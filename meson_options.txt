@@ -1,0 +1,4 @@
+option('app', type: 'feature', value: 'auto',
+       description: 'Build the TalkBank desktop app (needs cargo and GTK 4 / libadwaita)')
+option('depdir', type: 'string', value: '',
+       description: 'Where the CLAN programs look for lib/ at run time. Empty means the source tree, which is what you want for a build-directory workflow; packagers should set the installed path.')

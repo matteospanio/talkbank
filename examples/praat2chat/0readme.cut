@@ -1,0 +1,28 @@
+@UTF8
+The files in this folder illustrate how to convert Praat files to CHAT and 
+vice versa.
+
+To convert a CHAT file like clip.cha to Praat, you use this command:
+       chat2praat clip.cha +emp3
+The +e switch specifies the format of the audio as either mp3 or wav.
+The output of this command is clip.c2praat.textGrid.
+You can convert this back to CHAT format using this command:
+       praat2chat clip.c2praat.textGrid
+In this case, no attribs.cut file is needed, because the orginal file was already
+in CHAT format. The output of this command is clip.xh2praat.praat.cha.
+Note that this file is identical to clip.cha
+
+However, you may have a Praat file, like praat.textGrid, that was not originally created in CHAT.  
+In that case you need an attribs.cut file and you use this command:
+	praat2chat -opcl +dattribs.cut praat.textGrid
+This command uses the declarations in the attribs.cut file, and it produces praat.praat.cha as output.
+
+The +d swtich with an attribs.cut file is only needed when converting from a Praat file 
+created originally inside Praat, not when the Praat file was created 
+from CHAT, and not when converting from CHAT to Praat.  The attribs.cut file tells the
+program which Praat tag gives the Speaker role and which ones give dependent tiers.
+	
+After running praat2chat, you will need to fix the headers, run DELIM to 
+add periods for utterances and perform various similar operations required by CHAT format.
+	
+

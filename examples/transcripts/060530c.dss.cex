@@ -1,0 +1,229 @@
+@UTF8
+@PID:	11312/c-00016674-1
+@Window:	282_991_844_1104_-1_-1_310_0_310_0
+@Begin
+@Languages:	eng
+@Participants:	CHI Ross Target_Child , MAR Mark Target_Child , FAT Brian
+	Father , MOT Mary Mother
+@ID:	eng|MacWhinney|CHI|6;05.30|male|TD||Target_Child|||
+@ID:	eng|MacWhinney|MAR|4;07.05|male|||Target_Child|||
+@ID:	eng|MacWhinney|FAT||male|||Father|||
+@ID:	eng|MacWhinney|MOT||female|||Mother|||
+@Media:	060530c, audio
+@Situation:	A few minutes later .
+@Types:	long, toyplay, TD
+*CHI:	the tractor . [+ dss] 5061_6222
+%mor:	det:art|the n|tractor .
+%xdss:	Z;
+*CHI:	because he doesn't have a barrel [?] . 52731_55192
+%mor:	conj|because pro:sub|he mod|do&3S~neg|not v|have det:art|a n|barrel
+	.
+%xdss:	F6; B2; C3; E4; C1; Z;
+*CHI:	why [<] does it thaw [?] ? 80149_81705
+%mor:	pro:int|why mod|do&3S pro:per|it v|thaw ?
+%xdss:	H7; C3; G6; A1; C1; G1;
+*CHI:	I thought [?] Johnny Appleseed . 89600_92201
+%mor:	pro:sub|I v|think&PAST n:prop|Johnny n:prop|Appleseed .
+%xdss:	B1; C2; Z; Z;
+*CHI:	why do you think [//] why does it fall ? 98725_102580
+%mor:	pro:int|why mod|do pro:per|you pro:int|why mod|do&3S pro:per|it
+	v|fall ?
+%xdss:	H7; B1; H7; C3; G6; A1; C1; G1;
+*CHI:	because [<] nothing is falling <on [/] falling onto it> [>] . 103834_106783
+%mor:	conj|because pro:indef|nothing aux|be&3S part|fall-PRESP
+	part|fall-PRESP prep|onto pro:per|it .
+%xdss:	F6; A4; C1; A1;
+*CHI:	<I'm not talking about him> [<] . 113981_114863
+%mor:	pro:sub|I~aux|be&1S neg|not part|talk-PRESP prep|about pro:obj|him
+	.
+%xdss:	B1; C2; E7; B2;
+*CHI:	the reason why they fall is because &-um nothing's holding them up
+	so the center of gravity is pulling them down . 114863_123106
+%mor:	det:art|the n|reason pro:rel|why pro:sub|they v|fall aux|be&3S
+	conj|because adj|nothing&dn-POSS part|hold-PRESP pro:obj|them adv|up
+	co|so det:art|the n|center prep|of n|gravity aux|be&3S
+	part|pull-PRESP pro:obj|them adv|down .
+%xdss:	Z; B6; B3; C1; C1; F6; B3; Z; Z; C1; B3;
+*CHI:	&-um why do they come down ? 139755_142216
+%mor:	pro:int|why mod|do pro:sub|they v|come adv|down ?
+%xdss:	H7; C5; G6; B3; C1; G1;
+*CHI:	<so he catches more and floats down> [<] . 158122_158633
+%mor:	co|so pro:sub|he v|catch-3S adv|more coord|and v|float-3S adv|down
+	.
+%xdss:	B2; C2; F3; C2;
+*CHI:	<and because_of the center of gravity> [<] it pulls her down . 158633_162650
+%mor:	coord|and prep|because_of det:art|the n|center prep|of n|gravity
+	pro:per|it v|pull-3S pro:obj|her adv|down .
+%xdss:	F3; Z; Z; A1; C2; B2;
+*CHI:	<no the> [<] stuff fell [>] . 185706_186380
+%mor:	qn|no det:art|the n|stuff v|fall&PAST .
+%xdss:	A3; Z; C2;
+*CHI:	when he lands . 195412_197409
+%mor:	conj|when pro:sub|he v|land-3S .
+%xdss:	F8; B2; C2;
+*CHI:	how does it fall ? 200845_202285
+%mor:	pro:int|how mod|do&3S pro:per|it v|fall ?
+%xdss:	H4; C3; G6; A1; C1; G1;
+*CHI:	how does it get up ? 202285_203794
+%mor:	pro:int|how mod|do&3S pro:per|it v|get adv|up ?
+%xdss:	H4; C3; G6; A1; C1; G1;
+*CHI:	why does it fall ? 207532_208902
+%mor:	pro:int|why mod|do&3S pro:per|it v|fall ?
+%xdss:	H7; C3; G6; A1; C1; G1;
+*CHI:	cause &-um [/] oh because he's like fighting against the center of
+	gravity to get up . 216309_225597
+%mor:	n|cause co|oh conj|because pro:sub|he~cop|be&3S prep|like
+	n:gerund|fight-PRESP adv|against det:art|the n|center prep|of
+	n|gravity inf|to v|get adv|up .
+%xdss:	Z; F6; B2; C1; F8; Z; D8; Z; Z; C1;
+*CHI:	because &-um his center of gravity like it [//] it like [//] it
+	goes like [/] like &=jumping . 249235_259567
+%mor:	conj|because det:poss|his n|center prep|of n|gravity prep|like
+	pro:per|it pro:per|it v|go-3S prep|like .
+%xdss:	F6; B2; Z; Z; F8; A1; A1; C2; F8;
+*CHI:	when you [/] when you land's sort of like [/] it seems to like want
+	you to land <on your right feet> [>] . 259567_267485
+%mor:	conj|when conj|when pro:per|you adj|land&dn-POSS n|sort prep|of
+	pro:per|it cop|seem-3S inf|to v|like v|want pro:per|you prep|to
+	n|land prep|on det:poss|your adj|right n|foot&PL .
+%xdss:	F8; F8; B1; Z; A1; C1; C1; B1; Z; B1; Z;
+*CHI:	they land on their right [>] feet . 271593_273474
+%mor:	pro:sub|they v|land prep|on det:poss|their adj|right n|foot&PL .
+%xdss:	B3; C1; B3; Z;
+*CHI:	<what's [?] this> [<] ? 326273_326459
+%mor:	pro:int|what~cop|be&3S pro:dem|this ?
+%xdss:	C1; H2; A1; G1;
+*CHI:	tell me . 337047_339090
+%mor:	v|tell pro:obj|me .
+%xdss:	C1; B1;
+*CHI:	what makes it go up ? 348540_350444
+%mor:	pro:int|what v|make-3S pro:per|it v|go adv|up ?
+%xdss:	H2; C2; D5; A1; C1; G1;
+*CHI:	<and fighting (.) like> [<] yeah it pushes against the ground to
+	push this thing up . 368649_372596
+%mor:	coord|and part|fight-PRESP co|like co|yeah pro:per|it v|push-3S
+	prep|against det:art|the n|ground inf|to v|push det:dem|this n|thing
+	adv|up .
+%xdss:	F3; A1; C2; Z; C1; A1; Z;
+*CHI:	I know (.) I know . 437838_438744
+%mor:	pro:sub|I v|know pro:sub|I v|know .
+%xdss:	B1; C1; D5; B1; C1;
+*CHI:	cause it doesn't have iron . 470340_472661
+%mor:	v|cause pro:per|it mod|do&3S~neg|not v|have n|iron .
+%xdss:	C1; A1; C3; E4; C1; Z;
+*CHI:	they [//] they're made of iron . 476121_477793
+%mor:	pro:sub|they~aux|be&PRES part|make&PASTP prep|of n|iron .
+%xdss:	B3; C7; Z;
+*CHI:	oh I wanna see this . 485758_487011
+%mor:	co|oh pro:sub|I v|want~inf|to co|see det:dem|this .
+%xdss:	B1; C1; D2; A1;
+*CHI:	<hey (.) dad (.) do you know what> [<] ? 496483_497667
+%mor:	co|hey n|dad v|do pro:per|you v|know pro:int|what ?
+%xdss:	Z; C1; D5; B1; C1; H4; H2; G1;
+*CHI:	I'd really like to take lessons in &-um (.) bow and arrow thing . 499103_504676
+%mor:	pro:sub|I~mod|genmod adv|really v|like inf|to v|take n|lesson-PL
+	prep|in n|bow coord|and n|arrow n|thing .
+%xdss:	B1; C1; D5; C1; Z; Z; F3; Z; Z;
+*CHI:	when all the crazy kids are out . 507161_510574
+%mor:	conj|when adv|all det:art|the adj|craze&dv-Y n|kid-PL cop|be&PRES
+	adv|out .
+%xdss:	F8; Z; C2;
+*CHI:	I know . 513035_513779
+%mor:	pro:sub|I v|know .
+%xdss:	B1; C1;
+*CHI:	I hope a lot <of kid> [>] [//] hey (.) where did you get those
+	socks ? 521044_524899
+%mor:	pro:sub|I v|hope det:art|a n|lot co|hey pro:int|where mod|do&PAST
+	pro:per|you v|get det:dem|those n|sock-PL ?
+%xdss:	B1; C1; Z; H2; C5; G6; B1; C1; B3; Z; G1;
+@New Episode
+@Tape Location:	106
+@Situation:	In the bath+room .
+@New Episode
+@Tape Location:	116
+@Situation:	Breakfast
+@New Episode
+@Tape Location:	120
+@Situation:	Mark goes out to the mailbox to put the mail out. He got to
+	the mailbox and saw that the flag was up. He comes back
+	inside .
+@New Episode
+@Tape Location:	128
+@Situation:	Meal_time
+*CHI:	dad (.) I got a whole bunch of money . 667115_677053
+%mor:	n|dad pro:sub|I v|get&PAST det:art|a adj|whole n|bunch prep|of
+	n|money .
+%xdss:	Z; B1; C2; Z; Z;
+*CHI:	I can buy some toys . 677053_678029
+%mor:	pro:sub|I mod|can v|buy qn|some n|toy-PL .
+%xdss:	B1; C3; C1; A3; Z;
+*CHI:	no you use your money and buy that . 683671_685598
+%mor:	co|no pro:per|you v|use det:poss|your n|money coord|and v|buy
+	pro:dem|that .
+%xdss:	B1; C1; B1; Z; F3; C1; A1;
+*CHI:	anytime I go over to Joey's (.) I can always wear his G_I_Joe pants
+	. 689221_709561
+%mor:	adv:tem|anytime pro:sub|I v|go adv|over prep|to adj|Joey&dn-POSS
+	pro:sub|I mod|can adv|always v|wear det:poss|his n:prop|G_I_Joe
+	v|pant-3S .
+%xdss:	B1; C1; B1; C1; B2; Z; C2;
+@New Episode
+@Tape Location:	139
+@Comment:	Father explains that the box on the side of the telephone
+	pole is a transformer .
+@New Episode
+@Tape Location:	143
+@Situation:	Getting ready to go
+*CHI:	not me (.) besides we do have a bath+room there (.) don't we ? 740000_744899
+%mor:	neg|not pro:obj|me adv|besides pro:sub|we mod|do v|have det:art|a
+	n|+n|bath+n|room adv|there mod|do~neg|not pro:sub|we ?
+%xdss:	B1; B3; C3; C1; Z; E4; B3; G1;
+*CHI:	did you know that &-um Jimmy has been at camp all these days and
+	just yesterday he got five girl+friends . 747825_759899
+%mor:	mod|do&PAST pro:per|you v|know comp|that n:prop|Jimmy aux|have&3S
+	aux|be&PASTP prep|at n|camp adv|all det:dem|these n|day-PL coord|and
+	adv|just adv:tem|yesterday pro:sub|he v|get&PAST det:num|five
+	n|+n|girl+n|friend-PL .
+%xdss:	C5; G6; B1; C1; F8; Z; C2; C1; Z; B3; Z; F3; B2; C2; A3; Z;
+*CHI:	he's got five girl+friends . 769070_770765
+%mor:	pro:sub|he~aux|be&3S part|get&PASTP det:num|five
+	n|+n|girl+n|friend-PL .
+%xdss:	B2; C7; A3; Z;
+*CHI:	I know (.) that's why I gave him one of my weapons . 783812_787272
+%mor:	pro:sub|I v|know pro:dem|that~cop|be&3S pro:int|why pro:sub|I
+	v|give&PAST pro:obj|him pro:indef|one prep|of det:poss|my
+	n|weapon-PL .
+%xdss:	B1; C1; H4; A1; C1; H7; B1; C2; B2; A3; B1; Z;
+*CHI:	it's a stick with &-um a y@l . 787968_790429
+%mor:	pro:per|it~cop|be&3S det:art|a n|stick prep|with det:art|a n:let|y
+	.
+%xdss:	A1; C1; Z; Z;
+*CHI:	it's a y@l . 790451_791682
+%mor:	pro:per|it~cop|be&3S det:art|a n:let|y .
+%xdss:	A1; C1; Z;
+*CHI:	he's gonna get a rubber band and find some rocks . 794143_797441
+%mor:	pro:sub|he~aux|be&3S part|go-PRESP~inf|to v|get det:art|a n|rubber
+	n|band coord|and v|find qn|some n|rock-PL .
+%xdss:	B2; C1; D2; C1; Z; Z; F3; C1; A3; Z;
+*CHI:	yeah he'll go pyoom@o [!] pyoom@o [!] pyoom@o ! 800715_802549
+%mor:	co|yeah pro:sub|he~mod|will v|go on|pyoom on|pyoom on|pyoom !
+%xdss:	B2; C3; C1;
+*CHI:	and I got some weapons . 803431_805289
+%mor:	coord|and pro:sub|I v|get&PAST qn|some n|weapon-PL .
+%xdss:	F3; B1; C2; A3; Z;
+*CHI:	you know those Chinese stars ? 805289_807031
+%mor:	pro:per|you v|know det:dem|those n:prop|Chinese v|star-3S ?
+%xdss:	B1; C1; B3; Z; C2; G1;
+*CHI:	me (.) Mark and I think that Danny are his guards . 817014_825002
+%mor:	pro:obj|me n:prop|Mark coord|and pro:sub|I v|think comp|that
+	n:prop|Danny cop|be&PRES det:poss|his n|guard-PL .
+%xdss:	B1; Z; F3; B1; C1; F8; Z; C2; B2; Z;
+*CHI:	yeah but he's not the one who has a whole bunch of girl+friends . 841811_845387
+%mor:	co|yeah conj|but pro:sub|he~cop|be&3S neg|not det:art|the
+	pro:indef|one pro:rel|who v|have&3S det:art|a adj|whole n|bunch
+	prep|of n|+n|girl+n|friend-PL .
+%xdss:	F5; B2; C1; E1; A3; B6; C2; Z; Z;
+*CHI:	he's the same size as I am . 851633_854048
+%mor:	pro:sub|he~cop|be&3S det:art|the adj|same n|size conj|as pro:sub|I
+	cop|be&1S .
+%xdss:	B2; C1; Z; F8; B1; C2;

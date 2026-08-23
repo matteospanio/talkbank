@@ -1,0 +1,34 @@
+@UTF8
+@Begin
+@Languages:	eng
+@Participants:	PAR Participant
+@ID:	eng|test|PAR|4;11.03|male|||Participant|||
+@Comment:	flucalc +t*PAR fluency.cha
+*PAR:	↫r-r↫rabbit is [//] was jumping .
+%mor:	n|rabbit aux|be&PAST&13S part|jump-PRESP .
+%gra:	1|3|SUBJ 2|3|AUX 3|0|ROOT 4|3|PUNCT
+*PAR:	↫b-bo-b↫boy has spoken .
+%mor:	n|boy aux|have&3S part|speak&PASTP .
+%gra:	1|3|SUBJ 2|3|AUX 3|0|ROOT 4|3|PUNCT
+*PAR:	↫b-b-b↫boy is walking .
+%mor:	n|boy aux|be&3S part|walk-PRESP .
+%gra:	1|3|SUBJ 2|3|AUX 3|0|ROOT 4|3|PUNCT
+*PAR:	↫bo-bo-bo↫boy is home .
+%mor:	n|boy aux|be&3S n|home .
+%gra:	1|2|SUBJ 2|0|ROOT 3|2|JCT 4|2|PUNCT
+*PAR:	he↫e-e↫ is a  ra↫b↫bbit↫it↫ .
+%mor:	pro:sub|he cop|be&3S det:art|a n|rabbit .
+%gra:	1|2|SUBJ 2|0|ROOT 3|4|DET 4|2|PRED 5|2|PUNCT
+*PAR:	wa^nt to .
+%mor:	v|want prep|to .
+%gra:	1|0|ROOT 2|1|JCT 3|1|PUNCT
+*PAR:	here: is some::thing bad +...
+%mor:	adv|here cop|be&3S pro:indef|something adj|bad +...
+%gra:	1|2|JCT 2|0|ROOT 3|2|SUBJ 4|2|PRED 5|2|PUNCT
+*PAR:	≠row &-um you_know (.) &-u:m that .
+%mor:	n|row co|you_know pro:dem|that .
+%gra:	1|2|SUBJ 2|3|COM 3|0|ROOT 4|3|PUNCT
+*PAR:	here is a dog [//] cow [/?] dog [/] dog (2.0) running .
+%mor:	adv|here cop|be&3S det:art|a n|dog part|run-PRESP .
+%gra:	1|2|JCT 2|0|ROOT 3|4|DET 4|2|PRED 5|4|XMOD 6|2|PUNCT
+@End

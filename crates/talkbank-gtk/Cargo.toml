@@ -1,0 +1,37 @@
+[package]
+name = "talkbank-gtk"
+description = "TalkBank desktop client for CHAT transcripts"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "talkbank"
+path = "src/main.rs"
+
+[dependencies]
+talkbank-engine.workspace = true
+talkbank-archive.workspace = true
+talkbank-batchalign.workspace = true
+anyhow.workspace = true
+tracing.workspace = true
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# v1_6 covers everything we use (AdwSpinner is 1.6); we do not go higher, so as
+# not to require a newer libadwaita than necessary.
+adw = { package = "libadwaita", version = "0.9", features = ["v1_6"] }
+# v4_12 for CssProvider::load_from_string; GtkFileDialog is 4.10. Not a real
+# constraint: libadwaita 1.6 already requires GTK 4.16.
+gtk = { package = "gtk4", version = "0.11", features = ["v4_12"] }
+
+# Reads the .mo files built from po/, so the existing translations keep working.
+async-channel = "2"
+tokio.workspace = true
+serde_json.workspace = true
+reqwest = { version = "0.13", default-features = false, features = ["rustls", "webpki-roots", "json"] }
+# The password goes into the system keyring, never into settings.ini.
+keyring = "4"
+gettext-rs = { version = "0.7", features = ["gettext-system"] }
+
+[dev-dependencies]
+tempdir = "0.3"

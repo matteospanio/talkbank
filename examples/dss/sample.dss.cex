@@ -1,0 +1,169 @@
+@Font:	CAfont:13:0
+@UTF8
+@Begin
+@Languages:	eng
+@Participants:	CHI Target_Child, INV Investigator
+@ID:	eng|dss|CHI|1;7.13||||Child||
+@ID:	eng|dss|INV|||||Investigator||
+*CHI:	my cousin likes to ride his bike and he's in baseball .
+%mor:	pro:poss:det|my n|cousin v|like-3S inf|to v|ride pro:poss:det|his n|bike
+	coord|and pro:sub|he~cop|be&3S prep|in n|baseball .
+%dss:	B1; Z; C2; D3; C2; B2; Z; F3; B2; C2; Z;
+*CHI:	he likes to play baseball . [+ dss]
+%mor:	pro:sub|he v|like-3S prep|to n|play n|baseball .
+%dss:	B2; C2; Z; Z;
+*CHI:	the dog came out . [+ dsse]
+%mor:	det|the n|dog v|come&PAST adv:loc|out .
+%dss:	Z; Z; C2;
+*CHI:	I don't know .
+%mor:	pro:sub|I mod|do~neg|not v|know .
+%dss:	B1; C4; E4; G6; Z; C2;
+*CHI:	he went to town .
+%mor:	pro:sub|he v|go&PAST prep|to n|town .
+%dss:	B2; C2; Z;
+*CHI:	it was me and Edward .
+%mor:	pro|it cop|be&PAST&13S pro:obj|me coord|and n:prop|Edward .
+%dss:	A1; C2; B1; F3; Z;
+*CHI:	and we found our way back .
+%mor:	coord|and pro:sub|we v|find&PAST pro:poss:det|our n|way adv:loc|back .
+%dss:	F3; B3; C2; B3; Z;
+*CHI:	we went to town together . [+ imit]
+%mor:	pro:sub|we v|go&PAST prep|to n|town adv|together .
+%dss:	B3; C2; Z;
+*CHI:	we ride our bikes .
+%mor:	pro:sub|we v|ride pro:poss:det|our n|bike-PL .
+%dss:	B3; C2; B3; Z;
+*CHI:	we went looking around .
+%mor:	pro:sub|we v|go&PAST n:gerund|look-PROG adv:loc|around .
+%dss:	B3; C2; Z; D8;
+*CHI:	we didn't have a shirt on .
+%mor:	pro:sub|we mod|do&PAST~neg|not v|have det|a n|shirt adv|on .
+%dss:	B3; C2; E7; G6; Z; C2; Z; Z;
+*CHI:	we went into a store and he didn't .
+%mor:	pro:sub|we v|go&PAST prep|into det|a n|store coord|and pro:sub|he mod|do&PAST~neg|not
+	.
+%dss:	B3; C2; Z; Z; F3; B2; C2; E7; Z;
+*CHI:	he was mad .
+%mor:	pro:sub|he cop|be&PAST&13S adj|mad .
+%dss:	B2; C2;
+*CHI:	they didn't even know .
+%mor:	pro:sub|they mod|do&PAST~neg|not adv:int|even v|know .
+%dss:	B3; C2; E7; Z; C2;
+*CHI:	he likes to play fight .
+%mor:	pro:sub|he v|like-3S prep|to n|play n|fight .
+%dss:	B2; C2; Z; Z;
+*CHI:	(be)cause it's fun .
+%mor:	conj|because pro|it~cop|be&3S adj|fun .
+%dss:	F6; A1; C2;
+*CHI:	we punch .
+%mor:	pro:sub|we v|punch .
+%dss:	B3; C2;
+*CHI:	we jump on each another .
+%mor:	pro:sub|we v|jump prep|on qn|each qn|another .
+%dss:	B3; C2; A7; A3;
+*CHI:	like there's one person right here .
+%mor:	co|like adv:loc|there~aux|be&3S det:num|one n|person adv|right adv:loc|here
+	.
+%dss:	C2; Z; Z;
+*CHI:	it goes like this with their hands .
+%mor:	pro|it v|go-3S prep|like pro:dem|this prep|with pro:poss:det|their n|hand-PL
+	.
+%dss:	A1; C2; A1; B3; Z;
+*CHI:	and they fall down .
+%mor:	coord|and pro:sub|they v|fall adv:loc|down .
+%dss:	F3; B3; C2;
+*CHI:	I got two grandpas .
+%mor:	pro:sub|I v|get&PAST det:num|two n|grandpa-PL .
+%dss:	B1; C2; A3; Z; Z;
+*CHI:	one has a bird foot .
+%mor:	det:num|one v|have&3S det|a n|bird n|foot .
+%dss:	C2; Z; Z; Z;
+*CHI:	he gave me it .
+%mor:	pro:sub|he v|give&PAST pro:obj|me pro|it .
+%dss:	B2; C2; B1; A1;
+*CHI:	&um (.) she has a bird . [+ tr]
+%mor:	pro:sub|she v|have&3S det|a n|bird .
+%dss:	B2; C2; Z; Z;
+*CHI:	I used to .
+%mor:	pro:sub|I v|use-PAST inf|to .
+%dss:	B1; C2; D3;
+*CHI:	I used to have one but it died .
+%mor:	pro:sub|I v|use-PAST inf|to v|have pro:indef|one conj|but pro|it v|die-PAST
+	.
+%dss:	B1; C2; D3; C2; A3; B7; F5; A1; C2;
+*CHI:	yeah the bird flew .
+%mor:	co|yeah det|the n|bird v|fly&PAST .
+%dss:	Z; Z; C2;
+*CHI:	and the dart went like this .
+%mor:	coord|and det|the v|dart v|go&PAST prep|like pro:dem|this .
+%dss:	F3; C2; C2; A1;
+*CHI:	well I didn't name the other ones .
+%mor:	co|well pro:sub|I mod|do&PAST~neg|not v|name det|the qn|other pro:indef|one-PL
+	.
+%dss:	B1; C2; E7; G6; Z; C2; A3;
+*CHI:	I named one of those Tweetie_Pie .
+%mor:	pro:sub|I v|name-PAST pro:indef|one prep|of det|those n:prop|Tweetie_Pie
+	.
+%dss:	B1; C2; A3; B7; Z; Z;
+*CHI:	hey how come you got those stickers ?
+%mor:	co|hey adv:wh|how v|come pro|you v|get&PAST det|those n|sticker-PL ?
+%dss:	F8; C2; D5; B1; C2; Z; Z;
+*CHI:	what are those ?
+%mor:	pro:wh|what cop|be&PRES det|those ?
+%dss:	B6; H2; C2;
+*CHI:	I got a chowchow .
+%mor:	pro:sub|I v|get&PAST det|a n|chowchow .
+%dss:	B1; C2; Z; Z;
+*CHI:	and I used to have one .
+%mor:	coord|and pro:sub|I v|use-PAST inf|to v|have pro:indef|one .
+%dss:	F3; B1; C2; D3; C2; A3; B7;
+*CHI:	he was a akita .
+%mor:	pro:sub|he cop|be&PAST&13S det|a n|akita .
+%dss:	B2; C2; Z; Z;
+*CHI:	(be)cause like you know when they get old and they die .
+%mor:	conj|because prep|like pro|you v|know conj|when pro:sub|they v|get adj|old
+	coord|and pro:sub|they v|die .
+%dss:	F6; B1; C2; F8; B3; C2; F3; B3; C2;
+*CHI:	that's what happened .
+%mor:	pro:dem|that~cop|be&3S pro:wh|what v|happen-PAST .
+%dss:	A1; C2; B6; H2; C2;
+*CHI:	he couldn't walk anymore .
+%mor:	pro:sub|he mod|could~neg|not v|walk adv|anymore .
+%dss:	B2; C6; E7; Z; C2;
+*CHI:	but he could walk .
+%mor:	conj|but pro:sub|he mod|could v|walk .
+%dss:	F5; B2; C6; C2;
+*CHI:	but he would go like this .
+%mor:	conj|but pro:sub|he mod|will&COND v|go prep|like pro:dem|this .
+%dss:	F5; B2; C6; C2; A1;
+*CHI:	yeah he did .
+%mor:	co|yeah pro:sub|he v|do&PAST .
+%dss:	B2; C2;
+*CHI:	grandpa's bed he laid down .
+%mor:	n|grandpa~poss|s n|bed pro:sub|he v|lay&PAST adv:loc|down .
+%dss:	Z; Z; B2; C2;
+*CHI:	&um (.) he likes me to take him for walks . [+ tr]
+%mor:	pro:sub|he v|like-3S pro:obj|me inf|to v|take pro:obj|him prep|for n|walk-PL
+	.
+%dss:	B2; C2; D5; B1; C2; B2; Z;
+*CHI:	I take him around the block .
+%mor:	pro:sub|I v|take pro:obj|him prep|around det|the n|block .
+%dss:	B1; C2; B2; Z; Z;
+*CHI:	one day I rode my bike with him and he make me fall down .
+%mor:	det:num|one n|day pro:sub|I v|ride&PAST pro:poss:det|my n|bike prep|with
+	pro:obj|him coord|and pro:sub|he v|make pro:obj|me v|fall adv:loc|down
+	.
+%dss:	Z; Z; B1; C2; B1; Z; B2; F3; B2; C2; D5; B1; C2;
+*CHI:	he like pulled me this way .
+%mor:	pro:sub|he v|like v|pull-PAST pro:obj|me det|this n|way .
+%dss:	B2; C2; C2; B1; Z; Z;
+*CHI:	and then I pulled him and I fell .
+%mor:	coord|and adv:tem|then pro:sub|I v|pull-PAST pro:obj|him coord|and pro:sub|I
+	v|fall&PAST .
+%dss:	F3; B1; C2; B2; F3; B1; C2;
+*CHI:	(be)cause he was pulling me .
+%mor:	conj|because pro:sub|he aux|be&PAST&13S part|pull-PROG pro:obj|me .
+%dss:	F6; B2; C2; B1;
+*CHI:	and I didn't want to fall .
+%mor:	coord|and pro:sub|I mod|do&PAST~neg|not v|want inf|to v|fall .
+%dss:	F3; B1; C2; E7; G6; Z; C2; D2; C2;

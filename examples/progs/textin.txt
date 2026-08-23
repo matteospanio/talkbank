@@ -1,0 +1,14 @@
+@UTF8
+This is a sample text that I have created to illustrate the use of the 
+TEXTIN program. As long as your input text has sentences that end in 
+periods, question marks or exclamations, the program will know how 
+to separate them.  However, if there are a lot of other marks, such 
+as footnotes, or links to websites, it may get confused.  In that 
+case you will need to do some reformatting.  If you find any things 
+that you would like to have improved in TEXTIN, just send us a note 
+and we will try to make the output a bit cleaner.  This program 
+could be used, for example, to input student essays into CHAT format 
+for further analysis through the CLAN programs, such as FREQ. 
+
+Blank lines, such as the one above will be deleted.
+

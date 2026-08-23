@@ -1,0 +1,35 @@
+[workspace]
+resolver = "3"
+members = [
+    "crates/talkbank-engine",
+    "crates/talkbank-archive",
+    "crates/talkbank-batchalign",
+    "crates/talkbank-gtk",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "GPL-2.0-only"
+repository = "https://github.com/matteospanio/talkbank"
+
+[workspace.dependencies]
+# --- internal ---
+talkbank-engine     = { path = "crates/talkbank-engine" }
+talkbank-archive    = { path = "crates/talkbank-archive" }
+talkbank-batchalign = { path = "crates/talkbank-batchalign" }
+
+# --- shared ---
+anyhow     = "1"
+thiserror  = "2"
+serde      = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio      = { version = "1", features = ["rt-multi-thread", "macros", "fs", "process", "time", "sync"] }
+tracing    = "0.1"
+
+[profile.release]
+# Most of the build time comes from chatter's dependency tree; this keeps the
+# executable reasonable without stretching compilation much further.
+opt-level = 2
+lto       = "thin"
+strip     = true

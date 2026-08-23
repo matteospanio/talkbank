@@ -1,0 +1,126 @@
+@UTF8
+@Window:	224_1384_986_1048_-1_-1_2353_0_2353_0
+@Font:	Courier:18:0
+@Begin
+@Languages:	eng
+@Participants:	CHI Target_Child, INV Investigator, MOT Mother
+@ID:	eng|10137901_CON_1.sltin|CHI|||||Target_Child|||
+@ID:	eng|10137901_CON_1.sltin|INV|||||Investigator|||
+@ID:	eng|10137901_CON_1.sltin|MOT|||||Mother|||
+@Time Start:	00:00
+@Comment:	Name: 10137901, Gender: F, DOB: 11/16/2007, DOE: 5/16/2011,
+	CA: 3;6, Context: CON, Transcriber: Keegan Koehlinger, Begin
+	Conversational Language Sample
+*CHI:	and this looks sticky .
+%mor:	coord|and pro:dem|this v|look-3S n|sticky .
+%gra:	1|3|LINK 2|3|SUBJ 3|0|ROOT 4|3|OBJ 5|3|PUNCT
+%com:	POST error
+*CHI:	gooey .
+%mor:	adj|gooey .
+%gra:	1|0|INCROOT 2|1|PUNCT
+%com:	no
+*CHI:	blue .
+%mor:	adj|blue .
+%gra:	1|0|INCROOT 2|1|PUNCT
+%com:	no
+*CHI:	yeah I like all of the colors .
+%mor:	co|yeah pro:sub|I v|like pro:indef|all prep|of det:art|the
+	n|color-PL .
+%gra:	1|3|COM 2|3|SUBJ 3|0|ROOT 4|3|OBJ 5|4|NJCT 6|7|DET 7|5|POBJ 8|3|PUNCT
+%com:	works
+*CHI:	because I want this to be flat .
+%mor:	conj|because pro:sub|I v|want det:dem|this inf|to cop|be n|flat .
+%gra:	1|3|LINK 2|3|SUBJ 3|0|ROOT 4|3|OBJ 5|6|INF 6|4|COMP 7|6|PRED 8|3|PUNCT
+%com:	works
+*CHI:	I'll flip it up .
+%mor:	pro:sub|I~mod|will v|flip pro:per|it adv|up .
+%gra:	1|3|SUBJ 2|3|AUX 3|0|ROOT 4|3|OBJ 5|3|JCT 6|3|PUNCT
+%com:	works
+*CHI:	a xxx .
+%mor:	det:art|a .
+%gra:	1|0|INCROOT 2|1|PUNCT
+%com:	no
+*CHI:	I'll smell it .
+%mor:	pro:sub|I~mod|will v|smell pro:per|it .
+%gra:	1|3|SUBJ 2|3|AUX 3|0|ROOT 4|3|OBJ 5|3|PUNCT
+%com:	works
+*CHI:	it doesn't .
+%mor:	pro:per|it mod|do&3S~neg|not .
+%gra:	1|0|INCROOT 2|1|ENUM 3|2|NEG 4|1|PUNCT
+%com:	works
+*CHI:	it smells like playdough .
+%mor:	pro:per|it v|smell-3S co|like n|+v|play+n|dough .
+%gra:	1|2|SUBJ 2|0|ROOT 3|4|COM 4|2|OBJ 5|2|PUNCT
+%com:	works
+*CHI:	a bowl's yellow .
+%mor:	det:art|a adj|bowl&dn-POSS n|yellow .
+%gra:	1|3|DET 2|3|MOD 3|0|INCROOT 4|3|PUNCT
+%com:	POST error
+*CHI:	I try .
+%mor:	pro:sub|I v|try .
+%gra:	1|2|SUBJ 2|0|ROOT 3|2|PUNCT
+%com:	works
+*CHI:	some balls, I mean some stars .
+%mor:	qn|some n|ball-PL cm|cm pro:sub|I v|mean qn|some n|star-PL .
+%gra:	1|2|QUANT 2|5|JCT 3|2|LP 4|5|SUBJ 5|0|ROOT 6|7|QUANT 7|5|OBJ 8|5|PUNCT
+%com:	works
+*CHI:	I don't know .
+%mor:	pro:sub|I mod|do~neg|not v|know .
+%gra:	1|4|SUBJ 2|4|AUX 3|2|NEG 4|0|ROOT 5|4|PUNCT
+%com:	works
+*CHI:	well I don't like meatballs .
+%mor:	co|well pro:sub|I mod|do~neg|not v|like n|+n|meat+n|ball-PL .
+%gra:	1|5|COM 2|5|SUBJ 3|5|AUX 4|3|NEG 5|0|ROOT 6|5|OBJ 7|5|PUNCT
+%com:	works
+*CHI:	some pancakes .
+%mor:	qn|some n|+n|pan+n|cake-PL .
+%gra:	1|2|QUANT 2|0|INCROOT 3|2|PUNCT
+%com:	no
+*CHI:	we'll go outside and play dressup .
+%mor:	pro:sub|we~mod|will v|go adv|+prep|out+n|side coord|and n|play
+	n|+v|dress+prep|up .
+%gra:	1|3|SUBJ 2|3|AUX 3|0|ROOT 4|3|JCT 5|3|CONJ 6|7|MOD 7|5|COORD 8|3|PUNCT
+%com:	works
+*CHI:	I don't know .
+%mor:	pro:sub|I mod|do~neg|not v|know .
+%gra:	1|4|SUBJ 2|4|AUX 3|2|NEG 4|0|ROOT 5|4|PUNCT
+%com:	no
+*CHI:	I think so .
+%mor:	pro:sub|I v|think co|so .
+%gra:	1|2|SUBJ 2|0|ROOT 3|2|OBJ 4|2|PUNCT
+%com:	YES: INCLUDED WHEN USING OLD PRO .CUT, BUT NOT NEW PRO .CUT
+*CHI:	I don't know .
+%mor:	pro:sub|I mod|do~neg|not v|know .
+%gra:	1|4|SUBJ 2|4|AUX 3|2|NEG 4|0|ROOT 5|4|PUNCT
+%com:	no
+*CHI:	look mama !
+%mor:	v|look n|mama !
+%gra:	1|0|ROOT 2|1|OBJ 3|1|PUNCT
+%com:	works
+*CHI:	0it feels sticky .
+%mor:	0pro:per|it v|feel-3S n|sticky .
+%gra:	1|2|SUBJ 2|0|ROOT 3|2|OBJ 4|2|PUNCT
+%com:	no
+*CHI:	jump on 0the trampoline .
+%mor:	n|jump prep|on 0det:art|the n|trampoline .
+%gra:	1|0|INCROOT 2|1|NJCT 3|4|DET 4|2|POBJ 5|1|PUNCT
+%com:	no
+*CHI:	and all of the neighborhood are my &+f +/.
+%mor:	coord|and pro:indef|all prep|of det:art|the n|neighborhood
+	cop|be&PRES co|my +/.
+%gra:	1|6|LINK 2|6|SUBJ 3|2|NJCT 4|5|DET 5|3|POBJ 6|0|ROOT 7|6|PRED 8|6|PUNCT
+%com:	no
+*CHI:	all of the neighborhood are my favorite .
+%mor:	pro:indef|all prep|of det:art|the n|neighborhood cop|be&PRES
+	det:poss|my n|favorite .
+%gra:	1|5|SUBJ 2|1|NJCT 3|4|DET 4|2|POBJ 5|0|ROOT 6|7|DET 7|5|PRED 8|5|PUNCT
+%com:	works
+*CHI:	I don't know .
+%mor:	pro:sub|I mod|do~neg|not v|know .
+%gra:	1|4|SUBJ 2|4|AUX 3|2|NEG 4|0|ROOT 5|4|PUNCT
+%com:	no
+*CHI:	what is this ?
+%mor:	pro:int|what cop|be&3S det:dem|this ?
+%gra:	1|2|SUBJ 2|0|ROOT 3|2|PRED 4|2|PUNCT
+%com:	works
+@End

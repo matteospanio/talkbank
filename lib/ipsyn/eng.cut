@@ -1,0 +1,411 @@
+@UTF8
+@Color words:	RULENAME: 7 65535 773 0 
+% The following lines marked with % explain the interpretation of symbols in the rules
+
+% += means variable can match any number of times
+% = means variable can match once
+% + means OR
+% $b means beginning of utterance
+% $e means end of utterance, excluding utterance delimiter
+
+% The interpretation of the "^" operator inside a rule can be changed by
+% placing a single character in the first column of a line by itself before that rule.
+% For this function the ^ symbol means AND in any order
+% and the > symbol means AND in the specified order.
+% These declarations apply to all following rules until reversed.
+% The following line with just the symbol >sets them to the AND in a determined order version
+>
+
+% The following set of markers specify the nature of the string to be matched
+%  ,  separates alternative elements, but also has special use (example: |adv,-ly for adverbs in -ly)
+% # prefix marker
+% | part-of-speech marker
+% ; stem of the word marker
+% - suffix marker
+% & nonconcatenated morpheme marker
+% = English translation for the stem marker
+% @ replacement word preceding [: ...] code marker
+% * error code inside [* ...] code marker
+% followed, optionally, by - or + and immediately followed by either one:
+%     *        find any match
+%     %        erase any match
+%     string   find "string"
+% o erase all other elements not specified by user
+%     o%    erase all other elements
+%     o~    erase postclitic element, if present
+%     o$    erase preclitic element, if present
+
+%  postclitic AND preclitic use this particular syntax:
+%  find postclitics with specific morphosyntactic marker
+%  examples:    |*,~|*   (for any POS followed by clitic with any POS
+%  OR   ;*,~;*   (for any stem followed by clitic with any stem)
+%  find preclitic with specific morphosyntactic marker
+%  example:    |*,$|*   OR   ;*,$;*  (see above)
+
+% Each rule starts with "RULENAME". It may have one or more conditionals group designated with "if".
+% The "ADD" element is associated with "RULENAME" group only.
+% All other elements are associated with conditional group "if" of each rule "RULENAME".
+% Conditional group can have only one "POINT", "INCLUDE", "EXCLUDE" or "DIFFERENT_STEMS".
+% Other elements can be listed once or more.  All listing on each of those elements are treated as an "AND".
+% Each of those elements listed separately is considered as an "OR".
+
+% The following is the list of variables used in the rules.
+% Variables are marked in rules with $, as in $N.
+N  = |n,|n:prop,|n:pt
+V  = |v,|cop,|aux
+AMC = |aux,|mod,|cop
+PRO   = |pro:per,|pro:indef,|pro:refl,|pro:obj,|pro:sub,|pro:int
+MOD += |adj,|det:art,|det:poss,|det:num,|det:dem,|qn
+ART = |det:art
+DET = |det:dem
+ADV   = |adv,|adv:tem
+NP   = $N + $PRO + ($MOD ^ $N) + ($DET ^ $N) + ($ART ^ $N) + ($ART ^ $MOD ^ $N) + ($DET ^ $MOD ^ $N)
+
+RULENAME: N2 - Pronoun
+if
+INCLUDE:	$PRO
+DIFFERENT_STEMS:		1
+
+RULENAME: N5 - Article before noun
+if
+INCLUDE:	($ART ^ $N) + ($ART ^ $MOD ^ $N)
+DIFFERENT_STEMS:		>1
+
+RULENAME: N6 - Two-word NP after verb or prep
+if
+INCLUDE:	($V ^ $MOD ^ $N) + (|prep ^ $MOD ^ $N) + (|aux ^ |part ^ $MOD ^ $N)
+DIFFERENT_STEMS:		>1
+
+RULENAME: N7 - Plural suffix
+if
+INCLUDE:	$N,-PL
+DIFFERENT_STEMS:		1
+
+RULENAME: N8 - Two-word NP before verb
+if
+INCLUDE:	($MOD ^ $N ^ $V) + ($MOD ^ $N ^ |mod)
+DIFFERENT_STEMS:		>1
+
+RULENAME: N9 - Three-word NP
+if
+INCLUDE:	($MOD ^ $MOD ^ $N) + ($MOD ^ $MOD ^ $PRO)
+DIFFERENT_STEMS:		>1
+
+RULENAME: N10 - Adverb + head
+if
+INCLUDE:	(|adv ^ |adj) + (|adv ^ |n,;here) + (|adv ^ |n,;there) + (|adv ^ |part)
+EXCLUDE:	all ^ done
+DIFFERENT_STEMS_POS:	1
+
+RULENAME: N11 - Other bound morpheme, N or adj
+if
+INCLUDE:	|n,-* + |adj,-* + |n,#* + |adj,#* + |co,-*
+EXCLUDE:	-POSS + -PL + -Y
+DIFFERENT_STEMS:	1
+if
+POINT:	2
+INCLUDE:	|adj*,-Y
+
+RULENAME: V2 - Preposition
+ADD:	1 IF V3 = 1
+ADD:	2 IF V3 = 2
+if
+INCLUDE:	|prep
+DIFFERENT_STEMS:	1
+
+RULENAME: V3 - Prep + N
+if
+INCLUDE:	|prep ^ $NP
+DIFFERENT_STEMS_POS:	1
+
+RULENAME: V4 - Copula linking two Ns
+ADD:	1 IF V151 = 1
+ADD:	2 IF V151 = 2
+ADD:	1 IF V16 = 1
+ADD:	2 IF V16 = 2
+if
+INCLUDE:	($NP + |pro:dem) ^ |cop ^ ($NP + $MOD)
+EXCLUDE:	(how ^ are ^ you ^ ?) + (|*,~|cop)
+DIFFERENT_STEMS:	>1
+if
+POINT:	2
+INCLUDE:	|*,~|cop
+
+RULENAME: V6 - Auxiliary BE, DO, HAVE
+ADD:	1 IF V13 = 1
+ADD:	2 IF V13 = 2
+ADD:	1 IF V152 = 1
+ADD:	2 IF V152 = 2
+if
+INCLUDE:	(|aux ^ $V) + (|aux ^|neg ^ $V) + (|aux ^*^ |part) + (|mod,;do ^ $V) + (|mod,;do ^ $NP)
+DIFFERENT_STEMS:	>1
+if
+POINT:	2
+INCLUDE:	|mod,;do^~|neg
+
+RULENAME: V7 - Progressive -ing
+if
+INCLUDE:	|part,-PRESP
+DIFFERENT_STEMS:	1
+
+RULENAME: V8 - Adverb
+ADD:	1 IF N10 = 1
+ADD:	2 IF N10 = 2
+ADD:	1 IF V8 = 1
+ADD:	2 IF V8 = 2
+if
+INCLUDE:	$ADV
+EXCLUDE:	(I ^ think ^ so) + here + there
+DIFFERENT_STEMS:	>1
+
+RULENAME: V9 - Modal + V
+ADD:	1 IF V11 = 1
+ADD:	2 IF V11 = 2
+ADD:	1 IF V153 = 1
+ADD:	2 IF V153 = 2
+if
+INCLUDE:	|mod ^ $V
+EXCLUDE:	(I ^ think ^ so) + here + there
+DIFFERENT_STEMS:	1
+
+RULENAME: V10 - Third-person sing. pres.
+if
+INCLUDE:	|v,-3S
+EXCLUDE:	does + says
+DIFFERENT_STEMS:	1
+
+RULENAME: V11 - Past tense modal
+if
+INCLUDE:	(|mod,;could + |mod,;might + |mod,;should + |mod,;will,&COND) ^ |*
+DIFFERENT_STEMS:	>1
+
+RULENAME: V12 - Regular past tense
+if
+INCLUDE:	|v,-PAST + |v,-PASTP
+DIFFERENT_STEMS:	1
+
+RULENAME: V13 - Past tense auxiliary
+if
+INCLUDE:	(|aux,-PAST) + (|aux,&PAST) + did + didn't
+EXCLUDE:	|aux,;get
+DIFFERENT_STEMS:	1
+
+RULENAME: V14 - Adverb + V
+if
+INCLUDE:	($ADV ^ $V) + ($ADV ^ |adj) + (right ^ (here + there)) + ($V ^ $ADV)
+EXCLUDE:	($b ^ $ADV) + ($ADV ^ $e) + (|adv,;all ^ |part,;do,&PASTP)
+DIFFERENT_STEMS_POS:	1
+
+RULENAME: V151 - Ellipsis with copula    % copula
+if
+INCLUDE:	($b ^ $NP ^ |cop ^ $e) + ($b ^ |* ^ $NP ^ |cop ^ $e)
+DIFFERENT_STEMS:	1
+
+RULENAME: V152 - Ellipsis with auxiliary    % auxiliary
+if
+INCLUDE:	($b ^ $NP ^ |aux ^ $e) + ($b ^ |* ^ $NP ^ |aux ^ $e)
+DIFFERENT_STEMS:	1
+
+RULENAME: V153 - Ellipsis with modal    % modal
+if
+INCLUDE:	|mod ^ $e
+DIFFERENT_STEMS:	1
+
+RULENAME: V16 - Past tense copula
+if
+INCLUDE:	|cop,&PAST ^ *
+DIFFERENT_STEMS_POS:	2
+
+RULENAME: V17 - Other bound morpheme on V
+if
+INCLUDE:	#*,|v + -LY
+EXCLUDE:	hardly + really
+DIFFERENT_STEMS:	1
+
+RULENAME: Q3 - Simple Negation
+ADD:	1 IF Q5 = 1
+ADD:	2 IF Q5 = 2
+if
+INCLUDE:	|neg,;not + |qn,;no
+DIFFERENT_STEMS:	>1
+
+RULENAME: Q5 - Neg. between subject + verb
+ADD:	1 IF Q7 = 1
+ADD:	2 IF Q7 = 2
+ADD:	1 IF Q11 = 1	% secondary
+ADD:	2 IF Q11 = 2	% secondary
+if
+INCLUDE:	($NP ^*^ |neg ^ |v) + ($NP ^*^ ~|neg ^ |v)
+EXCLUDE:	I ^ don't ^ know
+DIFFERENT_STEMS:	>1
+if
+POINT:	2
+INCLUDE:	I ^ don't ^ know
+
+RULENAME: Q7 - Negation of aux/modal/copula
+ADD:	1 IF Q11 = 1
+ADD:	2 IF Q11 = 2
+if
+INCLUDE:	($AMC ^ |neg ^ |v) + ($AMC ^ ~|neg ^ |v) + ($AMC ^ |neg ^ |part) + ($AMC ^ ~|neg ^ |part)
+EXCLUDE:	|mod,;do ^ ~|neg,;not ^ |v,;know
+DIFFERENT_STEMS:	>1
+if
+POINT:	2
+INCLUDE:	$NP ^ (don't + can't) ^ |v
+
+RULENAME: Q8 - Yes/no Q w/ inverted aux/modal/copula
+ADD:	1 IF Q11 = 1
+ADD:	2 IF Q11 = 2
+if
+INCLUDE:	($b ^ $AMC ^ $NP) + ($b ^ |conj ^ $AMC ^ $NP)
+DIFFERENT_STEMS:	>1
+
+RULENAME: Q9 - Why, when, which, whose
+if
+INCLUDE:	$b ^ (|pro:int,;why + |pro:int,;when + |pro:int,;which + |pro:int,;whose)
+DIFFERENT_STEMS:	1
+
+RULENAME: Q11 - Q w/ negation + inversion
+if
+INCLUDE:	(($b + ($b ^ |pro:int)) ^ $AMC ^ |neg ^ $N) + (($b + ($b ^ |pro:int)) ^ $AMC ^ ~|neg,;not ^ $NP)
+EXCLUDE:	|end,;end
+DIFFERENT_STEMS:	1
+
+RULENAME: S3 - Verb-object
+ADD:	1 IF S4 = 1
+ADD:	2 IF S4 = 2
+ADD:	1 IF S14 = 1
+ADD:	2 IF S14 = 2
+if
+INCLUDE:	(|v ^ $NP) + (|aux^|part^$NP)
+DIFFERENT_STEMS:	1
+
+RULENAME: S4 - Subject-verb-object
+if
+INCLUDE:	($NP ^ |v ^ $NP) + (|aux^|part^$NP)
+DIFFERENT_STEMS:	1
+
+RULENAME: S5 - Conjunction (any)
+ADD:	1 IF S7 = 1
+ADD:	2 IF S7 = 2
+ADD:	1 IF S10 = 1
+ADD:	2 IF S10 = 2
+ADD:	1 IF S12 = 1
+ADD:	2 IF S12 = 2
+if
+INCLUDE:	|conj + |coord
+DIFFERENT_STEMS:	1
+
+RULENAME: S6 - Any two Vs
+ADD:	1 IF S8 = 1
+ADD:	2 IF S8 = 2
+ADD:	1 IF S9 = 1
+ADD:	2 IF S9 = 2
+ADD:	1 IF S11 = 1
+ADD:	2 IF S11 = 2
+ADD:	1 IF S12 = 1
+ADD:	2 IF S12 = 2
+ADD:	1 IF S13 = 1
+ADD:	2 IF S13 = 2
+ADD:	1 IF S15 = 1
+ADD:	2 IF S15 = 2
+ADD:	1 IF S16 = 1
+ADD:	2 IF S16 = 2
+ADD:	1 IF S19 = 1
+ADD:	2 IF S19 = 2
+ADD:	1 IF S17 = 1	% secondary
+ADD:	2 IF S17 = 2	% secondary
+if
+INCLUDE:	|v ^*^ |v
+DIFFERENT_STEMS:	1
+
+RULENAME: S7 - Conjoined phrases
+if
+INCLUDE:	|* ^ |coord ^ |*
+EXCLUDE:	$b ^ |coord ^ |*
+DIFFERENT_STEMS:	>1
+
+RULENAME: S8 - Infinitive
+ADD:	1 IF S17 = 1
+ADD:	2 IF S17 = 2
+if
+INCLUDE:	$V ^*^ |inf ^ |v
+EXCLUDE:	~|inf,;to
+
+RULENAME: S9 - Let/Make/Help/Watch
+if
+INCLUDE:	($b ^ (let + let's) ^*^ |v) + ($b ^ |adv:* ^ (let + let's) ^*^ |v) + ($b ^ (make + help + watch) ^ $NP)
+DIFFERENT_STEMS:	1
+
+RULENAME: S10 - Subordinating conj.
+ADD:	1 IF S13 = 1
+ADD:	2 IF S13 = 2
+if
+INCLUDE:	|conj
+EXCLUDE:	$b ^ |conj
+DIFFERENT_STEMS:	>1
+
+RULENAME: S11 - Mental state V
+ADD:	1 IF S20 = 1
+ADD:	2 IF S20 = 2
+if
+INCLUDE:	($NP ^ (|v,;think + |v,;say) ^ that) + ($NP ^ (|v,;think + |v,;say) ^ $NP)
+DIFFERENT_STEMS:	1
+
+RULENAME: S12 - Conjoined clauses
+if
+INCLUDE:	0|CJCT
+DIFFERENT_STEMS:	1
+
+RULENAME: S13 - If or wh-clause
+if
+INCLUDE:	(if ^ $NP) + ($V ^ |pro:int)
+EXCLUDE:	($V ^ |pro:int,;what ^ $e)
+DIFFERENT_STEMS:	1
+
+RULENAME: S14 - Bitransitive predicate
+if
+INCLUDE:	0|OBJ2
+EXCLUDE:	|v,;give,~|pro:obj,;me
+DIFFERENT_STEMS:	1
+if
+POINT:	2
+INCLUDE:	|v,;give,~|pro:obj,;me
+
+RULENAME: S15 - Three or more (nonaux) Vs
+if
+INCLUDE:	|v ^*^ |v ^*^ |v
+DIFFERENT_STEMS:	>1
+
+RULENAME: S16 - Relative clause
+if
+INCLUDE:	0|CMOD
+DIFFERENT_STEMS:	1
+
+RULENAME: S17 - Infinitive clause: new subject
+if
+INCLUDE:	($N + |pro:obj) ^ |inf ^ |v
+DIFFERENT_STEMS:	>1
+
+RULENAME: S18 - Gerund
+if
+INCLUDE:	|n:gerund
+DIFFERENT_STEMS:	1
+
+RULENAME: S19 - Fronted or center subord. clause
+if
+INCLUDE:	$b ^ |conj
+EXCLUDE:	$b ^ (|conj,;but + |conj,;because)
+DIFFERENT_STEMS:	1
+
+RULENAME: S20 - Passive
+if
+INCLUDE:	(|aux ^*^ |part,-PASTP ^*^ |prep,;by) + (|aux ^*^ |part,&PASTP ^*^ |prep,;by)
+DIFFERENT_STEMS:	1
+
+% Rules sums
++ N = N*
++ V = V*
++ Q = Q*
++ S = S*
+

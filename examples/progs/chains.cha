@@ -1,0 +1,29 @@
+@UTF8
+@Begin
+@Languages:	eng
+@Participants:	CHI Sarah Target_Child, MOT Carol Mother
+@ID:	eng|samples|CHI|||||Target_Child|||
+@ID:	eng|samples|MOT|||||Mother|||
+*MOT:	sure go ahead [^c] .
+%mor:	adj|sure v|go adv|ahead .
+%gra:	1|2|SUBJ 2|0|ROOT 3|2|JCT 4|2|PUNCT
+%cod:	$A
+%spa:	$nia:gi
+*CHI:	can I [^c] can I really [^c] .
+%mor:	mod|can pro:sub|I mod|can pro:sub|I adv|real&dadj-LY .
+%gra:	1|4|AUX 2|4|SUBJ 3|4|AUX 4|0|ROOT 5|4|JCT 6|4|PUNCT
+%cod:	$A $D $B .
+%spa:	$nia:fp $npp:yq .
+%sit:	$ext $why . $mor
+*MOT:	you do [^c] or you don't [^c] .
+%mor:	pro:per|you v|do coord|or pro:per|you mod|do~neg|not .
+%gra:	1|2|SUBJ 2|0|ROOT 3|2|CONJ 4|3|COORD 5|4|OBJ 6|5|NEG 7|2|PUNCT
+%cod:	$B $C .
+%spa:	$npp:pa
+*MOT:	that's it [^c] .
+%mor:	pro:dem|that~cop|be&3S pro:per|it .
+%gra:	1|2|SUBJ 2|0|ROOT 3|2|PRED 4|2|PUNCT
+%cod:	$C
+%spa:	$nia:pa
+%par:	$dog $boy
+@End

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ANNOTATION_DOCUMENT xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.mpi.nl/tools/elan/EAFv2.4.xsd" DATE="2006-03-10T14:56:23-05:00" AUTHOR="unspecified" VERSION="2.4" FORMAT="2.4">
+    <HEADER MEDIA_FILE="" TIME_UNITS="milliseconds">
+        <MEDIA_DESCRIPTOR MEDIA_URL="file:///example.mp4" MIME_TYPE="video/quicktime"/>
+        <PROPERTY NAME="lastUsedAnnotationId">8</PROPERTY>
+        <PROPERTY NAME="@Window:	">
+            224_1384_986_1048_-1_-1_325_0_325_0
+        </PROPERTY>
+        <PROPERTY NAME="@Languages:	">
+            eng
+        </PROPERTY>
+        <PROPERTY NAME="@Participants:	">
+            CHI Target_Child, MOT Mother
+        </PROPERTY>
+        <PROPERTY NAME="@ID:	">
+            eng|example|CHI|||||Target_Child|||
+        </PROPERTY>
+        <PROPERTY NAME="@ID:	">
+            eng|example|MOT|||||Mother|||
+        </PROPERTY>
+        <PROPERTY NAME="@Media:	">
+            example, video
+        </PROPERTY>
+    </HEADER>
+    <TIME_ORDER>
+        <TIME_SLOT TIME_SLOT_ID="ts1" TIME_VALUE="0"/>
+        <TIME_SLOT TIME_SLOT_ID="ts3" TIME_VALUE="0"/>
+        <TIME_SLOT TIME_SLOT_ID="ts5" TIME_VALUE="0"/>
+        <TIME_SLOT TIME_SLOT_ID="ts7" TIME_VALUE="0"/>
+        <TIME_SLOT TIME_SLOT_ID="ts2" TIME_VALUE="2312"/>
+        <TIME_SLOT TIME_SLOT_ID="ts4" TIME_VALUE="2312"/>
+        <TIME_SLOT TIME_SLOT_ID="ts6" TIME_VALUE="2312"/>
+        <TIME_SLOT TIME_SLOT_ID="ts8" TIME_VALUE="2312"/>
+        <TIME_SLOT TIME_SLOT_ID="ts9" TIME_VALUE="2312"/>
+        <TIME_SLOT TIME_SLOT_ID="ts11" TIME_VALUE="2312"/>
+        <TIME_SLOT TIME_SLOT_ID="ts13" TIME_VALUE="2312"/>
+        <TIME_SLOT TIME_SLOT_ID="ts15" TIME_VALUE="2312"/>
+        <TIME_SLOT TIME_SLOT_ID="ts10" TIME_VALUE="4312"/>
+        <TIME_SLOT TIME_SLOT_ID="ts12" TIME_VALUE="4312"/>
+        <TIME_SLOT TIME_SLOT_ID="ts14" TIME_VALUE="4312"/>
+        <TIME_SLOT TIME_SLOT_ID="ts16" TIME_VALUE="4312"/>
+    </TIME_ORDER>
+<TIER TIER_ID="CHI" PARTICIPANT="CHI" LINGUISTIC_TYPE_REF="orthography" DEFAULT_LOCALE="us">
+    <ANNOTATION>
+        <ALIGNABLE_ANNOTATION ANNOTATION_ID="a1" TIME_SLOT_REF1="ts1" TIME_SLOT_REF2="ts2">
+            <ANNOTATION_VALUE>more cookie .</ANNOTATION_VALUE>
+        </ALIGNABLE_ANNOTATION>
+    </ANNOTATION>
+</TIER>
+<TIER TIER_ID="mor@CHI" PARTICIPANT="CHI" LINGUISTIC_TYPE_REF="dependency" DEFAULT_LOCALE="us" PARENT_REF="CHI">
+    <ANNOTATION>
+        <REF_ANNOTATION ANNOTATION_ID="a2" ANNOTATION_REF="a1">
+            <ANNOTATION_VALUE>qn|more n|cookie .</ANNOTATION_VALUE>
+        </REF_ANNOTATION>
+    </ANNOTATION>
+</TIER>
+<TIER TIER_ID="gra@CHI" PARTICIPANT="CHI" LINGUISTIC_TYPE_REF="dependency" DEFAULT_LOCALE="us" PARENT_REF="CHI">
+    <ANNOTATION>
+        <REF_ANNOTATION ANNOTATION_ID="a3" ANNOTATION_REF="a1">
+            <ANNOTATION_VALUE>1|2|QUANT 2|0|INCROOT 3|2|PUNCT</ANNOTATION_VALUE>
+        </REF_ANNOTATION>
+    </ANNOTATION>
+</TIER>
+<TIER TIER_ID="gpx@CHI" PARTICIPANT="CHI" LINGUISTIC_TYPE_REF="dependency" DEFAULT_LOCALE="us" PARENT_REF="CHI">
+    <ANNOTATION>
+        <REF_ANNOTATION ANNOTATION_ID="a4" ANNOTATION_REF="a1">
+            <ANNOTATION_VALUE>points to cookie jar</ANNOTATION_VALUE>
+        </REF_ANNOTATION>
+    </ANNOTATION>
+</TIER>
+<TIER TIER_ID="MOT" PARTICIPANT="MOT" LINGUISTIC_TYPE_REF="orthography" DEFAULT_LOCALE="us">
+    <ANNOTATION>
+        <ALIGNABLE_ANNOTATION ANNOTATION_ID="a5" TIME_SLOT_REF1="ts9" TIME_SLOT_REF2="ts10">
+            <ANNOTATION_VALUE>do you want more cookies ?</ANNOTATION_VALUE>
+        </ALIGNABLE_ANNOTATION>
+    </ANNOTATION>
+</TIER>
+<TIER TIER_ID="mor@MOT" PARTICIPANT="MOT" LINGUISTIC_TYPE_REF="dependency" DEFAULT_LOCALE="us" PARENT_REF="MOT">
+    <ANNOTATION>
+        <REF_ANNOTATION ANNOTATION_ID="a6" ANNOTATION_REF="a5">
+            <ANNOTATION_VALUE>mod|do pro:per|you v|want qn|more n|cookie-PL ?</ANNOTATION_VALUE>
+        </REF_ANNOTATION>
+    </ANNOTATION>
+</TIER>
+<TIER TIER_ID="gra@MOT" PARTICIPANT="MOT" LINGUISTIC_TYPE_REF="dependency" DEFAULT_LOCALE="us" PARENT_REF="MOT">
+    <ANNOTATION>
+        <REF_ANNOTATION ANNOTATION_ID="a7" ANNOTATION_REF="a5">
+            <ANNOTATION_VALUE>1|3|AUX 2|3|SUBJ 3|0|ROOT 4|5|QUANT 5|3|OBJ 6|3|PUNCT</ANNOTATION_VALUE>
+        </REF_ANNOTATION>
+    </ANNOTATION>
+</TIER>
+<TIER TIER_ID="gpx@MOT" PARTICIPANT="MOT" LINGUISTIC_TYPE_REF="dependency" DEFAULT_LOCALE="us" PARENT_REF="MOT">
+    <ANNOTATION>
+        <REF_ANNOTATION ANNOTATION_ID="a8" ANNOTATION_REF="a5">
+            <ANNOTATION_VALUE>looks at child</ANNOTATION_VALUE>
+        </REF_ANNOTATION>
+    </ANNOTATION>
+</TIER>
+    <LINGUISTIC_TYPE LINGUISTIC_TYPE_ID="orthography"/>
+    <LINGUISTIC_TYPE LINGUISTIC_TYPE_ID="no_constraint"/>
+    <LINGUISTIC_TYPE LINGUISTIC_TYPE_ID="included_in" CONSTRAINTS="Included_In"/>
+    <LINGUISTIC_TYPE LINGUISTIC_TYPE_ID="dependency" CONSTRAINTS="Symbolic_Association"/>
+    <LOCALE LANGUAGE_CODE="us" COUNTRY_CODE="EN"/>
+    <CONSTRAINT STEREOTYPE="Symbolic_Association"	DESCRIPTION="1-1 association with a parent annotation"/>
+    <CONSTRAINT STEREOTYPE="Included_In" DESCRIPTION="Time alignable annotations within the parent annotation&apos;s time interval, gaps are allowed"/>
+</ANNOTATION_DOCUMENT>

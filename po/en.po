@@ -1,0 +1,1796 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: talkbank 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-16 00:00+0000\n"
+"PO-Revision-Date: 2026-08-16 00:00+0000\n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+
+#: app/main.c:262
+msgid "Choose at least one file to analyse."
+msgstr ""
+
+#: app/main.c:268
+#, c-format
+msgid "%s needs to know which speaker to analyse. Pick one under “Who to analyse”."
+msgstr ""
+
+#: app/main.c:274
+#, c-format
+msgid "%s needs the language of the transcript."
+msgstr ""
+
+#: app/main.c:281
+#, c-format
+msgid "These files have no %mor tier, which this analysis reads. Run “Morphological analysis” (mor) first, or work on the words of the main tier instead."
+msgstr ""
+
+#: app/main.c:284 app/main.c:302
+msgid "Use words instead"
+msgstr ""
+
+#: app/main.c:304
+#, c-format
+msgid "The files have no %mor tier. Run “Morphological analysis” (mor) on them first, or switch to counting the words of the main tier."
+msgstr ""
+
+#: app/main.c:308
+msgid "Pick a speaker under “Who to analyse”."
+msgstr ""
+
+#: app/main.c:310
+msgid "Choose the language of the transcript."
+msgstr ""
+
+#: app/main.c:312
+msgid "This file is not a valid CHAT transcript. Run “Check the file is valid” (check) to see what is wrong."
+msgstr ""
+
+#: app/main.c:316
+#, c-format
+msgid "The program stopped with code %d. See the Messages tab."
+msgstr ""
+
+#: app/main.c:330
+#, c-format
+msgid "Added -t%mor: the analysis will count words on the main tier."
+msgstr ""
+
+#: app/main.c:378
+msgid "failed"
+msgstr ""
+
+#: app/main.c:386
+#, c-format
+msgid "done in %.1f s"
+msgstr ""
+
+#: app/main.c:400
+#, c-format
+msgid "%u file created"
+msgid_plural "%u files created"
+msgstr[0] ""
+msgstr[1] ""
+
+#: app/main.c:436
+msgid "running…"
+msgstr ""
+
+#: app/main.c:455
+#, c-format
+msgid "Showing %s"
+msgstr ""
+
+#: app/main.c:458
+msgid "This file is not readable as text."
+msgstr ""
+
+#: app/main.c:459
+msgid "Could not open the file."
+msgstr ""
+
+#: app/main.c:525
+msgid "Choose the folder with your transcripts"
+msgstr ""
+
+#: app/main.c:672
+msgid "Command line copied."
+msgstr ""
+
+#: app/main.c:738
+msgid "Choose an analysis"
+msgstr ""
+
+#: app/main.c:740
+msgid "Pick one from the list on the left. “Start here” holds the six commands you need most often."
+msgstr ""
+
+#: app/main.c:745
+msgid "TalkBank"
+msgstr ""
+
+#: app/main.c:758
+msgid "What it does"
+msgstr ""
+
+#: app/main.c:760
+msgid "Example from the manual"
+msgstr ""
+
+#: app/main.c:766
+msgid "All options for this program"
+msgstr ""
+
+#: app/main.c:777
+#, c-format
+msgid "%u file selected"
+msgid_plural "%u files selected"
+msgstr[0] ""
+msgstr[1] ""
+
+#: app/main.c:778
+msgid "Files"
+msgstr ""
+
+#: app/main.c:782
+msgid "Folder…"
+msgstr ""
+
+#: app/main.c:784
+msgid "Select all"
+msgstr ""
+
+#: app/main.c:792
+msgid "This folder has no files"
+msgstr ""
+
+#: app/main.c:793
+msgid "Use the Folder button to go where your transcripts are."
+msgstr ""
+
+#: app/main.c:800
+msgid "not a transcript"
+msgstr ""
+
+#: app/main.c:814
+msgid "Show the file"
+msgstr ""
+
+#: app/main.c:826
+msgid "Who to analyse"
+msgstr ""
+
+#: app/main.c:827
+msgid "Read from the @Participants header of the files you selected. Leave everything off to analyse all speakers."
+msgstr ""
+
+#: app/main.c:831
+msgid "No speaker found yet"
+msgstr ""
+
+#: app/main.c:832
+msgid "Select a CHAT file above and the speakers will appear here."
+msgstr ""
+
+#: app/main.c:859
+msgid "Options"
+msgstr ""
+
+#: app/main.c:873
+msgid "Language of the transcript"
+msgstr ""
+
+#: app/main.c:874
+msgid "Rule set this analysis needs (+l)"
+msgstr ""
+
+#: app/main.c:884
+msgid "Word to search for (+s)"
+msgstr ""
+
+#: app/main.c:890
+msgid "Extra tiers to include"
+msgstr ""
+
+#: app/main.c:892
+#, c-format
+msgid "Annotation lines below each utterance: %mor is morphology, %gra syntax"
+msgstr ""
+
+#: app/main.c:910
+msgid "Include repetitions and retracings"
+msgstr ""
+
+#: app/main.c:911
+msgid "CLAN leaves them out by default (+r6)"
+msgstr ""
+
+#: app/main.c:912
+msgid "Ignore upper and lower case"
+msgstr ""
+
+#: app/main.c:913
+msgid "Treat all files as one corpus"
+msgstr ""
+
+#: app/main.c:914
+msgid "One combined result instead of one per file (+u)"
+msgstr ""
+
+#: app/main.c:915
+msgid "Include subfolders"
+msgstr ""
+
+#: app/main.c:916
+msgid "Also save the result to a file"
+msgstr ""
+
+#: app/main.c:917
+msgid "Creates a .cex file next to your data (+f)"
+msgstr ""
+
+#: app/main.c:919
+msgid "Spreadsheet layout"
+msgstr ""
+
+#: app/main.c:922
+msgid "Other options, typed"
+msgstr ""
+
+#: app/main.c:1025
+msgid "The language will be applied next time you start TalkBank."
+msgstr ""
+
+#: app/main.c:1068 app/main.c:1308
+msgid "Preferences"
+msgstr ""
+
+#: app/main.c:1072
+msgid "Appearance"
+msgstr ""
+
+#: app/main.c:1075 app/main.c:1085
+msgid "Same as the system"
+msgstr ""
+
+#: app/main.c:1077
+msgid "Language"
+msgstr ""
+
+#: app/main.c:1085
+msgid "Light"
+msgstr ""
+
+#: app/main.c:1085
+msgid "Dark"
+msgstr ""
+
+#: app/main.c:1087
+msgid "Theme"
+msgstr ""
+
+#: app/main.c:1094
+msgid "Output text size"
+msgstr ""
+
+#: app/main.c:1101
+msgid "Behaviour"
+msgstr ""
+
+#: app/main.c:1103
+msgid "Show the command line"
+msgstr ""
+
+#: app/main.c:1104
+msgid "The line you could type in a terminal to get the same result"
+msgstr ""
+
+#: app/main.c:1105
+msgid "Warn before running"
+msgstr ""
+
+#: app/main.c:1106
+msgid "Check that the files have what the analysis needs"
+msgstr ""
+
+#: app/main.c:1107
+msgid "Include repetitions by default"
+msgstr ""
+
+#: app/main.c:1108
+msgid "Save results to a file by default"
+msgstr ""
+
+#: app/main.c:1122
+msgid "Folders"
+msgstr ""
+
+#: app/main.c:1124 app/main.c:1302
+msgid "Working folder"
+msgstr ""
+
+#: app/main.c:1127
+msgid "Change…"
+msgstr ""
+
+#: app/main.c:1134
+msgid "CLAN lib folder"
+msgstr ""
+
+#: app/main.c:1140
+msgid "CLAN programs"
+msgstr ""
+
+#: app/main.c:1159
+msgid "Graphical front-end for the CLAN programs (Computerized Language ANalysis), part of the CHILDES/TalkBank project."
+msgstr ""
+
+#: app/main.c:1169 app/main.c:1307
+msgid "Recent commands"
+msgstr ""
+
+#: app/main.c:1177
+msgid "Nothing has been run yet in this session."
+msgstr ""
+
+#: app/main.c:1211
+msgid "Output"
+msgstr ""
+
+#: app/main.c:1222
+msgid "Messages"
+msgstr ""
+
+#: app/main.c:1234
+msgid "New files"
+msgstr ""
+
+#: app/main.c:1272 app/main.c:1373
+msgid "Analyses"
+msgstr ""
+
+#: app/main.c:1280
+msgid "Search an analysis"
+msgstr ""
+
+#: app/main.c:1309
+msgid "About TalkBank"
+msgstr ""
+
+#: app/main.c:1355
+msgid "Copy the command line"
+msgstr ""
+
+#: app/main.c:1363
+msgid "Run"
+msgstr ""
+
+#: app/catalog.c:9
+msgid "Count words"
+msgstr ""
+
+#: app/catalog.c:10
+msgid "Counts how many times each word appears and computes the type/token ratio, the usual measure of vocabulary variety."
+msgstr ""
+
+#: app/catalog.c:13
+msgid "Mean length of utterance (MLU)"
+msgstr ""
+
+#: app/catalog.c:14
+#, c-format
+msgid "Average number of morphemes per utterance, the classic index of grammatical development. It counts on the %mor tier, so the file must have been run through MOR first."
+msgstr ""
+
+#: app/catalog.c:17
+msgid "Find a word in context"
+msgstr ""
+
+#: app/catalog.c:18
+msgid "Shows every line containing the word you searched for, together with the surrounding utterances, so you can read it in context."
+msgstr ""
+
+#: app/catalog.c:21
+msgid "Search word combinations"
+msgstr ""
+
+#: app/catalog.c:22
+msgid "Finds sequences and combinations of words. Use ^ for \"immediately followed by\", + for \"or\": +s\"kitty^kitty\" finds kitty said twice in a row."
+msgstr ""
+
+#: app/catalog.c:25
+msgid "Extract marked sections"
+msgstr ""
+
+#: app/catalog.c:26
+msgid "Pulls out the parts of the transcript marked with @bg and @eg headers, for example a single activity or task, so you can analyse it separately."
+msgstr ""
+
+#: app/catalog.c:29
+msgid "Check the file is valid"
+msgstr ""
+
+#: app/catalog.c:30
+msgid "Verifies that the transcript follows the CHAT rules and reports every error with its line number. Run this before any analysis."
+msgstr ""
+
+#: app/catalog.c:35
+msgid "Word frequency by position"
+msgstr ""
+
+#: app/catalog.c:36
+msgid "Counts words according to where they sit in the utterance: first, second, last. Useful for studying word order."
+msgstr ""
+
+#: app/catalog.c:38
+msgid "Word frequency inside each section"
+msgstr ""
+
+#: app/catalog.c:39
+msgid "Like counting words, but reported separately for each marked section (gem)."
+msgstr ""
+
+#: app/catalog.c:41
+msgid "Sound frequency"
+msgstr ""
+
+#: app/catalog.c:42
+#, c-format
+msgid "Counts the phonemes on the %pho tier and shows where in the word each one occurs."
+msgstr ""
+
+#: app/catalog.c:44
+msgid "Length histograms"
+msgstr ""
+
+#: app/catalog.c:45
+msgid "Distribution of the length of words, utterances and turns, in characters and morphemes."
+msgstr ""
+
+#: app/catalog.c:47
+msgid "Longest words and utterances"
+msgstr ""
+
+#: app/catalog.c:48
+msgid "Finds the longest words, or with +g2 the longest utterances. Used for the MLU of the five longest utterances (MLU5)."
+msgstr ""
+
+#: app/catalog.c:51
+msgid "Lexical diversity (VOCD)"
+msgstr ""
+
+#: app/catalog.c:52
+msgid "Computes the D index, a measure of vocabulary richness that, unlike the type/token ratio, does not depend on sample length."
+msgstr ""
+
+#: app/catalog.c:55
+msgid "Table of parts of speech"
+msgstr ""
+
+#: app/catalog.c:56
+msgid "Spreadsheet with how often each part of speech and each bound morpheme is used."
+msgstr ""
+
+#: app/catalog.c:58
+msgid "Table of MC codes"
+msgstr ""
+
+#: app/catalog.c:59
+msgid "Spreadsheet of the coded categories entered with the coder mode."
+msgstr ""
+
+#: app/catalog.c:61
+msgid "Repeated lines"
+msgstr ""
+
+#: app/catalog.c:62
+msgid "Reports lines that appear more than once, handy for cleaning up word lists."
+msgstr ""
+
+#: app/catalog.c:66
+msgid "Mean length of turn (MLT)"
+msgstr ""
+
+#: app/catalog.c:67
+msgid "Counts utterances, turns and words per speaker, and their ratios. Unlike MLU it also counts lines with unintelligible material (xxx)."
+msgstr ""
+
+#: app/catalog.c:70
+msgid "Full child language profile"
+msgstr ""
+
+#: app/catalog.c:71
+msgid "Runs a whole battery of measures at once (MLU, DSS, IPSyn, vocabulary, errors) and compares the child against a reference database. The best starting point for a clinical profile."
+msgstr ""
+
+#: app/catalog.c:75
+msgid "Developmental Sentence Score"
+msgstr ""
+
+#: app/catalog.c:76
+msgid "Assigns the DSS score, which weights the grammatical structures used in 50 sentences. Needs a speaker and a language."
+msgstr ""
+
+#: app/catalog.c:79
+msgid "Index of Productive Syntax"
+msgstr ""
+
+#: app/catalog.c:80
+#, c-format
+msgid "Scores the variety of syntactic structures produced, adding a %syn tier to the file."
+msgstr ""
+
+#: app/catalog.c:82
+msgid "Fluency and disfluency measures"
+msgstr ""
+
+#: app/catalog.c:83
+msgid "Counts repetitions, revisions, filled pauses and blocks, the measures used in stuttering research."
+msgstr ""
+
+#: app/catalog.c:85
+msgid "SUGAR measures"
+msgstr ""
+
+#: app/catalog.c:86
+msgid "MLU, total number of words, clauses per sentence and words per sentence, following the SUGAR protocol."
+msgstr ""
+
+#: app/catalog.c:89
+msgid "Summary profile with comparison"
+msgstr ""
+
+#: app/catalog.c:90
+msgid "Spreadsheet with duration, MLU, type/token ratio, error percentages, parts of speech, repetitions and revisions, compared against a reference database."
+msgstr ""
+
+#: app/catalog.c:93
+msgid "Summary profile, file by file"
+msgstr ""
+
+#: app/catalog.c:94
+msgid "Same measures as the summary profile, but reported separately for each file."
+msgstr ""
+
+#: app/catalog.c:96
+msgid "Speech duration"
+msgstr ""
+
+#: app/catalog.c:97
+msgid "Uses the timestamps linked to the media to compute words and utterances per minute of speech."
+msgstr ""
+
+#: app/catalog.c:99
+msgid "Parent-child exchanges"
+msgstr ""
+
+#: app/catalog.c:100
+msgid "Measures how much each speaker repeats, expands or changes what the other just said. Needs the two speakers given with +b (source) and +c (response)."
+msgstr ""
+
+#: app/catalog.c:103
+msgid "What follows what"
+msgstr ""
+
+#: app/catalog.c:104
+msgid "Contingency table showing which code tends to follow which other code."
+msgstr ""
+
+#: app/catalog.c:106
+msgid "Average distance between items"
+msgstr ""
+
+#: app/catalog.c:107
+msgid "How many utterances typically separate two occurrences of the same word or code."
+msgstr ""
+
+#: app/catalog.c:109
+msgid "Words occurring together"
+msgstr ""
+
+#: app/catalog.c:110
+msgid "Lists the clusters of words that recur next to each other."
+msgstr ""
+
+#: app/catalog.c:112
+msgid "Chains of codes across turns"
+msgstr ""
+
+#: app/catalog.c:113
+msgid "Follows a code through the conversation to see how long it stays active."
+msgstr ""
+
+#: app/catalog.c:115
+msgid "Transcription reliability"
+msgstr ""
+
+#: app/catalog.c:116
+msgid "Compares two transcriptions of the same recording and reports where they disagree."
+msgstr ""
+
+#: app/catalog.c:120
+msgid "List the sections of a file"
+msgstr ""
+
+#: app/catalog.c:121
+msgid "Shows the structure of the gems in the transcript, to see what can be extracted."
+msgstr ""
+
+#: app/catalog.c:123
+msgid "Repetitions between speakers"
+msgstr ""
+
+#: app/catalog.c:124
+msgid "Finds where one speaker repeats what another just said."
+msgstr ""
+
+#: app/catalog.c:126
+msgid "Mark reformulations"
+msgstr ""
+
+#: app/catalog.c:127
+msgid "Adds a %ret tier coding retracings and self-corrections."
+msgstr ""
+
+#: app/catalog.c:129
+msgid "Compare target and actual pronunciation"
+msgstr ""
+
+#: app/catalog.c:130
+#, c-format
+msgid "Matches the words on the %mod tier against how they were actually produced on %pho."
+msgstr ""
+
+#: app/catalog.c:132
+msgid "Join wrapped tiers"
+msgstr ""
+
+#: app/catalog.c:133
+msgid "Puts tiers split over several lines back onto a single line."
+msgstr ""
+
+#: app/catalog.c:135
+msgid "Number the lines"
+msgstr ""
+
+#: app/catalog.c:136
+msgid "Adds line numbers, useful when reporting errors to a colleague."
+msgstr ""
+
+#: app/catalog.c:140
+#, c-format
+msgid "Morphological analysis (creates %mor)"
+msgstr ""
+
+#: app/catalog.c:141
+#, c-format
+msgid "Adds the %mor tier with part of speech and morphemes for every word. This is the step that unlocks MLU, DSS, IPSyn and the profiles. Needs a MOR grammar for the language of the transcript."
+msgstr ""
+
+#: app/catalog.c:145
+#, c-format
+msgid "Disambiguate %mor"
+msgstr ""
+
+#: app/catalog.c:146
+msgid "Where MOR proposed several analyses for a word, POST picks the right one using the context."
+msgstr ""
+
+#: app/catalog.c:148
+#, c-format
+msgid "Grammatical relations (creates %gra)"
+msgstr ""
+
+#: app/catalog.c:149
+#, c-format
+msgid "Adds the %gra tier with the syntactic dependencies between words: subject, object, modifier."
+msgstr ""
+
+#: app/catalog.c:151
+msgid "Fix leftover errors after POST"
+msgstr ""
+
+#: app/catalog.c:152
+msgid "Corrects the analyses POST could not resolve."
+msgstr ""
+
+#: app/catalog.c:153
+msgid "Compare %trn with %mor"
+msgstr ""
+
+#: app/catalog.c:154
+msgid "Reports where the manual coding on %trn disagrees with the automatic %mor."
+msgstr ""
+
+#: app/catalog.c:156
+msgid "Inspect a POST database"
+msgstr ""
+
+#: app/catalog.c:157
+msgid "Prints the contents of a trained POST database."
+msgstr ""
+
+#: app/catalog.c:158
+msgid "Train a POST database"
+msgstr ""
+
+#: app/catalog.c:159
+msgid "Builds a new disambiguation database from files already disambiguated by hand."
+msgstr ""
+
+#: app/catalog.c:161
+msgid "Apply POST modification rules"
+msgstr ""
+
+#: app/catalog.c:162
+msgid "Runs the rule file that adjusts POST output."
+msgstr ""
+
+#: app/catalog.c:163
+msgid "Handle compound words"
+msgstr ""
+
+#: app/catalog.c:164
+msgid "Prepares the compound word list POST uses."
+msgstr ""
+
+#: app/catalog.c:165
+#, c-format
+msgid "Create the %mod tier"
+msgstr ""
+
+#: app/catalog.c:166
+#, c-format
+msgid "Derives the target pronunciation tier %mod from %pho."
+msgstr ""
+
+#: app/catalog.c:169
+msgid "CHAT to Elan"
+msgstr ""
+
+#: app/catalog.c:170
+msgid "Converts a transcript to Elan XML, for annotating video."
+msgstr ""
+
+#: app/catalog.c:171
+msgid "Elan to CHAT"
+msgstr ""
+
+#: app/catalog.c:172
+msgid "Imports an Elan annotation as a CHAT transcript."
+msgstr ""
+
+#: app/catalog.c:173
+msgid "CHAT to Praat"
+msgstr ""
+
+#: app/catalog.c:174
+msgid "Produces a Praat TextGrid for acoustic analysis."
+msgstr ""
+
+#: app/catalog.c:175
+msgid "Praat to CHAT"
+msgstr ""
+
+#: app/catalog.c:176
+msgid "Imports a Praat TextGrid as a CHAT transcript."
+msgstr ""
+
+#: app/catalog.c:177
+msgid "LENA to CHAT"
+msgstr ""
+
+#: app/catalog.c:178
+msgid "Imports the XML produced by a LENA recorder."
+msgstr ""
+
+#: app/catalog.c:179
+msgid "LIPP to CHAT"
+msgstr ""
+
+#: app/catalog.c:180
+msgid "Imports transcripts in LIPP format."
+msgstr ""
+
+#: app/catalog.c:181
+msgid "SALT to CHAT"
+msgstr ""
+
+#: app/catalog.c:182
+msgid "Imports transcripts in SALT format."
+msgstr ""
+
+#: app/catalog.c:183
+msgid "Subtitles to CHAT"
+msgstr ""
+
+#: app/catalog.c:184
+msgid "Turns an SRT subtitle file into a transcript with time links."
+msgstr ""
+
+#: app/catalog.c:185
+msgid "Plain text to CHAT"
+msgstr ""
+
+#: app/catalog.c:186
+msgid "Turns a plain text file into a CHAT transcript, adding the required headers."
+msgstr ""
+
+#: app/catalog.c:188
+msgid "Datavyu to CHAT"
+msgstr ""
+
+#: app/catalog.c:189
+msgid "Imports coding done in Datavyu."
+msgstr ""
+
+#: app/catalog.c:192
+msgid "Normalise formatting"
+msgstr ""
+
+#: app/catalog.c:193
+msgid "Fixes spacing and layout so the file matches the current CHAT conventions."
+msgstr ""
+
+#: app/catalog.c:195
+msgid "Split multi-utterance tiers"
+msgstr ""
+
+#: app/catalog.c:196
+msgid "Puts each utterance on its own tier when several ended up on one line."
+msgstr ""
+
+#: app/catalog.c:198
+msgid "Repair media time links"
+msgstr ""
+
+#: app/catalog.c:199
+msgid "Rebuilds and realigns the bullets that link the transcript to audio or video."
+msgstr ""
+
+#: app/catalog.c:201
+msgid "Normalise end-of-utterance marks"
+msgstr ""
+
+#: app/catalog.c:202
+msgid "Makes sure every utterance ends with a proper delimiter."
+msgstr ""
+
+#: app/catalog.c:203
+msgid "Indent CA overlaps"
+msgstr ""
+
+#: app/catalog.c:204
+msgid "Lays out overlapping speech the way Conversation Analysis expects."
+msgstr ""
+
+#: app/catalog.c:206
+msgid "Move quoted speech to its own tier"
+msgstr ""
+
+#: app/catalog.c:207
+msgid "Takes reported speech at the end of a line and puts it on a separate tier."
+msgstr ""
+
+#: app/catalog.c:209
+msgid "Convert to lower case"
+msgstr ""
+
+#: app/catalog.c:210
+msgid "Lower-cases every word except proper nouns and the words you list as exceptions."
+msgstr ""
+
+#: app/catalog.c:212
+msgid "Search and replace in bulk"
+msgstr ""
+
+#: app/catalog.c:213
+msgid "Applies a list of substitutions across many files at once."
+msgstr ""
+
+#: app/catalog.c:215
+#, c-format
+msgid "Create the plain text tier (%flo)"
+msgstr ""
+
+#: app/catalog.c:216
+msgid "Adds a simplified version of each utterance, without codes or annotations."
+msgstr ""
+
+#: app/catalog.c:218
+#, c-format
+msgid "Create the orthography tier (%ort)"
+msgstr ""
+
+#: app/catalog.c:219
+msgid "Adds the standard spelling of what was said."
+msgstr ""
+
+#: app/catalog.c:220
+msgid "Compare against a reference script"
+msgstr ""
+
+#: app/catalog.c:221
+msgid "Aligns a transcript with the script the speaker was reading, for reading studies."
+msgstr ""
+
+#: app/catalog.c:223
+msgid "Reorder dependent tiers"
+msgstr ""
+
+#: app/catalog.c:224
+msgid "Puts the dependent tiers of every utterance into a consistent order."
+msgstr ""
+
+#: app/catalog.c:226
+msgid "Compute ages and dates"
+msgstr ""
+
+#: app/catalog.c:227
+msgid "Works out the child's age from the birth date and recording date in the headers."
+msgstr ""
+
+#: app/catalog.c:229
+msgid "Merge two dependent tiers"
+msgstr ""
+
+#: app/catalog.c:230
+msgid "Combines the content of two dependent tiers into one."
+msgstr ""
+
+#: app/catalog.c:251
+msgid "Start here"
+msgstr ""
+
+#: app/catalog.c:252
+msgid "Counts and vocabulary"
+msgstr ""
+
+#: app/catalog.c:253
+msgid "Measures and profiles"
+msgstr ""
+
+#: app/catalog.c:254
+msgid "Search"
+msgstr ""
+
+#: app/catalog.c:255
+msgid "Morphology"
+msgstr ""
+
+#: app/catalog.c:256
+msgid "Convert formats"
+msgstr ""
+
+#: app/catalog.c:257
+msgid "Check and clean up"
+msgstr ""
+
+msgid "CHILDES archive"
+msgstr ""
+
+msgid "Loading the archive catalogue…"
+msgstr ""
+
+msgid "The list of corpora is public: no account is needed to browse it."
+msgstr ""
+
+msgid "CHILDES"
+msgstr ""
+
+msgid "Showing the list saved %d days ago; updating in the background."
+msgstr ""
+
+msgid "Could not reach the archive"
+msgstr ""
+
+msgid "Check your internet connection. The catalogue will be saved once downloaded, so this only needs to work the first time."
+msgstr ""
+
+msgid "Try again"
+msgstr ""
+
+msgid "Search a corpus"
+msgstr ""
+
+msgid "Collections"
+msgstr ""
+
+msgid "A collection groups corpora by language or by clinical group. A corpus is one research project's transcripts, usually a few children recorded over months or years."
+msgstr ""
+
+msgid "%u corpus"
+msgid_plural "%u corpora"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%u transcript"
+msgid_plural "%u transcripts"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Results"
+msgstr ""
+
+msgid "%u corpus found"
+msgid_plural "%u corpora found"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "audio"
+msgstr ""
+
+msgid "video"
+msgstr ""
+
+msgid "What this is"
+msgstr ""
+
+msgid "Transcripts"
+msgstr ""
+
+msgid "Media"
+msgstr ""
+
+msgid "partly missing or not aligned"
+msgstr ""
+
+msgid "Documentation"
+msgstr ""
+
+msgid "Open the corpus page"
+msgstr ""
+
+msgid "Description, history and the citation to use"
+msgstr ""
+
+msgid "Copy the reference"
+msgstr ""
+
+msgid "Reference copied."
+msgstr ""
+
+msgid "Contents"
+msgstr ""
+
+msgid "Loading details…"
+msgstr ""
+
+msgid "Details are not available right now"
+msgstr ""
+
+msgid "Languages"
+msgstr ""
+
+msgid "Study design"
+msgstr ""
+
+msgid "Activity"
+msgstr ""
+
+msgid "Group"
+msgstr ""
+
+msgid "Transcripts with media"
+msgstr ""
+
+msgid "Participants"
+msgstr ""
+
+msgid "Show who was recorded"
+msgstr ""
+
+msgid "Loaded on demand: on a large corpus this can take a while"
+msgstr ""
+
+msgid "Loading…"
+msgstr ""
+
+msgid "Could not load the participants"
+msgstr ""
+
+msgid "No participant information"
+msgstr ""
+
+msgid "%u recording"
+msgid_plural "%u recordings"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Age of the target child"
+msgstr ""
+
+msgid "from %a to %b years"
+msgstr ""
+
+msgid "Get it"
+msgstr ""
+
+msgid "Save into"
+msgstr ""
+
+msgid "Download this corpus"
+msgstr ""
+
+msgid "Download"
+msgstr ""
+
+msgid "Where to save the corpora"
+msgstr ""
+
+msgid "A download is already running."
+msgstr ""
+
+msgid "starting…"
+msgstr ""
+
+msgid "extracting…"
+msgstr ""
+
+msgid "Download failed: %s"
+msgstr ""
+
+msgid "Corpus downloaded."
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "Sign in to download. Nearly all CHILDES data needs a free account."
+msgstr ""
+
+msgid "TalkBank account"
+msgstr ""
+
+msgid "Needed only to download data: browsing the catalogue is free. An account is free too — register on talkbank.org with an email address."
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "Test connection"
+msgstr ""
+
+msgid "Checks the credentials against talkbank.org"
+msgstr ""
+
+msgid "Test"
+msgstr ""
+
+msgid "Fill in both fields first."
+msgstr ""
+
+msgid "Connecting…"
+msgstr ""
+
+msgid "Signed in. This system has no password store, so the password is kept only until you close TalkBank."
+msgstr ""
+
+msgid "Signed in. The session lasts about a day."
+msgstr ""
+
+msgid "Email or password not recognised."
+msgstr ""
+
+msgid "This account has not been confirmed yet. Check your inbox."
+msgstr ""
+
+msgid "TalkBank answered: %s"
+msgstr ""
+
+msgid "Sign out"
+msgstr ""
+
+msgid "Forgets the saved password and closes the session"
+msgstr ""
+
+msgid "not found"
+msgstr ""
+
+msgid "Downloaded corpora"
+msgstr ""
+
+msgid "chosen when you download the first corpus"
+msgstr ""
+
+msgid "Browse the CHILDES archive"
+msgstr ""
+
+msgid "Batchalign"
+msgstr ""
+
+msgid "Checking whether Batchalign is available…"
+msgstr ""
+
+msgid "Start Batchalign and run"
+msgstr ""
+
+msgid "Batchalign is running"
+msgstr ""
+
+msgid "Batchalign is not installed"
+msgstr ""
+
+msgid "It is a separate TalkBank tool. This app works fully without it: you only need it for speech recognition, media alignment, and morphology in languages the classic MOR grammars do not cover."
+msgstr ""
+
+msgid "Copy the installation command"
+msgstr ""
+
+msgid "Copied"
+msgstr ""
+
+msgid "Batchalign is installed but not running"
+msgstr ""
+
+msgid "It will be started when you run a task, and stopped when you close TalkBank. The first run downloads several gigabytes of models."
+msgstr ""
+
+msgid "Media and transcription"
+msgstr ""
+
+msgid "What can I do?"
+msgstr ""
+
+msgid "This analysis needs the %mor tier"
+msgstr ""
+
+msgid "The %mor tier holds the morphological analysis of every word. Three ways forward:"
+msgstr ""
+
+msgid "Count words instead"
+msgstr ""
+
+msgid "Create it with MOR"
+msgstr ""
+
+msgid "The classic MOR grammars only cover English, French, Spanish and Chinese, so for these files they are not an option."
+msgstr ""
+
+msgid "Create it with Batchalign (UD)"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "This task needs a recording: select an audio file, or put one next to the transcript."
+msgstr ""
+
+msgid "Batchalign finished."
+msgstr ""
+
+msgid "Transcribe audio into a CHAT file"
+msgstr ""
+
+msgid "Turns a recording into a transcript, with speakers separated and utterances segmented. Runs locally with Whisper; no account or key is needed."
+msgstr ""
+
+msgid "Link the transcript to the recording"
+msgstr ""
+
+msgid "Aligns an existing transcript with its audio, so every utterance carries the time when it was said and you can play it back."
+msgstr ""
+
+msgid "Create the %mor and %gra tiers"
+msgstr ""
+
+msgid "Adds morphology and grammatical relations using Universal Dependencies. Covers around 26 languages, where the classic MOR grammars only cover English, French, Spanish and Chinese."
+msgstr ""
+
+msgid "Split into utterances"
+msgstr ""
+
+msgid "Restores utterance boundaries and punctuation in a transcript that has none."
+msgstr ""
+
+msgid "Work out who is speaking"
+msgstr ""
+
+msgid "Separates the voices in a recording and assigns each utterance to a speaker."
+msgstr ""
+
+msgid "Translate the transcript"
+msgstr ""
+
+msgid "Adds a translation tier to each utterance."
+msgstr ""
+
+msgid "Filter by metadata"
+msgstr ""
+
+msgid "Needs a one-off index of the archive"
+msgstr ""
+
+msgid "indexed: %u corpus"
+msgid_plural "indexed: %u corpora"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Only corpora with audio or video"
+msgstr ""
+
+msgid "all"
+msgstr ""
+
+msgid "Build the metadata index"
+msgstr ""
+
+msgid "Asks the archive about every corpus once, so language and study type can be filtered across the whole of CHILDES. Takes a couple of minutes; the result is saved."
+msgstr ""
+
+msgid "Build"
+msgstr ""
+
+msgid "Indexed %u corpus."
+msgid_plural "Indexed %u corpora."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "TalkBank archive"
+msgstr ""
+
+msgid "TalkBank collections"
+msgstr ""
+
+msgid "Each bank gathers the transcripts of one research area. CHILDES is child language; PhonBank is phonological development; the others cover aphasia, dementia, bilingualism, classrooms and more."
+msgstr ""
+
+msgid "%u folder"
+msgid_plural "%u folders"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Search in this bank"
+msgstr ""
+
+msgid "Browse"
+msgstr ""
+
+msgid "A corpus is one research project's transcripts. Depending on the bank it sits directly here or one level down, inside a language or clinical group."
+msgstr ""
+
+msgid "Inside"
+msgstr ""
+
+msgid "Checking whether this folder can be downloaded…"
+msgstr ""
+
+msgid "Not a downloadable corpus"
+msgstr ""
+
+msgid "This folder groups other folders. Open one of them to download it."
+msgstr ""
+
+msgid "Written permission required"
+msgstr ""
+
+msgid "This bank is restricted: ask macw@cmu.edu for access, then sign in again."
+msgstr ""
+
+msgid "Sign in to download"
+msgstr ""
+
+msgid "Could not check; try anyway"
+msgstr ""
+
+msgid "Sign in to download. Nearly all TalkBank data needs a free account."
+msgstr ""
+
+msgid "%u folder found"
+msgid_plural "%u folders found"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Showing the first 120; narrow the search to see the rest"
+msgstr ""
+
+msgid "Needs a one-off index of this bank"
+msgstr ""
+
+msgid "Asks the archive about every folder of this bank once, so language and study type can be filtered across it. Takes a few minutes; the result is saved."
+msgstr ""
+
+msgid "Sign in first: the archive answers the same for every folder to signed-out visitors."
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Could not open %s: %e"
+msgstr ""
+
+msgid "Save the changes?"
+msgstr ""
+
+msgid "The current transcript has unsaved changes."
+msgstr ""
+
+msgid "Discard"
+msgstr ""
+
+msgid "Could not save: %e"
+msgstr ""
+
+msgid "Saved."
+msgstr ""
+
+msgid "Save before closing?"
+msgstr ""
+
+msgid "Close without saving"
+msgstr ""
+
+msgid "Save and close"
+msgstr ""
+
+msgid "No problems · %u utterances"
+msgstr ""
+
+msgid "%u error"
+msgid_plural "%u errors"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%u warning"
+msgid_plural "%u warnings"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "line %u"
+msgstr ""
+
+msgid "Choose the working folder"
+msgstr ""
+
+msgid "Analyse this"
+msgstr ""
+
+msgid "Go to the analyses with this file selected"
+msgstr ""
+
+msgid "No transcript open"
+msgstr ""
+
+msgid "Pick one from the list on the left, or choose another folder."
+msgstr ""
+
+msgid "The format is correct"
+msgstr ""
+
+msgid "Format check"
+msgstr ""
+
+msgid "Home"
+msgstr ""
+
+msgid "Pick up where you left off"
+msgstr ""
+
+msgid "last analysis: %s"
+msgstr ""
+
+msgid "Resume"
+msgstr ""
+
+msgid "Welcome"
+msgstr ""
+
+msgid "This app works on CHAT transcripts: plain-text recordings of talk, the format used by CHILDES and the other TalkBank collections. You need a folder of them to start."
+msgstr ""
+
+msgid "Get a corpus from TalkBank"
+msgstr ""
+
+msgid "Thousands of transcripts, free with an account. This is the usual way to start."
+msgstr ""
+
+msgid "Browse the archive"
+msgstr ""
+
+msgid "What would you like to do?"
+msgstr ""
+
+msgid "Open a folder of transcripts"
+msgstr ""
+
+msgid "Read, edit and check the files you already have"
+msgstr ""
+
+msgid "Download a corpus"
+msgstr ""
+
+msgid "Browse TalkBank: CHILDES, PhonBank, AphasiaBank and twelve more"
+msgstr ""
+
+msgid "Transcribe audio or video"
+msgstr ""
+
+msgid "Automatic transcription and alignment with Batchalign"
+msgstr ""
+
+msgid "Run an analysis"
+msgstr ""
+
+msgid "Word counts, MLU, searches: the 70 CLAN programs"
+msgstr ""
+
+msgid "Recent transcripts"
+msgstr ""
+
+msgid "Recent folders"
+msgstr ""
+
+msgid "New to CHAT transcripts?"
+msgstr ""
+
+msgid "What the files contain, and the order to do things in"
+msgstr ""
+
+msgid "A transcript is a text file"
+msgstr ""
+
+msgid "Lines starting with @ describe the recording, lines starting with * are what someone said, lines starting with % are annotations added on top."
+msgstr ""
+
+msgid "The %mor tier is what most analyses need"
+msgstr ""
+
+msgid "It marks the part of speech of every word. Freshly transcribed files almost never have it; MOR or Batchalign can add it."
+msgstr ""
+
+msgid "The usual order"
+msgstr ""
+
+msgid "Get the files → check the format → add %mor if it is missing → run the analysis."
+msgstr ""
+
+msgid "Open the full guide"
+msgstr ""
+
+msgid "No transcript in this folder"
+msgstr ""
+
+msgid "%s so far"
+msgstr ""
+
+msgid "extracting %d of %t"
+msgstr ""
+
+msgid "Finished"
+msgstr ""
+
+msgid "This corpus is already downloading."
+msgstr ""
+
+msgid "%s downloaded."
+msgstr ""
+
+msgid "Corpus downloaded"
+msgstr ""
+
+msgid "%s is ready in %p"
+msgstr ""
+
+msgid "Downloads"
+msgstr ""
+
+msgid "No downloads yet"
+msgstr ""
+
+msgid "Clear finished"
+msgstr ""
+
+msgid "Archive"
+msgstr ""
+
+msgid "Download everything in here"
+msgstr ""
+
+msgid "%c folders below, %t transcripts in all"
+msgstr ""
+
+msgid "Download all"
+msgstr ""
+
+msgid "Nothing to download here"
+msgstr ""
+
+msgid "This folder has no transcripts under it."
+msgstr ""
+
+msgid "Looking for corpora…"
+msgstr ""
+
+msgid "Asking the archive which folders below this one can be downloaded."
+msgstr ""
+
+msgid "%n folders checked, %q to go"
+msgstr ""
+
+msgid "Everything here needs a separate permission: write to macw@cmu.edu."
+msgstr ""
+
+msgid "No downloadable corpus found under this folder."
+msgstr ""
+
+msgid "%u transcript in all"
+msgid_plural "%u transcripts in all"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Into %p"
+msgstr ""
+
+msgid "%k corpus needs a separate permission and will be skipped."
+msgid_plural "%k corpora need a separate permission and will be skipped."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "The archive is deeper than one search can cover: this is a partial list. Repeat it on the subfolders to get the rest."
+msgstr ""
+
+msgid "Download %u corpus?"
+msgid_plural "Download %u corpora?"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "waiting"
+msgstr ""
+
+msgid "cancelled"
+msgstr ""
+
+msgid "Those corpora are already downloading."
+msgstr ""
+
+msgid "Download failed"
+msgstr ""
+
+msgid "%u corpus downloaded."
+msgid_plural "%u corpora downloaded."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%u corpus downloaded, %f failed."
+msgid_plural "%u corpora downloaded, %f failed."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Ready in %p"
+msgstr ""
+
+msgid "Cancel all"
+msgstr ""
+
+msgid "Cancel this download"
+msgstr ""
+
+msgid "%c folder below"
+msgid_plural "%c folders below"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%t transcript in all"
+msgid_plural "%t transcripts in all"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Checking up to %u folders to see which ones can be downloaded."
+msgstr ""
+
+msgid "%n folders checked"
+msgstr ""
+
+msgid "The archive is not answering right now"
+msgstr ""
+
+msgid "Some folders could not be checked, so this list would be incomplete. Try again in a few minutes."
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "About %s, transcripts only — media files are not included."
+msgstr ""
+
+msgid "%u of these is already on disk and will be skipped."
+msgid_plural "%u of these are already on disk and will be skipped."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%t transcripts in %n folder need a separate permission and will be skipped."
+msgid_plural "%t transcripts in %n folders need a separate permission and will be skipped."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%u folder could not be checked and was left out."
+msgid_plural "%u folders could not be checked and were left out."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Partial list: stopped after checking %u folders."
+msgstr ""
+
+msgid "Download again"
+msgstr ""
+
+msgid "Keep looking"
+msgstr ""
+
+msgid "Download these"
+msgstr ""
+
+msgid "These files are part of %s"
+msgstr ""
+
+msgid "Download the whole corpus instead: %u transcript."
+msgid_plural "Download the whole corpus instead: %u transcripts."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Go to the corpus"
+msgstr ""
+
+msgid "Nothing left to download: it is all already here."
+msgstr ""
+
+msgid "This bank needs separate permission"
+msgstr ""
+
+msgid "Paused — sign in to continue"
+msgstr ""
+
+msgid "Paused — the download folder is full"
+msgstr ""
+
+msgid "This folder is not a downloadable corpus"
+msgstr ""
+
+msgid "Cancelled"
+msgstr ""
+
+msgid "The downloaded file is damaged"
+msgstr ""
+
+msgid "Not enough free space"
+msgstr ""
+
+msgid "Could not write to disk"
+msgstr ""
+
+msgid "Network error"
+msgstr ""
+
+msgid "%u download is still running."
+msgid_plural "%u downloads are still running."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Closing now stops them. Nothing half-downloaded is left behind."
+msgstr ""
+
+msgid "Close anyway"
+msgstr ""
+
+msgid "This folder is inside a corpus"
+msgstr ""
+
+msgid "%t transcript here"
+msgid_plural "%t transcripts here"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Find the corpus"
+msgstr ""
+
+msgid "%d of %u corpora downloaded."
+msgstr ""

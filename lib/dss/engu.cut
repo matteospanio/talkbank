@@ -1,0 +1,114 @@
+@UTF8
+#Points:  IP |PP |MV |SV |NG |CNJ|IR |WHQ|
+#         a   b   c   d   e   f   g   h
+
+STARTRULES: +punc +indef-pns +per-pns +noun-phrases +main-verbs +secondary-verbs +negatives +conjunctions +interrogative-reversal +wh-question
+
+RULENAME: punc
+ FOCUS: .+?
+ POINTS:
+
+RULENAME: indef-pns (A)
+ FOCUS: pron|it*+pron|this*+pron|that*
+ POINTS: A1
+ FOCUS: det|some*+adj|more*+det|all*+num|*+adj|other*+det|another*+pron|some*
+ POINTS: A3
+ FOCUS: pron|no*+(det|no*^pron|one*)
+ POINTS: A4
+ FOCUS: pron|any*+det|any*+pron|any*+det|every*+pron|every*+adj|every*+det|both*+adj|few*+det|many*+det|each*+det|several*+det|most*+adj|least*+adj|last*+adj|second*+adj|third*+adj|next*+adj|first*
+ POINTS: A7
+
+# Z rules-   noun phrases
+# these rules are used in conjunction with C or D to assign C or D points
+# they do not assign their own points
+
+RULENAME: noun-phrases (Z)
+ FOCUS: noun|*
+ POINTS: Z
+
+RULENAME: per-pns (B)
+ FOCUS: pron|*-Prs*-S1+pron|*-Prs-S2
+ POINTS: B1
+ FOCUS: pron|he-*+pron|him-*+pron|his-*+pron|she-*+pron|her-*+pron|hers-*
+ POINTS: B2
+ FOCUS: *pron|we*+pron|us*+pron|our*+pron|th*-Prs+pron|*-P3
+ POINTS: B3
+ FOCUS: adj|own*+pron|oneself*+pron|*ever-*
+ POINTS: B7
+ FOCUS: pron|*-Acc*
+ POINTS: B5
+ FOCUS:	pron|wh*+(adv|how^adj|much*)+(adv|how^adj|many*)
+ POINTS: B6
+
+RULENAME: main-verbs (C)
+ FOCUS: (aux|get*^verb|*-Part-Past*)+(*aux|be*^verb|*-Part-Past*)+(aux|must*^verb|*)+(aux|shall*^verb|*)+(aux|have*^verb|*-Part-Past*)+(aux|have*^verb|get*-Fin*-Past*)
+  POINTS: C7
+  FOCUS: (verb|*-Past*)+(verb|*-S3)+(aux|be*-Past*)+(aux|be*-P3*)
+  POINTS: C2
+  FOCUS: (aux|can*^verb|*)+(aux|can*~part|not^verb|*)+(*aux|will*^verb|*)+(aux|may*^verb|*)
+  POINTS: C4
+  FOCUS: (aux|do*-S^verb|*)+(aux|do*-S^part|not^verb|*)+(*aux|do*-S^pro:per|*^verb|*)+(aux|do*-S~part|not^verb|*)
+  POINTS: C4
+  FOCUS: (aux|do*-S3^verb|*)+(aux|do*-Past*^verb|*)+(aux|do*-S3*^pro:per|*^verb|*)+(aux|do*-Past*^pro:per|*^verb|*)+(aux|do*-S3*~part|not)+(aux|do*-Past*~part|not)
+  POINTS: C6
+  FOCUS: (aux|*ould-*^aux|*)+(aux|might-*^aux|*)+(aux|*ould-*^verb|*)+(aux|might-*^verb|*)+(aux|*ould-*^part|not^verb|*)+(aux|might-*^part|not^verb|*)+(aux|*ould-*~part|not^verb|*)+(aux|might-*~part|not^verb|*)+(aux|*ould-*^pro:per|*^verb|*)+(aux|might-*^pro:per|*^verb|*)+(aux|*ould-*^pron|*)
+  POINTS: C6
+  FOCUS: (verb|*-Ind*)+(verb|*-S)+(aux|be*-S3)+(*~aux|be*-S3)+(aux|be*-S3^verb|*-Part*-Pres*)
+  POINTS: C1
+  FOCUS: (aux|have*^aux|be-Part-Past*^verb|*-Part*-Pres*)+(aux|*^aux|have*^verb|*-Part*-Past*)+(aux|*^aux|be*^verb|*-Part*-Pres*)+(aux|*^aux|be^verb|*-Part*-Pres*)
+  POINTS: C8
+
+RULENAME: secondary-verbs (D)
+ FOCUS: (verb|want^part|to)+(*|go*-Part*-Pres*^part|to)+(verb|let*^pron|*)+(verb|let*~pron|*)+(*|go*-Part*-Pres*~part|to)+(verb|want~part|to)+(aux|got*~part|to)+(verb|go*-Part*-Pres*~part|to)+(verb|go*-Part*-Pres*~part|to)+(aux|*-Fin-S^verb|*)
+ POINTS: D2
+ FOCUS: (adj|*^part|to)+(verb|*^part|to^verb|*)
+ POINTS:D3
+ FOCUS: (verb|*^pron|*-Acc*^part|to)+(verb|*^noun|*^par|to)+(verb|*^pron|*^verb|*)+(verb|*^noun|*^verb|*)+(verb|*^part|to^verb|*)+(verb|*^pron|*-Acc*^aux|*)+(verb|*^pron|*-Acc*~aux|*)
+ POINTS: D5
+ FOCUS: (noun|*^verb|*-Part-Past-S)+(noun|*^verb|*-Ger-S)
+ POINTS: D4
+ FOCUS: (part|to^aux|*^verb|*-Part-Past*)+(verb|*^verb|*-Ger-S)
+ POINTS: D7
+ FOCUS: (noun|*-Ger)+(verb|*-Ger-S)
+ POINTS: D8
+
+RULENAME: negatives (E)
+ FOCUS: (pron|it*~aux|be*^part|not)+(pron|*-Dem-*^aux|be*^part|not)
+ POINTS: E1
+ FOCUS: (aux|can-*~part|not)+(aux|do-*~part|not)
+ POINTS: E4
+ FOCUS: (aux|be*-Pres-S3~part|not)+(aux|will-*~part|not)
+ POINTS: E5
+ FOCUS:(aux|*^part|not)+(aux|*~part|not)+(*~aux|*^part|not)
+ POINTS: E7
+
+RULENAME: conjunctions (F)
+FOCUS: cconj|and
+ POINTS: F3
+ FOCUS: cconj|but+adv|so+sconj|if+cconj|or
+ POINTS: F5
+ FOCUS: sconj|because
+ POINTS: F6
+ FOCUS: (adv|*^pron|wh*)+(adv|as^adj|*^adp|as)+(verb|*^adp|like)+(aux|*^adp|like)+(adj|*-Cmp*^adp|than)+(adv|how^part|to^verb|*)+(verb|*^adv|where^part|to^verb|*)+(verb|*^adv|where)+adp|until+sconj|unless+adp|since+adv|before+adv|after+adp|for
+ POINTS: F8
+
+RULENAME: interrogative-reversal (G)
+  FOCUS: &aux|be-*^*^verb|*-Part-Pres*
+ POINTS: G4
+ FOCUS: &aux|be-*
+ POINTS: G1
+ FOCUS: &aux|do*+&aux|can*+&aux|will*+&aux|shall*
+ POINTS: G6
+ FOCUS: &aux|have-*+&aux|*ould-*+&aux|may-*+&aux|might-*
+ POINTS: G8
+
+RULENAME: wh-question (H)
+  FOCUS: &pron|whose-*+&pron|which-*^noun|*
+ POINTS: H8
+ FOCUS: &pron|wh*-*+&det|what-*+&adv|where-*+&adv|how-*
+ POINTS: H2
+ FOCUS:	&adv|when-*+&adv|how*
+ POINTS: H4
+ FOCUS: adv|why*+adv|how_about+pron|why*
+ POINTS: H7
+

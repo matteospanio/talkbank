@@ -1,0 +1,20 @@
+[package]
+name = "talkbank-archive"
+description = "TalkBank archive client: catalogue, metadata, access, downloads"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+reqwest = { version = "0.13", default-features = false, features = ["rustls", "webpki-roots", "json", "cookies", "stream", "charset", "http2"] }
+futures-util = "0.3"
+zip = { version = "8", default-features = false, features = ["deflate"] }
+
+[dev-dependencies]
+tempdir = "0.3"
+tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }

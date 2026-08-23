@@ -1,0 +1,84 @@
+@UTF8
+@Window:	224_1384_986_1048_-1_-1_2293_0_2293_0
+@Begin
+@Languages:	eng
+@Participants:	CHI Target_Child, MOT Mother
+@ID:	eng|change_me_later|CHI|7;10.||||Target_Child|||
+@ID:	eng|change_me_later|MOT|||||Mother|||
+@Birth of CHI:	15-JUL-1977
+@Date:	05-JUN-1985
+@Comment:	ID=LD121
+@Comment:	Environment is child's home
+@Time Start:	00:00
+*CHI:	what are we gonna do ?
+*MOT:	you can play with any toy you want .
+*CHI:	I want the truck .
+*CHI:	I want the red truck .
+*MOT:	push the truck .
+*CHI:	uhoh, the truck turned over .
+*CHI:	I want a drink .
+%com:	Mother and child leave the room to get a drink
+*MOT:	are you done with the truck ?
+*CHI:	yeah [% response] .
+%com:	Child's response to a question
+%def:	response
+@Comment:	little brother cries
+*MOT:	wait nickey hold on .
+*MOT:	(1:3.) sorry about that .
+*CHI:	we drive a car .
+*CHI:	(8.) we don't play with those .
+*MOT:	nickey, what movie did you go see ?
+*CHI:	it was called <&-um (5.)> [/?] ghost xxx +/.
+*CHI:	called <&-um (0.5)> [/?] ghostbusters .
+*CHI:	it was called <&-um (.)> [/?] ghostbusters .
+%com:	Mother looking out the window, Mother picks up the trucks, Mother
+	looks at the books
+*MOT:	show me the book .
+*CHI:	there [% pointing to the tv ] .
+*CHI:	that's a xxx +...
+%com:	abandoned utterance
+*CHI:	it was a xxx +/.
+%com:	interrupted utterance
+*MOT:	what is it ?
+*CHI:	me go [% ev] up [% op-sp] .
+@Comment:	EV = Early aquired verb, OP-SP = Object pronoun used for
+	subject
+*CHI:	<I want> [/?] I want a &-um that one .
+*CHI:	no the ↫gre↫gre(en) [/] red one !
+*MOT:	look at the <the red truck> [>] .
+*CHI:	<no> [<] I want that one !
+*CHI:	that is like dad's and the yours .
+%com:	pointing to the truck
+*CHI:	those are the babies and the houses .
+*CHI:	but those are the babies'z toys .
+*CHI:	so the bird goes and tells the cat to go home .
+*CHI:	the cat loved the bird .
+*CHI:	but the bird went [% goed] because man was leaving .
+*CHI:	I'm tired .
+*MOT:	you're tired because it's late .
+*MOT:	you'll have to go because they've maked dinner .
+*CHI:	they're really nice because they goed [% went] .
+*CHI:	the cat doesn't like the food so it won't [% willn't] eat but it
+	can't go hungry .
+*MOT:	where's he going ?
+*CHI:	he 0is going home .
+*MOT:	where does the boy go ?
+*CHI:	boy goes here .
+*MOT:	do you want some ?
+*CHI:	0 .
+%act:	nods yes .
+*CHI:	see my vrrrm@c .
+*CHI:	I want &-th xxx +/.
+*CHI:	I need it .
+@Comment:	The following are test words
+*CHI:	kittens dad's mary's loved goes tells can't doesn't he's we're I'm
+	I'll I'd we've .
+*CHI:	monies plays babies baby's babies'z cries cried cries crying skies
+	dishes bosses .
+*CHI:	pages cups pens catches runs .
+*CHI:	stopped stopping died dying dropped dropping bagged bagging pitted
+	pitting .
+*CHI:	padded padding hummed humming pinned pinning cooked cooking .
+*CHI:	running buzzing regretting putting admitting jumping sewing going .
+*CHI:	he (ha)s what (doe)s why (di)d let's .
+@End

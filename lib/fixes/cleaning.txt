@@ -1,0 +1,40 @@
+Cleaning transcripts before running requires these steps:
+1.  Run status.sh and pull.sh to update the local database
+
+2.  CLAN: In order to make things run more smoothly, it is best to remove the %mor and %gra which are easy to add back later.  
+trim -t%mor -t%gra +re *.cha +1
+longtier *.cha +1
+
+3. CLAN: expand the [x N] notations folder by folder with this CLAN command:
+kwal -d90 +d +f +t@ +t% *.cha +1 +re
+
+4. Fix old uses of & to &~ using temp in CLAN
+
+5.  For English only, remove pluses from compounds in the Terminal using
+noplus.pl *.cha
+find /path/to/chat/dir -name '*.cha' -print0 | xargs -0 noplus.pl 
+
+6.  CLAN: run rep-comp.cut and rep-join.cut with CHSTRING. They are in /fixes
+chstring +crep-comp.cut *.cha +1
+chstring +crep-join.cut *.cha +1
+chstring +crep-under.cut *.cha +1
+
+7. CLAN: run MOR +xb *.cha to make sure all compounds were recognized
+add any missing ones to the lexicon
+
+8. BBEdit: to remove repetition marks next to fillers and fragments (both & and &+)
+Filler1: \&\+([a-z]+) \[\/\] \&\+([a-z]+) Replace: \&\+\1 \&\+\1  (with grep)
+Filler2:  \&([a-z]+) \[\/\] \&([a-z]+)  Replace: \&\1 \&\1  (with grep)
+Find: &-um [/] &-um Replace: &-um &-um  (without grep)
+Find: &-uh [/] &-uh Replace: &-uh &-uh (without grep)
+
+9.  run Chatter and fix errors
+
+10.  remove all *.ulx files
+
+11:  If there is no audio, you are finished, if there is audio, continue with batchalign
+(assumes miniconda is installed and batchalign is downloaded)
+conda activate batchalign
+batchalign ~/mfa_data/input ~/mfa_data/output --prealigned  (transcript has bullets)
+or
+if transcripts have audio but no bullets, then use F5 to hand align and then run above command

@@ -1,0 +1,16 @@
+# credentials — must never reach the repository
+.env
+
+# build output
+/build/
+/target/
+/talkbank
+
+# compiled translations
+*.mo
+
+# the CLAN and CHAT manuals: large PDFs, downloaded from talkbank.org
+*.pdf
+
+# macOS leftovers from the original tarball
+.DS_Store

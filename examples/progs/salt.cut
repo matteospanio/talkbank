@@ -1,0 +1,80 @@
+@UTF8
+$  Child, Mother
++  ID LD121.
++  DOB is 7/15/77.
++  environment is child's home.
++  DOE 6/5/85
++ CA: 7;10
+-  00:00
+C  What are we gonna do?
+M  You  can play with any toy you want.
+-  2:00
+C  I want the truck.
+C  I want the red truck.
+M  push the truck.
+-  3:00
+C  Uhoh, the truck turn/ed over.
+C  I want a drink.
+=  Mother and child leave the room to get a drink.
+M  Are you done with the truck?
+C  Yeah [response].
++  [response]
+=  Child's response to a question.
++  little brother cries.
+M  wait Nickey hold on.
+:  01:03
+M  Sorry about that.
+C  We drive a car.
+;  00:08
+C  We don't play with those.
+M  Nickey, what movie did you go see?
+C  It was called (um 0:05) ghost^
+C  called (um :5) ghostbusters.
+C  It was called (um :) ghostbusters.
+=  Mother looking out the window.
+=  Mother picks up the trucks.
+=  Mother looks at the books.
+M  Show me the book.
+C  There {pointing to the TV }.
+C  That/'s a>
+=  abandoned utterance.
+C  It was a ^
+=  interrupted utterance.
+M  What is it?
+C  Me go[EV] up [OP-SP].
++  [EV] = Early aquired verb.
++  [OP-SP] = Object pronoun used for subject.
+C  (I want) I want  a (um) that one.
+C  No the (gre*,  gre*) red one!
+M  Look at the <the red truck>.
+C  <No> I want that one!
+C  That is like dad/z and the yours.
+=  pointing to the truck
+C  Those are the baby/s and the house/s.
+C  But those are the baby/s/z  toys.
+C  So the bird go/3s and tell/3s the cat to go home.
+C  The cat love/ed the bird.
+C  But the bird went {go/ed} because man was leave/ing.
+C  I/'m  tired.
+M  You/'re tired because it/'s late.
+M  You/'ll have to go because they/'ve make/ed dinner.
+C  They/'re really nice because they go/ed {went}.
+C  The cat does/n't like the food so it won't {will/n't} eat but it can/'t go hungry.
+M  Where/'s he go/ing?
+C  he *is go/ing home.
+M  Where does the boy go?
+C  Boy go*/3s here.
+M  do you want some?
+C  {nods yes}.
+C  see my %vrrrm.
+C  I want th*^
+C  I need it.
++ The following are test words
+C kitten/s dad/z mary/z love/ed go/3s tell/3s can/'t does/n't he/'s we/'re i/'m i/'ll i/'d we/'ve.
+C money/S play/3s baby/s baby/z baby/s/z cry/3s cry/ed cry/s cry/ing sky/s dish/s boss/s.
+C page/s cup/s pen/s catch/3s run/3s.
+C stop/ED stop/ING die/ed die/ING drop/ED drop/ING bag/ED bag/ING pit/ED pit/ING.
+C pad/ED pad/ING hum/ED hum/ING pin/ED pin/ING cook/ED cook/ING.
+C run/ING buzz/ING regret/ING put/ING admit/ING jump/ING sew/ING go/ING.
+C he/h's what/d's why/d'd let/'us.
+

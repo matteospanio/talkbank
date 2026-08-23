@@ -1,0 +1,21 @@
+[package]
+name = "talkbank-engine"
+description = "Runs the CLAN programs and reads CHAT files"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+thiserror.workspace = true
+tracing.workspace = true
+nix = { version = "0.30", features = ["term"] }
+libc = "0.2"
+
+# The CHAT format has an authority: chatter. We use its parser instead of reading
+# the format by hand. It is not on crates.io, and its own book warns that "any
+# release may change which files validate" — hence the pinned tag.
+talkbank-transform = { git = "https://github.com/TalkBank/chatter", tag = "v0.12.0", default-features = false }
+talkbank-model     = { git = "https://github.com/TalkBank/chatter", tag = "v0.12.0" }
+
+[dev-dependencies]
+tempdir = "0.3"

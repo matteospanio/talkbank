@@ -1,0 +1,17 @@
+@UTF8
+@Window:	224_1384_986_1048_-1_-1_325_0_325_0
+@Begin
+@Languages:	eng
+@Participants:	CHI Target_Child, MOT Mother
+@ID:	eng|example|CHI|||||Target_Child|||
+@ID:	eng|example|MOT|||||Mother|||
+@Media:	example, video
+*CHI:	more cookie . 0_2312
+%mor:	qn|more n|cookie .
+%gra:	1|2|QUANT 2|0|INCROOT 3|2|PUNCT
+%gpx:	points to cookie jar
+*MOT:	do you want more cookies ? 2312_4312
+%mor:	mod|do pro:per|you v|want qn|more n|cookie-PL ?
+%gra:	1|3|AUX 2|3|SUBJ 3|0|ROOT 4|5|QUANT 5|3|OBJ 6|3|PUNCT
+%gpx:	looks at child
+@End

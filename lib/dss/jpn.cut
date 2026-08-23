@@ -1,0 +1,760 @@
+@UTF8
+#Release 2009 05 29
+# (updated 2011jul8)
+# (updated 2013mar26; adapted to JMOR06)
+# (updated 2020feb10; adapted to JMOR08)
+# (updated 2024apr1; adapted to UD)
+
+#Points:  |VM|VL|ADJ|COP|CNJ|NP|CASFQ|ADV|SMOD|FINP|
+#              A     B   C        D     E     F        G         H           I        J
+#+vmiddle +vlast +vadj +adjnoun +cop +comp +conj +conj-ptl +np +case-ptl +foc-ptl +adv +final-ptl +smod
+#
+#######################################################################
+STARTRULES: +punc +nphrase +adjnoun +cop +comp +vmiddle +vlast +vadj +conj +case-foc-quot-ptl +adv +final-ptl +smod
+#######################################################################
+RULENAME: punc
+ FOCUS: .+?
+ POINTS:
+
+###############################################################################
+#  elaborated noun phrase  F  #       (combinations before isolated use)
+###############################################################################
+RULENAME: nphrase
+#to exclude "no da" constructions###
+ FOCUS: sconj|の^aux|だ-Inf-S
+ POINTS:
+
+#### N+no+(N)  F2
+# Papa no (kutsu)  F2
+ FOCUS: ptl:attr|no=GEN
+ POINTS: F2
+
+#### A+N  F2
+# oishiku nai gohan  F2
+ FOCUS: adj|*-Pos-S1^adj|無い-Pos-S1^noun|*
+ POINTS: F2 C3
+# oishii gohan  F2
+ FOCUS: adj|*-Pos-S1^noun|*
+ POINTS: F2 C1
+# oishikatta gohan F2
+ FOCUS: adj|*-Pos-S1^aux|た-Inf-S^noun|*
+ POINTS: F2 C1
+
+#### N to N  F3
+# gohan to raisu   F3
+ FOCUS: noun|*^adp|と^noun|*
+ POINTS: F3
+
+#### adn + ^n*|    F3
+# ookina hito ; konna hito  F3
+ FOCUS: adj|大きな-Pos-S1^noun|*+adj|小さな-Pos-S1^noun|*+adj|色んな-Pos-S1^noun|*+adj|大きな-Pos-S1^part|ね^noun|*+adj|小さな-Pos-S1^part|ね^noun|*+adj|色んな-Pos-S1^part|ね^noun|*+pron|*んな-Int-S1^noun|*+pron|*んな-Int-S1^part|ね^noun|*
+ POINTS: F3
+
+#### cop + ^n*|  F3
+# janai hito  D3 F3
+ FOCUS: aux|だ-Inf-S^aux|ない-Inf-S^noun|*
+ POINTS: D3 F3
+
+# datta hito  D4 F3
+ FOCUS: aux|だ-Inf-S^aux|た-Inf-S^noun|*
+ POINTS: D4 F3
+
+#### verben + ^n*|  F3
+# taberaretakunakatta   B1 A1 A2 A4 F3
+ FOCUS: aux|られる-Inf-S^aux|たい-Inf-S^adj|無い-Pos-S1^aux|た-Inf-S^noun|*+aux|れる-Inf-S^aux|たい-Inf-S^adj|無い-Pos-S1^aux|た-Inf-S^noun|*
+ POINTS: B1 A1 A2 A4 F3
+# taberaretakunai  B1 A1 A2 A4 F3
+### FOCUS: *PASS-DESID-ADV*^v:ir:sub|ar&NEG-PRES=be^n*|*
+ FOCUS: aux|られる-Inf-S^aux|たい-Inf-S^adj|無い-Pos-S1^noun|*+aux|れる-Inf-S^aux|たい-Inf-S^adj|無い-Pos-S1^noun|*
+ POINTS: B1 A1 A2 A4 F3
+# taberaretakatta  B1 A2 A4 F3
+### FOCUS: *PASS-DESID-PAST*^n*|*
+ FOCUS: aux|られる-Inf-S^aux|たい-Inf-S^aux|た-Inf-S^noun|*+aux|れる-Inf-S^aux|たい-Inf-S^aux|た-Inf-S^noun|*
+ POINTS: B1 A2 A4 F3
+# taberaretai  B1 A2 A4 F3
+### FOCUS: *PASS-DESID-PRES*^n*|*
+ FOCUS: aux|られる-Inf-S^aux|たい-Inf-S^noun|*+aux|れる-Inf-S^aux|たい-Inf-S^noun|*
+ POINTS: B1 A2 A4 F3
+# taberarechawanakatta   B1 A1 A1 A1 A4 F3
+### FOCUS: *PASS-COMPL-NEG-PAST*^n*|*
+ FOCUS: aux|られる-Inf-S^aux|ちゃう-Inf-S^aux|ない-Inf-Neg-S^aux|た-Inf-S^noun|*+aux|れる-Inf-S^aux|ちゃう-Inf-S^aux|ない-Inf-Neg-S^aux|た-Inf-S^noun|*
+ POINTS: B1 A1 A1 A1 A4 F3
+# taberarechawanai  B1 A1 A1 A4 F3
+### FOCUS: *PASS-COMPL-NEG-PRES*^n*|*
+ FOCUS: aux|られる-Inf-S^aux|ちゃう-Inf-S^aux|ない-Inf-Neg-S^noun|*+aux|れる-Inf-S^aux|ちゃう-Inf-S^aux|ない-Inf-Neg-S^noun|*
+ POINTS: B1 A1 A1 A4 F3
+# taberarechaimashita  B1 A1 A1 A2 A4 F3
+### FOCUS: *PASS-COMPL-POL-PAST*^n*|*
+ FOCUS: aux|られる-Inf-S^aux|ちゃう-Inf-S^aux|ます-Inf-S^aux|た-Inf-S^noun|*+aux|れる-Inf-S^aux|ちゃう-Inf-S^aux|ます-Inf-S^aux|た-Inf-S^noun|*
+ POINTS: B1 A1 A1 A2 A4 F3
+# taberarechaimasu  B1 A1 A2 A4 F3
+### FOCUS: *PASS-COMPL-POL-PRES*^n*|*
+ FOCUS: aux|られる-Inf-S^aux|ちゃう-Inf-S^aux|ます-Inf-S^noun|*+aux|れる-Inf-S^aux|ちゃう-Inf-S^aux|ます-Inf-S^noun|*
+ POINTS: B1 A1 A2 A4 F3
+ # taberarechatta  B1 A1 A4 F3
+### FOCUS: *PASS-COMPL-PAST*^n*|*
+ FOCUS: aux|られる-Inf-S^aux|ちゃう-Inf-S^aux|た-Inf-S^noun|*+aux|れる-Inf-S^aux|ちゃう-Inf-S^aux|た-Inf-S^noun|*
+ POINTS: B1 A1 A4 F3
+# taberarechau  B1 A1 A4 F3
+### FOCUS: *PASS-COMPL-PRES*^n*|*
+ FOCUS: aux|られる-Inf-S^aux|ちゃう-Inf-S^noun|*+aux|れる-Inf-S^aux|ちゃう-Inf-S^noun|*
+ POINTS: B1 A1 A4 F3
+# taberarenakatta   B1 A1 A4 F3
+### FOCUS: *PASS-NEG-PAST*^n*|*
+ FOCUS: aux|られる-Inf-S^aux|ない-Inf-Neg-S^aux|た-Inf-S^noun|*+aux|れる-Inf-S^aux|ない-Inf-Neg-S^aux|た-Inf-S^noun|*
+ POINTS: B1 A1 A4 F3
+# taberarenai  B1 A1 A4 F3
+### FOCUS: *PASS-NEG-PRES*^n*|*
+ FOCUS: aux|られる-Inf-S^aux|ない-Inf-Neg-S^noun|*+aux|れる-Inf-S^aux|ない-Inf-Neg-S^noun|*
+ POINTS: B1 A1 A4 F3
+# taberaremashita  B1 A2 A4 F3
+### FOCUS: *PASS-POL-PAST*^n*|*
+ FOCUS: aux|られる-Inf-S^aux|ます-Inf-S^aux|た-Inf-S^noun|*+aux|れる-Inf-S^aux|ます-Inf-S^aux|た-Inf-S^noun|*
+ POINTS: B1 A2 A4 F3
+# taberareta  B1 A4 F3
+### FOCUS: *PASS-PAST*^n*|*
+ FOCUS: aux|られる-Inf-S^aux|た-Inf-S^noun|*+aux|れる-Inf-S^aux|た-Inf-S^noun|*
+ POINTS: B1 A4 F3
+# taberareru  B1 A4 F3
+### FOCUS: *PASS-PRES*^n*|*
+ FOCUS: aux|られる-Inf-S^noun|*+aux|れる-Inf-S^noun|*
+ POINTS: B1 A4 F3
+##################### POT not separated from PASS られる-た for vowel verbs, and STEM (走れない -> 走る-ない) for consonant verbs, resp.
+# tabetakunakatta   B1 A1 A2 F3
+### FOCUS: *DESID-ADV^v:ir:sub|ar&NEG-PAST=be^n*|*
+ FOCUS: aux|たい-Inf-S^adj|無い-Pos-S1^aux|た-Inf-S^noun|*
+ POINTS: B1 A1 A2 F3
+# tabetakunai  B1 A1 A2 F3
+### FOCUS: *DESID-NEG-PRES*^n*|*
+ FOCUS: aux|たい-Inf-S^adj|無い-Pos-S1^noun|*
+ POINTS: B1 A1 A2 F3
+# tabetakatta  B1 A2 F3
+### FOCUS: *DESID-PAST^n*|*
+ FOCUS: aux|たい-Inf-S^aux|た-Inf-S^noun|*
+ POINTS: B1 A2 F3
+# tabetai  B1 A2 F3
+### FOCUS: *DESID-PRES*^n*|*
+ FOCUS: aux|たい-Inf-S^noun|*
+ POINTS: B1 A2 F3
+# tabechawanakatta   B1 A1 A1 A1 F3
+### FOCUS: *COMPL-NEG-PAST^n*|*
+ FOCUS: aux|ちゃう-Inf-S^aux|ない-Inf-Neg-S^aux|た-Inf-S^noun|*
+ POINTS: B1 A1 A1 A1 F3
+# tabechawanai  B1 A1 A1 F3
+### FOCUS: *COMPL-NEG-PRES*^n*|*
+ FOCUS: aux|ちゃう-Inf-S^aux|ない-Inf-Neg-S^noun|*
+ POINTS: B1 A1 A1 F3
+ # tabechatta  B1 A1 F3
+### FOCUS: *COMPL-PAST^n*|*
+ FOCUS: aux|ちゃう-Inf-S^aux|た-Inf-S^noun|*
+ POINTS: B1 A1 F3
+# tabechau  B1 A1 F3
+### FOCUS: *COMPL-PRES*^n*|*
+ FOCUS: aux|ちゃう-Inf-S^noun|*
+ POINTS: B1 A1 F3
+# tabemashita  B1 A2 F3
+### FOCUS: *POL-PAST^n*|*
+ FOCUS: aux|ます-Inf-S^aux|た-Inf-S^noun|*
+ POINTS: B1 A2 F3
+# tabenakatta   B1 A1 F3
+### FOCUS: *NEG-PAST^n*|*
+ FOCUS: aux|ない-Inf-Neg-S^aux|た-Inf-S^noun|*
+ POINTS: B1 A1 F3
+# tabenai  B1 A1 F3
+### FOCUS: *NEG-PRES*^n*|*
+ FOCUS: aux|ない-Inf-Neg-S^noun|*
+ POINTS: B1 A1 F3
+# tabeta  B1 F3
+### FOCUS: *PAST^n*|*
+ FOCUS: aux|た-Inf-S^noun|*
+ POINTS: B1 F3
+# taberu  B1 F3
+### FOCUS: *PRES*^n*|*
+ FOCUS: verb|*-Inf-S^noun|*
+ POINTS: B1 F3
+
+
+
+#### AN+na+N   F5
+# kiree na hito F5
+ FOCUS: adj|*-Pos-S1^aux|だ-Inf-S^noun|*
+ POINTS: D4 F5
+
+
+
+#### V+ SNR
+####### first exclude noda
+# no da  (no QUD point)
+ FOCUS: sconj|の^aux|だ-Inf-S
+ POINTS: B1 D1
+# no datta  (no QUD point)
+ FOCUS: sconj|の^aux|だ-Inf-S^aux|た-Inf-S
+ POINTS: B1 D4
+####### then search for SNR
+# (chigau/chiisai) no ga (atta)  F5 G1
+ FOCUS: sconj|の^adp|ga+sconj|の^adp|ni
+ POINTS: F5 G1
+# (chigau/chiisai) no to (asonda)  F5 G2
+ FOCUS: sconj|の^adp|to+sconj|の^adp|de
+ POINTS: F5 G2
+# (chigau/chiisai) no o (mita)  F5 G3
+ FOCUS: sconj|の^adp|o+sconj|の^adp|kara
+ POINTS: F5 G3
+# (chigau/chiisai) no o (mita)  F5 G5
+ FOCUS: sconj|の^adp|made
+ POINTS: F5 G5
+# (chigau) no mita  F5
+ FOCUS: sconj|no^verb|*
+ POINTS: F5
+
+
+###############################################################################
+# verbal adjectives C   #
+###############################################################################
+RULENAME: vadj
+# oishikatta  C4
+ FOCUS: adj|*-Pos-S1^aux|た-Inf-S
+ POINTS: C4
+# oishiku nakatta  C3
+ FOCUS: adj|*-Pos-S1^aux|無い-Pos-S1^aux|た-Inf-S
+ POINTS: C3
+# oishiku nai  C3
+ FOCUS: adj|*-Pos-S1^aux|無い-Pos-S1
+ POINTS: C3
+# oishiku C3          #######  ADV not separated from PRES
+# oishii  C1
+ FOCUS: adj|*-Pos-S1
+ POINTS: C1
+
+
+###############################################################################
+#  verb middle inflection  A
+###############################################################################
+RULENAME: vmiddle
+################################################## PASS
+# taberareru  (pass)  A4
+# taberaretai  A2 A4
+# taberaretaku nakatta   B1 A1 A2 A4
+### FOCUS: *PASS-DESID-ADV*^v:ir:sub|ar&NEG-PAST=be
+ FOCUS: aux|られる-Inf-S^aux|たい-Inf-S^adj|無い-Pos-S1^aux|た-Inf-S+aux|れる-Inf-S^aux|たい-Inf-S^adj|無い-Pos-S1^aux|た-Inf-S
+ POINTS: B1 A1 A2 A4
+# taberaretaku nakute  B2 A1 A2 A4
+### FOCUS *PASS-DESID-ADV*^v:ir:sub|ar&NEG-CONN=be
+ FOCUS: aux|られる-Inf-S^aux|たい-Inf-S^adj|無い-Pos-S1^sconj|て+aux|れる-Inf-S^aux|たい-Inf-S^adj|無い-Pos-S1^sconj|て
+ POINTS: B2 A1 A2 A4
+############ COND only COND:ba; COND:tara is not separated from PAST (ta)
+# taberaretaku nakereba B3 A1 A2 A4
+### FOCUS *PASS-DESID-NEG-COND:tara* PASS-DESID-NEG:COND:ba*
+ FOCUS: aux|られる-Inf-S^aux|たい-Inf-S^adj|無い-Pos-S1^sconj|ば+aux|れる-Inf-S^aux|たい-Inf-S^adj|無い-Pos-S1^sconj|ば
+ POINTS: B3 A1 A2 A4
+# taberaretaku nai  B1 A1 A2 A4
+### FOCUS: *PASS-DESID-ADV*^v:ir:sub|ar&NEG-PRES=be
+ FOCUS: aux|られる-Inf-S^aux|たい-Inf-S^adj|無い-Pos-S1+aux|れる-Inf-S^aux|たい-Inf-S^adj|無い-Pos-S1
+ POINTS: B1 A1 A2 A4
+
+# taberaretakatta  B1 A2 A4
+### FOCUS: *PASS-DESID-PAST*
+ FOCUS: aux|られる-Inf-S^aux|たい-Inf-S^aux|た-Inf-S+aux|れる-Inf-S^aux|たい-Inf-S^aux|た-Inf-S
+ POINTS: B1 A2 A4
+# taberaretakute  B2  A2 A4
+### FOCUS *PASS-DESID-CONN*
+ FOCUS: aux|られる-Inf-S^aux|たい-Inf-S^sconj|て+aux|れる-Inf-S^aux|たい-Inf-S^sconj|て
+ POINTS: B2 A2 A4
+# taberaretakereba B3 A2 A4
+### FOCUS *PASS-DESID-COND:ba*
+ FOCUS: aux|られる-Inf-S^aux|たい-Inf-S^sconj|ば+aux|れる-Inf-S^aux|たい-Inf-S^sconj|ば
+ POINTS: B3 A2 A4
+# taberaretai  B1 A2 A4
+### FOCUS: *PASS-DESID-PRES*
+ FOCUS: aux|られる-Inf-S^aux|たい-Inf-S+aux|れる-Inf-S^aux|たい-Inf-S
+ POINTS: B1 A2 A4
+
+# taberarechawanakatta   B1 A1 A1 A1 A4
+### FOCUS: *PASS-COMPL-NEG-PAST*
+ FOCUS: aux|られる-Inf-S^aux|ちゃう-Inf-S^aux|ない-Inf-Neg-S^aux|た-Inf-S+aux|れる-Inf-S^aux|ちゃう-Inf-S^aux|ない-Inf-Neg-S^aux|た-Inf-S
+ POINTS: B1 A1 A1 A1 A4
+# taberarechawanaide  B4 A1 A4
+### FOCUS: *PASS-COMPL-NEG-IMP:de*
+ FOCUS: aux|られる-Inf-S^aux|ちゃう-Inf-S^aux|ない-Inf-Neg-S^sconj|て+aux|れる-Inf-S^aux|ちゃう-Inf-S^aux|ない-Inf-Neg-S^sconj|て
+ POINTS: B4 A1 A4
+# taberarechawanakute  B2 A1 A1 A4
+### FOCUS *PASS-COMPL-NEG-CONN*
+ FOCUS: aux|られる-Inf-S^aux|ちゃう-Inf-S^aux|無い-Inf-Neg-S^sconj|て+aux|れる-Inf-S^aux|ちゃう-Inf-S^aux|無い-Inf-Neg-S^sconj|て
+ POINTS: B2 A1 A1 A4
+# taberarechaenakereba B3 A1 A1 A4
+### FOCUS *PASS-COMPL-NEG-COND:tara* PASS-COMPL-NEG:COND:ba*
+ FOCUS: aux|られる-Inf-S^aux|ちゃう-Inf-S^aux|ない-Inf-Neg-S^sconj|ば+aux|れる-Inf-S^aux|ちゃう-Inf-S^aux|ない-Inf-Neg-S^sconj|ば
+ POINTS: B3 A1 A1 A4
+# taberarechawanakucha (ikenai)     B4 A1 A1 A4
+### FOCUS *PASS-COMPL-NEG-CONN&wa
+ FOCUS: aux|られる-Inf-S^aux|ちゃう-Inf-S^aux|無い-Inf-Neg-S^part|ちゃ+aux|れる-Inf-S^aux|ちゃう-Inf-S^aux|無い-Inf-Neg-S^part|ちゃ
+ POINTS: B4 A1 A1 A4
+# taberarechawanaide     B4 A1 A1 A4
+### FOCUS *PASS-COMPL-NEG&IMP:de
+ FOCUS: aux|られる-Inf-S^aux|ちゃう-Inf-S^aux|ない-Inf-Neg-S^sconj|て+aux|れる-Inf-S^aux|ちゃう-Inf-S^aux|ない-Inf-Neg-S^sconj|て
+ POINTS: B4 A1 A1 A4
+########### taberarechawanakucha!    NEG&OBL:wa Not separated from NEG-CONN&wa
+# taberarechawanai  B1 A1 A1 A4
+### FOCUS: *PASS-COMPL-NEG-PRES*
+ FOCUS: aux|られる-Inf-S^aux|ちゃう-Inf-S^aux|ない-Inf-Neg-S+aux|れる-Inf-S^aux|ちゃう-Inf-S^aux|ない-Inf-Neg-S
+ POINTS: B1 A1 A1 A4
+
+# taberarechaimasen  B1 A1 A1  A2 A4
+### FOCUS: *PASS-COMPL-POL-NEG*
+ FOCUS: aux|られる-Inf-S^aux|ちゃう-Inf-S^aux|ます-Inf-S^aux|ず-Inf-Neg-S+aux|れる-Inf-S^aux|ちゃう-Inf-S^aux|ます-Inf-S^aux|ず-Inf-Neg-S
+ POINTS: B1 A1 A1 A2 A4
+ # taberarechaimashita  B1 A1 A2 A4
+### FOCUS: *PASS-COMPL-POL-PAST*
+ FOCUS: aux|られる-Inf-S^aux|ちゃう-Inf-S^aux|ます-Inf-S^aux|た-Inf-S+aux|れる-Inf-S^aux|ちゃう-Inf-S^aux|ます-Inf-S^aux|た-Inf-S
+ POINTS: B1 A1 A2 A4
+# taberarechaimasu  B1 A1 A4
+### FOCUS: *PASS-COMPL-POL-PRES*
+ FOCUS: aux|られる-Inf-S^aux|ちゃう-Inf-S^aux|ます-Inf-S+aux|れる-Inf-S^aux|ちゃう-Inf-S^aux|ます-Inf-S
+ POINTS: B1 A1 A4
+ # taberarechaimashite  B2  A1 A2 A4
+### FOCUS *PASS-COMPL-POL-CONN*
+ FOCUS: aux|られる-Inf-S^aux|ちゃう-Inf-S^aux|ます-Inf-S^ sconj|て+aux|れる-Inf-S^aux|ちゃう-Inf-S^aux|ます-Inf-S^sconj|て
+ POINTS: B1 A1 A2 A4
+# other endings for sub-verbs  B0 A1 A2 A4
+### FOCUS: *v:*PASS-COMPL-POL*
+ FOCUS: aux|られる-Inf-S^aux|ちゃう-Inf-S^aux|ます-Inf-S+aux|れる-Inf-S^aux|ちゃう-Inf-S^aux|ます-Inf-S
+ POINTS: A1 A2 A4
+# taberarechatta  B1 A1 A4
+### FOCUS: *PASS-COMPL-PAST*
+ FOCUS: aux|られる-Inf-S^aux|ちゃう-Inf-S^aux|た-Inf-S+aux|れる-Inf-S^aux|ちゃう-Inf-S^aux|た-Inf-S
+ POINTS: B1 A1 A4
+# taberarechatte  B1 A1 A1 A4
+### FOCUS: *PASS-COMPL-IMP:te*  *PASS-COMPL-CONN*
+ FOCUS: aux|られる-Inf-S^aux|ちゃう-Inf-S^sconj|て+aux|れる-Inf-S^aux|ちゃう-Inf-S^sconj|て
+ POINTS: B1 A1 A1 A4
+# taberarechaeba B3 A1 A4
+### FOCUS *PASS-COMPL-COND:ba*
+ FOCUS: aux|られる-Inf-S^aux|ちゃう-Inf-S^sconj|ば+aux|れる-Inf-S^aux|ちゃう-Inf-S^sconj|ば
+ POINTS: B3 A1 A4
+# taberarechau  B1 A1 A4
+### FOCUS: *PASS-COMPL-PRES*
+ FOCUS: aux|られる-Inf-S^aux|ちゃう-Inf-S+aux|れる-Inf-S^aux|ちゃう-Inf-S
+ POINTS: B1 A1 A4
+
+# taberarenakatta   B1 A1 A4
+### FOCUS: *PASS-NEG-PAST*
+ FOCUS: aux|られる-Inf-S^aux|ない-Inf-Neg-S^aux|た-Inf-S+aux|れる-Inf-S^aux|ない-Inf-Neg-S^aux|た-Inf-S
+ POINTS: B1 A1 A4
+# taberarenakute  B2 A1 A4
+### FOCUS *PASS-NEG-CONN*
+ FOCUS: aux|られる-Inf-S^aux|ない-Inf-Neg-S^sconj|て+aux|れる-Inf-S^aux|ない-Inf-Neg-S^sconj|て
+ POINTS: B2 A1 A4
+# taberarenakereba B3 A1 A4
+### FOCUS *PASS-NEG:COND:ba*
+ FOCUS: aux|られる-Inf-S^aux|ない-Inf-Neg-S^sconj|ば+aux|れる-Inf-S^aux|ない-Inf-Neg-S^sconj|ば
+ POINTS: B3 A1 A4
+# taberarenakucha     B4 A1 A4
+### FOCUS *PASS-NEG-CONN&wa    #### NEG&OBL B5 not separated
+ FOCUS: aux|られる-Inf-S^aux|無い-Inf-Neg-S^part|ちゃ^aux|れる-Inf-S^aux|無い-Inf-Neg-S^part|ちゃ
+ POINTS: B4 A1 A4
+# taberarenai  B1 A1 A4
+### FOCUS: *PASS-NEG-PRES*
+ FOCUS: aux|られる-Inf-S^aux|ない-Inf-Neg-S+aux|れる-Inf-S^aux|ない-Inf-Neg-S
+ POINTS: B1 A1 A4
+
+# taberaremasen  B1 A1 A2 A4
+### FOCUS: *PASS-POL-NEG*
+ FOCUS: aux|られる-Inf-S^aux|ます-Inf-S^aux|ず-Inf-Neg-S+aux|れる-Inf-S^aux|ます-Inf-S^aux|ず-Inf-Neg-S
+ POINTS: B1 A1 A2 A4
+# taberaremashita  B1 A2 A4
+### FOCUS: *PASS-POL-PAST*
+ FOCUS: aux|られる-Inf-S^aux|ます-Inf-S^aux|た-Inf-S+aux|れる-Inf-S^aux|ます-Inf-S^aux|た-Inf-S
+ POINTS: B1 A2 A4
+# taberaremasu  B1 A2 A4
+### FOCUS: *PASS-POL-PRES*
+ FOCUS: aux|られる-Inf-S^aux|ます-Inf-S+aux|れる-Inf-S^aux|ます-Inf-S
+ POINTS: B1 A2 A4
+# taberaremashite  B2 A2 A4
+### FOCUS *PASS-POL-CONN*
+ FOCUS: aux|られる-Inf-S^aux|ます-Inf-S^sconj|て+aux|れる-Inf-S^aux|ます-Inf-S^sconj|て
+ POINTS: B2 A2 A4
+# other endings for sub-verbs  A2 A4
+### FOCUS: *v:*PASS-POL*
+ FOCUS: aux|られる-Inf-S^aux|ます-Inf-S+aux|れる-Inf-S^aux|ます-Inf-S
+ POINTS: A2 A4
+# taberareru  (pass)  A4
+# taberareta  B1 A4
+### FOCUS: *PASS-PAST*
+ FOCUS: aux|られる-Inf-S^aux|た-Inf-S+aux|れる-Inf-S^aux|た-Inf-S
+ POINTS: B1 A4
+# taberarete  B2 A4
+### FOCUS *PASS-CONN*
+ FOCUS: aux|られる-Inf-S^sconj|て+aux|れる-Inf-S^sconj|て
+ POINTS: B2 A4
+# taberarereba B3 A4
+### FOCUS *PASS-COND:ba*
+ FOCUS: aux|られる-Inf-S^sconj|ば+aux|れる-Inf-S^sconj|ば
+ POINTS: B3 A4
+# taberarecha   B4 A4
+### FOCUS *PASS-CONN&wa
+ FOCUS: aux|られる-Inf-S^part|ちゃ+aux|れる-Inf-S^part|ちゃ
+ POINTS: B4 A4
+# other endings for sub-verbs  B0 A4
+### FOCUS: *v:sub*PASS
+ FOCUS: aux|られる-Inf-S+aux|れる-Inf-S
+ POINTS:  A4
+# taberareru  B1 A4
+### FOCUS: *PASS-PRES*
+ FOCUS: aux|られる-Inf-S+aux|れる-Inf-S
+ POINTS: B1 A4
+
+#################################################DESID
+# tabetai  A2
+# tabetaku nakatta   B1 A1 A2
+### FOCUS: *DESID-ADV*^v:ir:sub|ar&NEG-PAST=be
+ FOCUS: aux|たい-Inf-S^adj|無い-Pos-S1^aux|た-Inf-S
+ POINTS: B1 A1 A2
+# tabetaku nakute  B2 A1 A2
+### FOCUS *DESID-ADV*^v:ir:sub|ar&NEG-CONN=be
+ FOCUS: aux|たい-Inf-S^adj|無い-Pos-S1^sconj|て
+ POINTS: B2 A1 A2
+# tabetaku nakereba B3 A1 A2
+### FOCUS *DESID-ADV*^v:ir:sub|ar&NEG-COND:ba=be
+ FOCUS: aux|たい-Inf-S^adj|無い-Pos-S1^sconj|ば
+ POINTS: B3 A1 A2
+# tabetaku nai  B1 A1 A2
+### FOCUS: *DESID-ADV*^v:ir:sub|ar&NEG-PRES=be
+ FOCUS: aux|たい-Inf-S^adj|無い-Pos-S1
+ POINTS: B1 A1 A2
+
+# tabetakatta  B1 A2
+### FOCUS: *DESID-PAST*
+ FOCUS: aux|たい-Inf-S^aux|た-Inf-S
+ POINTS: B1 A2
+# tabetai  B1 A2
+### FOCUS: *DESID-PRES*
+ FOCUS: aux|たい-Inf-S
+ POINTS: B1 A2
+# tabetakute  B2  A2
+### FOCUS *DESID-CONN*
+ FOCUS: aux|たい-Inf-S^sconj|て
+ POINTS: B2 A2
+ # tabetakereba B3 A2
+### FOCUS *DESID-COND:ba*
+ FOCUS: aux|たい-Inf-S^sconj|ば
+ POINTS: B3 A2
+# other endings for sub-verbs  B0 A2
+### FOCUS: *v:sub*DESID
+ FOCUS: aux|たい-Inf-S
+ POINTS:  A2
+
+
+
+################################################## COMPL
+# tabechawanakatta   B1 A1 A1
+### FOCUS: *COMPL-NEG-PAST*
+ FOCUS: aux|ちゃう-Inf-S^aux|ない-Inf-Neg-S^aux|た-Inf-S
+ POINTS: B1 A1 A1
+# tabechawanaide  B4 A1
+### FOCUS: *COMPL-NEG&IMP:de*
+ FOCUS: aux|ちゃう-Inf-S^aux|ない-Inf-Neg-S^sconj|て
+ POINTS: B4 A1
+ # tabechawanakute  B2 A1 A1
+### FOCUS *COMPL-NEG-CONN*
+ FOCUS: aux|ちゃう-Inf-S^aux|無い-Inf-Neg-S^sconj|て
+ POINTS: B2 A1 A1
+# tabechaenakereba B3 A1 A1
+### FOCUS *COMPL-NEG-COND:ba*
+ FOCUS: aux|ちゃう-Inf-S^aux|ない-Inf-Neg-S^sconj|ば
+ POINTS: B3 A1 A1
+# tabechawanakucha (ikenai)     B4 A1 A1
+### FOCUS *COMPL-NEG-CONN&wa
+ FOCUS: aux|ちゃう-Inf-S^aux|無い-Inf-Neg-S^part|ちゃ
+ POINTS: B4 A1 A1
+# tabechawanaide!     B4 A1
+### FOCUS *COMPL-NEG&IMP:de
+ FOCUS: aux|ちゃう-Inf-S^aux|ない-Inf-Neg-S^sconj|て
+ POINTS: B4 A1 A1
+# tabechawanakucha!     B5 A1 A1
+### FOCUS *COMPL-NEG&OBL:wa*
+ FOCUS: aux|ちゃう-Inf-S^aux|無い-Inf-Neg-S^part|ちゃ
+ POINTS: B5 A1 A1
+# tabechawanakya!     B5 A1 A1   ##### not separated from COMPL-NEG-PRES
+# other endings for sub-verbs  B0 A1 A1
+### FOCUS: *v:sub|*COMPL-NEG*
+ FOCUS: aux|ちゃう-Inf-S^aux|ない-Inf-Neg-S
+ POINTS: A1 A1
+# tabechawanai  B1 A1 A1
+### FOCUS: *COMPL-NEG-PRES*
+ FOCUS: aux|ちゃう-Inf-S^aux|ない-Inf-Neg-S
+ POINTS: B1 A1 A1
+
+# tabechaimasen  B1 A1 A1 A2
+### FOCUS: *COMPL-POL-NEG*
+ FOCUS: aux|ちゃう-Inf-S^aux|ます-Inf-S^aux|ず-Inf-Neg-S
+ POINTS: B1 A1 A1 A2
+# tabechaimashita  B1 A1 A1 A2
+### FOCUS: *COMPL-POL-PAST*
+ FOCUS: aux|ちゃう-Inf-S^aux|ます-Inf-S^aux|た-Inf-S
+ POINTS: B1 A1 A1 A2
+# tabechaimashite  B2  A1 A2
+### FOCUS *COMPL-POL-CONN*
+ FOCUS: aux|ちゃう-Inf-S^aux|ます-Inf-S^sconj|て
+ POINTS: B2 A1 A2
+# tabechaimashoo  B2 A1 A2
+### FOCUS *COMPL-POL-HORT*   #### HORT not separated from PRES
+# other endings for sub-verbs  B0 A1 A2
+### FOCUS: *v:*COMPL-POL*
+ FOCUS: aux|ちゃう-Inf-S^aux|ます-Inf-S
+ POINTS: A1 A2
+# tabechaimasu  B1 A1 A2
+### FOCUS: *COMPL-POL-PRES*
+ FOCUS: aux|ちゃう-Inf-S^aux|ます-Inf-S
+ POINTS: B1 A1 A2
+
+# tabechatta  B1 A1
+### FOCUS: *COMPL-PAST*
+ FOCUS: aux|ちゃう-Inf-S^aux|た-Inf-S
+ POINTS: B1 A1
+# tabechatte!  B1 A1
+### FOCUS: *COMPL-IMP:te*
+ FOCUS: aux|ちゃう-Inf-S^sconj|て
+ POINTS: B1 A1
+# tabechae!  B5 A1 A1  ####### IMP not separated from PRES
+# tabechainasai!   B5 A1
+### FOCUS: *COMPL-IMP:nasai  	IMP=*
+ FOCUS: aux|ちゃう-Inf-S^aux|為さる-Inf-S
+ POINTS: B5 A1
+# tabechatte  B2  A1     ####### CONN not separated from IMP:te
+# tabechaoo  B2 A1      ####### HORT not separated from PRES
+# tabechaeba B3 A1
+### COMPL-COND:ba*
+ FOCUS: aux|ちゃう-Inf-S^sconj|ば
+ POINTS: B3 A1
+# tabechai   A1 B4        ####### GER not separated from PRES
+# other endings for sub-verbs  B0 A1
+### FOCUS: *v:*COMPL
+ FOCUS: aux|ちゃう-Inf-S
+ POINTS: A1
+# tabechau  B1 A1
+### FOCUS: *COMPL-PRES*
+ FOCUS: aux|ちゃう-Inf-S
+ POINTS: B1 A1
+
+################################################## POL A2
+# tabemasen  B1 A1 A2
+### FOCUS: *POL-NEG*
+ FOCUS: aux|ます-Inf-S^aux|ず-Inf-Neg-S
+ POINTS: B1 A1 A2
+# tabemashita  B1 A2
+### FOCUS: *POL-PAST*
+ FOCUS: aux|ます-Inf-S^aux|た-Inf-S
+ POINTS: B1 A2
+# tabemashite  B2
+### FOCUS *POL-CONN*
+ FOCUS: aux|ます-Inf-S^sconj|て
+ POINTS: B2
+# tabemasu  B1
+### FOCUS: *POL-PRES*
+ FOCUS: aux|ます-Inf-S
+ POINTS: B1
+
+################################################## NEG
+# tabenakatta   B1 A1
+### FOCUS: *NEG-PAST*
+ FOCUS: aux|ない-Inf-Neg-S^aux|た-Inf-S
+ POINTS: B1 A1
+# tabenaide!  B4 A1
+### FOCUS: *NEG&IMP:de*
+ FOCUS: aux|ない-Inf-Neg-S^sconj|て
+ POINTS: B4 A1
+# tabenakute  B2 A1
+### FOCUS *NEG-CONN*
+ FOCUS: aux|無い-Inf-Neg-S^sconj|て
+ POINTS: B2 A1
+# tabenakereba B3 A1
+### FOCUS *NEG:COND:ba*
+ FOCUS: aux|無い-Inf-Neg-S^sconj|ば
+ POINTS: B3 A1
+# tabenakucha (ikenai)     B4 A1
+### FOCUS *NEG-CONN&wa
+ FOCUS: aux|無い-Inf-Neg-S^part|ちゃ
+ POINTS: B4 A1
+# tabenai  B1 A1
+### FOCUS: *NEG-PRES*
+ FOCUS: aux|ない-Inf-Neg-S
+ POINTS: B1 A1
+
+###############################################################################
+#  Subsidiary verbs
+###############################################################################
+# te kuru  te iku A2
+### FOCUS: *v:sub|ku-* v:sub|ik-*
+ FOCUS: sconj|て^verb|来る-Inf-S+sconj|て^verb|行く-Inf-S
+ POINTS: A2
+# te miru  te aru  te oku  te ageru  A3
+### FOCUS: *v:sub|mi-* v:sub|ar-* v:sub|ok-* v:sub|age-*
+ FOCUS: sconj|て^verb|見る-Inf-S+sconj|て^verb|有る-Inf-S+sconj|て^verb|置く-Inf-S+sconj|て^verb|上げる-Inf-S
+ POINTS: A3
+# te morau  te kureru  A5
+ FOCUS: sconj|て^verb|貰う-Inf-S+sconj|て^verb|呉れる-Inf-S
+ POINTS: A5
+#############################################################################
+#    verb last inflection  B  ###
+###############################################################################
+RULENAME: vlast
+# tabeta  B1
+### FOCUS: *PAST*
+ FOCUS: verb|*-Inf-S^aux|た-Inf-S
+ POINTS: B1
+# tabete!  B1
+### FOCUS: *IMP:te*
+ FOCUS: verb|*-Inf-S^sconj|て
+ POINTS: B1
+# tabete CONN   B2 # tabeyoo HORT B2    ##### not separated from PRES
+# tabereba B3
+### FOCUS *COND:ba*
+ FOCUS: verb|*-Inf-S^sconj|ば
+ POINTS: B3
+# tabecha   B4
+### FOCUS *CONN&wa
+ FOCUS: verb|*-Inf-S^part|ちゃ
+ POINTS: B4
+# taberu  B1
+### FOCUS: *PRES*
+ FOCUS: verb|*-Inf-S
+ POINTS: B1
+
+
+###############################################################################
+#  adjectival nouns  D        #
+###############################################################################
+RULENAME: adjnoun
+# AN da  AN ni  AN na  D4
+ FOCUS: adj|*-Pos-S1^aux|だ-Inf-S
+ POINTS: D4
+
+###############################################################################
+#  copula  D
+###############################################################################
+RULENAME: cop
+# janai de  D3      ######## de (cop-CONN) not separated from post ptl
+ FOCUS: aux|だ-Inf-S^aux|ない-Inf-S
+ POINTS: D3
+# datta na ni  D4   ######## na ni not separated from da
+ FOCUS: aux|だ-Inf-S^aux|た-Inf-S
+ POINTS: D4
+# ja  D5                 ######## ja not separated from da
+# da  D1
+ FOCUS: aux|だ-Inf-S
+ POINTS: D1
+
+
+###############################################################################
+#  formal nouns  F       #
+###############################################################################
+RULENAME: smod
+# hoo F5
+ FOCUS: noun|方
+ POINTS: F5
+# no F5        ########### RLV (taberu no ga ii) not separated from QUD (tabeta no.)
+# koto  F4
+ FOCUS: noun|事
+ POINTS: F4
+
+###############################################################################
+#  compounds  F #         ### not recognized as compound nouns
+###############################################################################
+RULENAME: comp
+# N+N   aka+juusu   F1
+# Nprop+N  Tatchan+eki
+# N+VGER  ekaki   F5
+# V+V  F5
+
+
+###############################################################################
+#  case & focus & quotation particles  G
+###############################################################################
+RULENAME: case-foc-quot-ptl
+# ga ni wa mo  G1
+ FOCUS: adp|が+adp|に+adp|は+adp|も
+ POINTS: G1
+# kara o dake toQ G3
+ FOCUS: adp|から+adp|を+adp|だけ+adp|と^verb|思う-Inf-S+adp|と^verb|言う-Inf-S
+ POINTS: G3
+# to de tteQ G2
+ FOCUS: adp|と+adp|で+adp|って+part|って
+ POINTS: G2
+# made kurai shika G5
+ FOCUS: adp|まで+adp|くらい+adp|しか
+ POINTS: G5
+
+
+###############################################################################
+#  final particles  J       #
+###############################################################################
+RULENAME: final-ptl
+# jan J5
+ FOCUS: part|じゃん
+ POINTS: J5
+# yo-ne kke J4
+ FOCUS: part|よ^part|ね+part|け
+ POINTS: J4
+# no-yo  J3
+ FOCUS: sconj|の^part|よ
+ POINTS: J3
+# kanaa mon J2           ###### mon not recognised
+ FOCUS: part|か^part|な
+ POINTS: J2
+# ka naa J2
+ FOCUS: part|か+part|な
+ POINTS: J2
+# yo ne no  J1
+ FOCUS: part|よ+part|ね+sconj|の
+ POINTS: J1
+
+
+###############################################################################
+#  adverbs  H       #
+###############################################################################
+RULENAME: adv
+# yappari sakki  H5
+ FOCUS: adv|矢張り+adv|さっき
+ POINTS: H5
+# ichiban nanka sugu  H4
+ FOCUS: adv|一番+pron|何-Int-S1^adp|か+adv|直ぐ
+ POINTS: H4
+# mada chotto ippai  H3
+ FOCUS: adv|未だ+adv|一寸+adv|一杯
+ POINTS: H3
+# mata motto moo  H2
+ FOCUS: adv|もっと+adv|もう+adv|又
+ POINTS: H2
+###############################################################################
+#  smodalizers  I       #
+###############################################################################
+RULENAME: smod
+#  yoo I5
+ FOCUS: aux|様-Inf-S
+ POINTS: I5
+#  mitai deshoo  I4          ####### deshoo not separated from desu
+ FOCUS: aux|みたい-Inf-S
+ POINTS: I4
+#  desu I3
+ FOCUS: aux|です-Inf-S
+ POINTS: I3
+
+
+###############################################################################
+#  conjunctions & conjunctive particles  E
+###############################################################################
+RULENAME: conj
+# demo  E5
+ FOCUS: cconj|で^adp|も
+ POINTS: E5
+# noni shi  datte ja sorede de dakara E4   ##### ja not separated from de
+ FOCUS: sconj|の^sconj|に+sconj|しcconj|だ^part|って+cconj|で+cconj|其れ^adp|で+cconj|だ^sconj|から
+ POINTS: E4
+# to kara(temporal) kedo    E3
+ FOCUS: sconj|と+sconj|て^sconj|から+sconj|けれど
+ POINTS: E3
+# kara(causal)   E2
+ FOCUS: sconj|から
+ POINTS: E2
+###############################################################################
+

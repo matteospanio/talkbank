@@ -1,0 +1,125 @@
+@UTF8
+#Points:  IP |PP |MV |SV |NG |CNJ|IR |WHQ|
+#         a   b   c   d   e   f   g   h
+
+STARTRULES: +punc +indef-pns +per-pns +noun-phrases +main-verbs +secondary-verbs +negatives +conjunctions +interrogative-reversal +wh-question
+
+RULENAME: punc
+ FOCUS: .+?
+ POINTS: 
+
+RULENAME: indef-pns (A)
+ FOCUS: pro:per|it*+pro:dem|it*+pro:dem|this*+pro:dem|that*+det:dem|it*+det:dem|that*+det:dem|this*+adv|that+pro:exist|*+det:poss|it*
+ POINTS: A1
+ FOCUS: qn|any+pro:indef|any*
+ POINTS: A7
+ FOCUS: qn|every+pro:indef|every*+adj|every*
+ POINTS: A7
+ FOCUS: qn|both+qn|few+qn|many+qn|each+qn|several+qn|most+adj|least+adj|last+adj|second+adj|third+adj|next+adj|first+pro:indef|many
+ POINTS: A7
+ FOCUS: qn|*+pro:indef|some*+det:num|*+pro:indef|one*+pro:indef|all+pro:indef|more
+ POINTS: A3
+ FOCUS: pro:indef|no*+(qn|no^pro:indef|one)
+ POINTS: A4
+
+# Z rules-   noun phrases
+# these rules are used in conjunction with C or D to assign C or D points
+# they do not assign their own points
+# note- this should come after per-pns rule
+
+RULENAME: noun-phrases (Z)
+ FOCUS: n|*
+ POINTS: Z
+ FOCUS: n:*|*
+ POINTS: Z
+
+RULENAME: per-pns (B)
+ FOCUS: (pro:*|I^v|*^pro:*|me)+(pro:*|we^v|*^pro:*|us)+(pro:*|he^v|*^pro:*|him)+(pro:*|she^v|*^pro:*|her)+(pro:*|they^v|*^pro:*|them)
+ POINTS: B4
+ FOCUS: pro:sub|I*+*pro:obj|me+pro:poss|mine+det:poss|my+pro:per|you*+det:poss|your+pro:poss|yours
+ POINTS: B1
+ FOCUS: pro:sub|he*+pro:obj|him+det:poss|his+pro:sub|she*+det:poss|her+pro:poss|hers+pro:obj|her
+ POINTS: B2
+ FOCUS: pro:sub|we*+pro:obj|us*+det:poss|our+pro:poss|ours+pro:sub|they*+pro:obj|them*+det:poss|their+pro:dem|these*+pro:dem|those*+*pro:obj|us+det:dem|these*+det:dem|those*
+ POINTS: B3
+ FOCUS: adj|own+pro:refl|oneself+pro:indef|wh*+pro:int|whatever+pro:int|whichever+pro:refl|own
+ POINTS: B7
+ FOCUS: pro:refl|*
+ POINTS: B5
+ FOCUS: pro:rel|*
+ POINTS: B6
+
+RULENAME: main-verbs (C)
+FOCUS: (v|get*^part|*PASTP)+(*aux|be*^part|*PASTP)+(mod|must^v|*)+(mod|shall^v|*)+(mod|shall^neg|not^v|*)+(aux|have^part|*&PASTP)+(aux|have^v|get&PAST)+(aux|get*^part|*PASTP)+(*aux|be*^pro:*|*^part|*PASTP)+(*cop|be*^pro:*|*^part|*PASTP)+(*aux|be*^det:dem|*^part|*PASTP)+(*cop|be*^det:dem|*^part|*PASTP)+(mod|must^*|be)
+ POINTS: C7
+ FOCUS: v|*-PAST+v|*-3S+v|*&3S+v|*&PAST+cop|be&1S+cop|be&2S+cop|be&PRES+cop|be&PAST&13S*+cop|be&PAST+*cop|be&1S
+ POINTS: C2
+ FOCUS: aux|be&1S*+aux|be&2S*+aux|be&PRES+aux|be&PAST&13S+aux|be&PAST+*aux|be&1S+aux|have&3S+aux|get&PAST +(pro:*|*^aux|be&PASTP)+(pro:*|*^cop|be&PASTP)+(n|*^aux|be&PASTP)+(n|*^cop|be&PASTP)
+ POINTS: C2
+ FOCUS: (mod|can^v|*)+(mod|can*neg|not^v|*)+(mod|can^pro:per|*^v|*)+(mod|can^pro:sub|*^v|*)+(*mod|will^v|*)+(mod|may^v|*)+(mod|do^v|*)+(mod|do&3S^v|*)+(mod|do^neg|not^v|*)+(mod|do&3S^neg|not^v|*)+(*mod|do^pro:per|*^v|*)+(*mod|do&3S^pro:per|*^v|*)+(mod|do~neg|not^v|*)+(mod|do~neg|not^adv|*^v|*)+(mod|do&3S~neg|not^v|*)+(mod|do~neg|not^pro:per|*^v|*)+(mod|do&3S~neg|not^pro:per|*^v|*)+(mod|will*neg|not^v|*)
+ POINTS: C3
+ FOCUS: (mod|could^v|*)+(mod|will&COND^v|*)+(mod|should^v|*)+(mod|might^v|*)+(mod|do&3S^v|*)+(mod|do&3S^pro:*|*^v|*)+(mod|do&PAST^v|*)+(mod|could^pro:per|*^v|*)+(mod|will&COND^pro:per|*^v|*)+(*mod|genmod^pro:sub|*^v|*)+(*mod|genmod^v|*)+(*mod|genmod^pro:poss|*^v|*)+(mod|do&PAST^neg|not^v|*)+(mod|do&PAST~neg|not^v|*)+(*mod|genmod^pro:per|*^v|*)+(mod|do&PAST^pro:per|*^v|*)+(mod|do&PAST^pro:sub|*^v|*)+(mod|do^pro:sub|*^v|*)+(mod|*~*|have)
+ POINTS: C5
+ FOCUS: (mod|could^cop|*)+(mod|will&COND^cop|*)+(mod|should^cop|*)+(mod|might^cop|*)+(mod|could^v|*)+(mod|will&COND^v|*)+(mod|should^v|*)+(mod|might^v|*)+(mod|could^neg|not^v|*)+(mod|will&COND^neg|not^v|*)+(mod|should^neg|not^v|*)+(mod|might^neg|not^v|*)+(mod|could~neg|not^v|*)+(mod|will&COND~neg|not^v|*)+(mod|should~neg|not^v|*)+(mod|might~neg|not^v|*)+(pro:*|*^cop|be)+(pro:*|*^aux|be)+(det:*|*^cop|be)+(det:*|*^aux|be)+(n|*^aux|be)+(n|*^cop|be)
+ POINTS: C5
+ FOCUS: v|*+cop|be&3S+*~cop|be&3S+(aux|be&3S^v|*-PRESP)+aux|be*+*aux|be*+cop|be*+aux|get
+ POINTS: C1
+ FOCUS: (aux|have*^aux|be&PASTP^v|*-PRESP)+(mod|*^aux|have^v|*PAST)+(aux|*^aux|be^v|*-PRESP)+(mod|*^aux|be^part|*-PRESP)
+ POINTS: C8
+
+RULENAME: secondary-verbs (D)
+ FOCUS: (v|want^inf|to)+(*|go-PRESP^inf|to)+mod:aux|gotta+(v|let~pro:obj|me)+(v|let~pro:obj|us)+(*|go&PRESP~inf|to)+(v|want~inf|to)+(mod|got~inf|to)+(v|suppose-PAST^inf|to)+(part|suppose&PASTP~inf|to)+(part|suppose&PAST^inf|to)+(part|go&PRESP~inf|to)+(part|go&PRESP^inf|to)+(part|go-PRESP~inf|to)+(part|try-PRESP^inf|to)+(aux|get^inf|to)+(mod|going_to*^v|*)+(mod|have~inf|to)+(mod|fixing_to*^v|*)+(part|fix-PRESP^inf|to)+(part|try&PRESP~inf|to)+(pro:sub|I~cop|be&1S~*|go&PRESP~inf|to)
+ POINTS: D2
+ FOCUS: (adj|*^inf|to^v|*)+(adv|about^inf|to)
+ POINTS: D3
+ FOCUS: (v|*^pro:obj|*^inf|to)+(v|*^pro:sub|*^inf|to)+(v|*^pro:per|*^inf|to)+(v|*^pro:dem|*^inf|to)+(v|*^n|*^inf|to)+(v|*^det:art|*^n|*^v|*)+(v|*^det:art|*^n|*^cop|*)+(v|*^det:art|*^n|*~cop|*)+(v|*^det:art|*^n|*^aux|*)+(v|*^det:art|*^n|*~aux|*)+(v|*^pro:obj|*^v|*)+(v|*^pro:sub|*^v|*)+(v|*^pro:per|*^v|*)+(v|*^pro:dem|*^v|*)+(v|*^n|*^v|*)+(v|*^n:*|*^v|*)+(v|*^inf|to^v|*)+(pro:int|*^inf|to^v|*)+(v|*^pro:obj|*^aux|*)+(v|*^pro:per|*^aux|*)+(v|*^pro:sub|*^aux|*)+(v|*^pro:dem|*^aux|*)+(v|*^pro:obj|*~aux|*)+(v|*^pro:sub|*~aux|*)+(v|*^pro:dem|*~aux|*)+(v|*^pro:per|*~aux|*)+(pro:int|*^pro:per|*^v|*)+(v*|*^pro:poss|*^v*|*)+(v|*^pro*|*~cop|*)+(v|*^pro*|*^cop|*)+(v|*^det:dem|*^v|*)+(v|let^pro:obj|me)+(v|let^pro:obj|us)+(v|let*^det:poss|*)
+ POINTS: D5
+ FOCUS: (n|*^part|*-PRESP)+(n|*^part|*PASTP)+(n:*|*^part|*-PRESP)+(n:*|*^part|*PASTP)
+ POINTS: D4
+ FOCUS: (inf|to^aux|get^part|*PASTP)+(inf|to^aux|be^part|*PASTP)
+ POINTS: D7
+ FOCUS: n:gerund|*+(det:poss|*^part|*-PRESP)+(pro:poss|*^part|*-PRESP)+(v|start*^part|*PRESP)+(v|go*^part|*PRESP)+(v|keep*^part|*PRESP)+(v|stop*^part|*PRESP)+(v|keep*^adv|on^part|*&PRESP)+(v|steady*^part|*PRESP)
+ POINTS: D8
+
+RULENAME: negatives (E)
+ FOCUS: (pro:dem|*^cop|be&3S^neg|not)+(pro:per|it^cop|be&3S^neg|not)+(det:dem|*^cop|be&3S^neg|not)+(pro:dem|*^aux|be&3S^neg|not)+(pro:per|it^aux|be&3S^neg|not)+(det:dem|*^aux|be&3S^neg|not)+(pro:dem|*^cop|be&3S~neg|not)+(pro:per|it^cop|be&3S~neg|not)+(det:dem|*^cop|be&3S~neg|not)+(pro:dem|*^aux|be&3S~neg|not)+(pro:per|it^aux|be&3S~neg|not)+(det:dem|*^aux|be&3S~neg|not)+(v|be^neg|not)+(cop|be&PRES^neg|not)+(cop|be&3S^neg|not)+(*aux|be&3S^neg|not)+(*|to^neg|not^v|*)
+ POINTS: E1
+ FOCUS: mod|can~neg|not+mod|do~neg|not+mod|can*~neg|not+(v|be~neg|not)
+ POINTS: E4
+ FOCUS: aux|be&3S~neg|not+cop|*&3S~neg|not+mod|will*~neg|not
+ POINTS: E5
+ FOCUS: (aux|have^neg|not)+(pro*~aux|*^neg|not)+(aux|*~neg|not)+(cop|*~neg|not)+(mod|do&PAST*neg|not)+(mod|*ould~neg|not)+(mod|*ould^neg|not)+(mod|can&PAST*neg|not)+(mod|shall^neg|not)+mod|do&3S*neg|not
+ POINTS: E7
+
+RULENAME: conjunctions (F)
+FOCUS: coord|and
+ POINTS: F3
+ FOCUS: conj|but+conj|so+conj|if+coord|or
+ POINTS: F5
+ FOCUS: conj|because
+ POINTS: F6
+ FOCUS: conj|*+prep|than+(prep|as^adj|*^adv|as)+prep|like+comp|*+(prep|as^pro:per|you)
+ POINTS: F8
+
+RULENAME: interrogative-reversal (G)
+ FOCUS: ?
+ POINTS: G3
+ FOCUS: (aux|be*~neg|not^pro*|*)+(aux|be*~neg|not^n|*)+(aux|be*^pro*|*)+(aux|be*^n|*)
+ POINTS: G4
+ FOCUS: (mod|*^pro*|*^v|*)+(mod|*^n|*^v|*)+end|end
+ POINTS: G5
+ FOCUS: (aux|have*^pro*|*^part|*)+(aux|have*^n|*^part|*)+(*mod|*^pro*|*^v|*)+(*mod|*^det:art|*^n|*^v|*)
+ POINTS: G5
+ FOCUS: (aux|have*^pro*|*^aux|be*^part|*)+(aux|have*^n|*^aux|be*^part|*)
+ POINTS: G7
+ FOCUS: (mod|*^pro*|*^aux|*^aux|*)+(mod|*^n|*^aux|*^aux|*)
+ POINTS: G7
+RULENAME: wh-question (H)
+ FOCUS: pro:int|who*+pro:int|what*+(pro:int|what^n|*)+adv:int|where+(adv:int|how^qn|*)+(pro:int|what^prep|for)+pro:int|where*
+ POINTS: H2
+ FOCUS: adv:int|when+adv:int|how+(adv:int|how^adj|*)+(pro:int|how*)+(v|*^pro:int|*)+(*cop|*^pro:int|*)+(v|*^pro*|*^pro:int|*)+(n|*^pro:int|*)
+ POINTS: H4
+ FOCUS: adv:int|why+adv:int|how_about+pro:int|why*
+ POINTS: H7
+ FOCUS: pro:int|whose+pro:int|which+(pro:int|*^n|*)
+ POINTS: H8

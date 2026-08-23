@@ -1,0 +1,21 @@
+@UTF8
+@Window:	224_1384_986_1048_-1_-1_543_0_543_0
+@Begin
+@Languages:	eng
+@Participants:	MAR Mark Target_Child, ROS Ross Target_Child, MOT Mary
+	Mother, FAT Brian Father
+@ID:	eng|samples|MAR|||||Target_Child|||
+@ID:	eng|samples|MOT|||||Mother|||
+@ID:	eng|samples|ROS|||||Target_Child|||
+@ID:	eng|samples|FAT|||||Father|||
+@Media:	clip, audio
+@Situation:	Breakfast table
+*FAT:	and <what do you mean> [//] what is it [//] what are you asking for
+	? 0_2312
+*ROS:	alert [!] alert ! 2312_3715
+*FAT:	alert means like it's time for a fire alert . 3715_6937
+*MOT:	well let [/] let but wait let &-uh . 6937_8218
+*ROS:	yeah [= yes] . 8218_8773
+*MOT:	Ross's song . 8773_9538
+*MAR:	no I want you +... 9538_10242
+@End
