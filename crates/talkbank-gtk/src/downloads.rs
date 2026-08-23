@@ -94,10 +94,10 @@ pub struct Job {
     /// How many corpora were queued together with this one. It is what allows
     /// "23 of 24": without the expected total, a lost corpus goes unnoticed.
     group_total: usize,
-    /// When, and at what point, the interface was last notified. Without this a
-    /// panel of forty rows would rebuild on every network packet: it flickers,
-    /// and it makes the cancel button hard to hit.
-    last_notified: Option<(std::time::Instant, u64)>,
+    /// When the interface was last told about this job's byte progress. Without
+    /// it a panel of forty rows would rebuild on every network packet: it
+    /// flickers, and it makes the cancel button hard to hit.
+    last_notified: Option<std::time::Instant>,
 }
 
 /// Why the queue is paused. These are the two cases where carrying on would fail
@@ -152,6 +152,24 @@ impl Job {
             Phase::Done(_) => t("Finished"),
             Phase::Failed(e) => e.clone(),
         }
+    }
+}
+
+/// How often byte progress reaches the interface, per job.
+///
+/// Four times a second is as much as a progress bar can usefully say.
+const PROGRESS_INTERVAL: std::time::Duration = std::time::Duration::from_millis(250);
+
+/// Whether a byte tick is worth redrawing for.
+///
+/// Time only, deliberately. The earlier rule was "250 ms **or** a megabyte",
+/// and an `or` can only make a throttle fire more often, never less: on a
+/// 400 MB recording over a fast link the megabyte clause meant dozens of
+/// notifications a second, each one rebuilding every row of the panel.
+fn progress_is_worth_showing(last: Option<std::time::Instant>, now: std::time::Instant) -> bool {
+    match last {
+        Some(when) => now.duration_since(when) >= PROGRESS_INTERVAL,
+        None => true,
     }
 }
 
@@ -331,17 +349,11 @@ impl Manager {
         // it is a state change and not a number ticking over.
         let mut notify = true;
         if let Some(j) = self.0.jobs.borrow_mut().iter_mut().find(|j| j.id == id) {
-            if let Phase::Downloading(bytes) = phase {
+            if matches!(phase, Phase::Downloading(_)) {
                 let now = std::time::Instant::now();
-                notify = match j.last_notified {
-                    Some((when, how_many)) => {
-                        now.duration_since(when) >= std::time::Duration::from_millis(250)
-                            || bytes.saturating_sub(how_many) >= 1_048_576
-                    }
-                    None => true,
-                };
+                notify = progress_is_worth_showing(j.last_notified, now);
                 if notify {
-                    j.last_notified = Some((now, bytes));
+                    j.last_notified = Some(now);
                 }
             } else {
                 j.last_notified = None;
@@ -426,14 +438,12 @@ impl Manager {
     /// the option on should not have to fetch the transcripts again.
     pub fn start_media_only(&self, path: &[String], dest_root: PathBuf) {
         let dest = talkbank_archive::download::destination(&dest_root, path);
-        let queued = self.enqueue_media_for(path, &dest, &dest_root, None, 1);
-        self.notify_watchers();
-        self.pump();
-        if queued == 0 {
-            self.0
-                .app
-                .toast(&t("No media to fetch: this corpus already has all of them."));
-        }
+        self.scan_and_queue_media(path, dest, dest_root, None, 1, |m, queued| {
+            if queued == 0 {
+                m.0.app
+                    .toast(&t("No media to fetch: this corpus already has all of them."));
+            }
+        });
     }
 
     /// Queues a whole branch. The paths come from the plan, so they are already
@@ -450,6 +460,10 @@ impl Manager {
         with_media: bool,
     ) {
         let mut queued = 0;
+        // Corpora already on disk whose recordings are being looked for. Their
+        // count arrives later, so the "nothing to do" message has to wait for
+        // them rather than fire while scans are still running.
+        let mut scanning = 0;
         for path in paths {
             // Anything already complete is skipped: these are megabytes, not
             // requests. With media wanted, "complete" is not enough — the
@@ -457,8 +471,18 @@ impl Manager {
             // media are queued straight from what is already on disk.
             if !again && talkbank_archive::download::already_there(&dest_root, path) {
                 if with_media {
+                    // Its transcripts are here but its recordings may not be.
+                    // The scan runs off-thread, so this only starts it.
                     let dest = talkbank_archive::download::destination(&dest_root, path);
-                    queued += self.enqueue_media_for(path, &dest, &dest_root, Some(root), paths.len());
+                    scanning += 1;
+                    self.scan_and_queue_media(
+                        path,
+                        dest,
+                        dest_root.clone(),
+                        Some(root),
+                        paths.len(),
+                        |_, _| {},
+                    );
                 }
                 continue;
             }
@@ -474,7 +498,7 @@ impl Manager {
         }
         self.notify_watchers();
         self.pump();
-        if queued == 0 {
+        if queued == 0 && scanning == 0 {
             self.0.app.toast(&t("Nothing left to download: it is all already here."));
         }
     }
@@ -485,16 +509,47 @@ impl Manager {
     /// This runs after extraction because the header is the only authority on
     /// the filename: it usually matches the transcript's own name, but the CHAT
     /// format does not promise it.
-    fn enqueue_media_for(
+    /// Scans a corpus off the interface thread, then queues what it found on it.
+    ///
+    /// The scan reads and parses every transcript — 0.4 ms each, which is
+    /// nothing for one corpus and twenty-two seconds for a branch the size of
+    /// CHILDES. On the main thread that is a frozen window, so it goes to a
+    /// worker and comes back.
+    fn scan_and_queue_media(
         &self,
         path: &[String],
-        dest: &std::path::Path,
+        dest: PathBuf,
+        dest_root: PathBuf,
+        group_root: Option<&[String]>,
+        group_total: usize,
+        then: impl FnOnce(&Manager, usize) + 'static,
+    ) {
+        let this = self.clone();
+        let p = path.to_vec();
+        let root = group_root.map(<[String]>::to_vec);
+        net().spawn(
+            async move { transcripts_with_media(&dest) },
+            move |found| {
+                let n = this.enqueue_media_from(&p, &dest_root, root.as_deref(), group_total, found);
+                this.notify_watchers();
+                this.pump();
+                then(&this, n);
+            },
+        );
+    }
+
+    /// Queues one job per recording the scan turned up. Returns how many.
+    fn enqueue_media_from(
+        &self,
+        path: &[String],
         dest_root: &std::path::Path,
         group_root: Option<&[String]>,
         group_total: usize,
+        found: Vec<(PathBuf, talkbank_engine::chat::MediaRef)>,
     ) -> usize {
+        let dest = talkbank_archive::download::destination(dest_root, path);
         let mut queued = 0;
-        for (file, media) in transcripts_with_media(dest) {
+        for (file, media) in found {
             // `missing` means the archive does not hold it: asking would only
             // earn a 404 and a row in the panel saying so.
             if !media.is_fetchable() {
@@ -504,7 +559,7 @@ impl Manager {
             // The archive path of the folder the transcript sits in, which is
             // the corpus path plus whatever subfolders the zip created.
             let mut dir = path.to_vec();
-            if let Ok(rel) = parent.strip_prefix(dest) {
+            if let Ok(rel) = parent.strip_prefix(&dest) {
                 dir.extend(rel.components().map(|c| c.as_os_str().to_string_lossy().into_owned()));
             }
             let ext = talkbank_archive::download::extensions(media.video)[0];
@@ -659,12 +714,13 @@ impl Manager {
                                 .find(|j| j.id == id)
                                 .map(|j| (j.group_root.clone(), j.group_total))
                                 .unwrap_or((None, 1));
-                            this.enqueue_media_for(
+                            this.scan_and_queue_media(
                                 &done_path,
-                                &dest,
-                                &root_dir,
+                                dest.clone(),
+                                root_dir.clone(),
                                 root.as_deref(),
                                 total,
+                                |_, _| {},
                             );
                         }
                         this.set_phase(id, Phase::Done(dest));
@@ -924,8 +980,25 @@ impl Manager {
         popover.set_child(Some(&box_));
 
         let this = self.clone();
-        let refresh = move || {
+        let btn2 = btn.clone();
+        let pop = popover.clone();
+        let refresh = std::rc::Rc::new(move || {
             let jobs = this.jobs();
+
+            // The badge and the button's own visibility are cheap and always
+            // wanted; the rows are neither.
+            let pending = jobs.iter().filter(|j| j.phase.pending()).count();
+            content.set_label(&if pending == 0 { String::new() } else { pending.to_string() });
+            btn2.set_visible(!jobs.is_empty());
+
+            // Rebuilding the list means tearing down and re-creating an
+            // AdwActionRow — with a spinner, buttons and their handlers — for
+            // every job. Doing that for a popover nobody has open, several
+            // times a second, for every archive page still on the navigation
+            // stack, is what made a media download lock the interface up.
+            if !pop.is_visible() {
+                return;
+            }
             match this.paused() {
                 Some(Paused::SignInNeeded) => {
                     paused_row.set_title(&t("Paused — sign in to continue"));
@@ -987,20 +1060,13 @@ impl Manager {
                 list.append(&row);
             }
 
-            // The badge on the button: only there while something is pending.
-            let n = jobs.iter().filter(|j| j.phase.pending()).count();
-            content.set_label(&if n == 0 { String::new() } else { n.to_string() });
-        };
+        });
         refresh();
-        self.watch_for(&btn, refresh);
-
-        // The button only appears when there is something to show: in an archive
-        // nobody has used yet it would be a meaningless icon.
-        let this = self.clone();
-        let b = btn.clone();
-        let show = move || b.set_visible(!this.jobs().is_empty());
-        show();
-        self.watch_for(&btn, show);
+        // Opening the popover is when the rows have to be right, because while
+        // it was closed they were not being kept up to date.
+        let r2 = refresh.clone();
+        popover.connect_show(move |_| r2());
+        self.watch_for(&btn, move || refresh());
 
         btn.upcast()
     }
@@ -1235,6 +1301,32 @@ mod tests {
         // and that has to be said even when it was a decision.
         let stopped = Outcome { expected: 5, done: 2, cancelled: 3, ..Default::default() };
         assert!(stopped.incomplete());
+    }
+
+    #[test]
+    fn byte_progress_is_throttled_by_time_alone() {
+        use std::time::{Duration, Instant};
+        let t0 = Instant::now();
+
+        // The first tick always shows: there is nothing on screen yet.
+        assert!(progress_is_worth_showing(None, t0));
+
+        // Within the interval, nothing — however many bytes moved. The old rule
+        // also fired every megabyte, so a fast 400 MB transfer rebuilt the whole
+        // panel dozens of times a second and the interface stopped responding.
+        assert!(!progress_is_worth_showing(Some(t0), t0 + Duration::from_millis(1)));
+        assert!(!progress_is_worth_showing(Some(t0), t0 + Duration::from_millis(249)));
+
+        // At the interval, yes.
+        assert!(progress_is_worth_showing(Some(t0), t0 + PROGRESS_INTERVAL));
+        assert!(progress_is_worth_showing(Some(t0), t0 + Duration::from_secs(1)));
+
+        // Four a second is the ceiling, so a transfer of any speed costs the
+        // same to draw.
+        let ticks = (0..1000)
+            .filter(|i| progress_is_worth_showing(Some(t0), t0 + Duration::from_millis(*i)))
+            .count();
+        assert!(ticks <= 751, "one second of ticks should cap out, got {ticks}");
     }
 
     #[test]

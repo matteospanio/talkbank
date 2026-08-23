@@ -23,6 +23,21 @@ All notable changes to this project are documented here. The format follows
   fetch.
 - A new preference, "Include audio and video by default".
 
+### Fixed
+
+- **The interface locked up during a download with media.** Three things
+  multiplied together: byte progress was reported "every 250 ms *or* every
+  megabyte", and an `or` can only make a throttle fire more often — on a 400 MB
+  recording that is dozens of updates a second; each update tore down and
+  rebuilt every row of the downloads panel even when nobody had it open; and
+  every archive page on the navigation stack held its own copy of that panel, so
+  the work was multiplied again by how deep you had browsed. Progress is now
+  throttled by time alone, rows are rebuilt only for a panel that is actually
+  visible, and each panel keeps one watcher instead of two.
+- Scanning a corpus for `@Media` headers no longer runs on the interface thread.
+  At 0.4 ms per transcript that is imperceptible for one corpus and twenty-two
+  seconds of frozen window for a branch the size of CHILDES.
+
 ## [0.1.1] - 2026-08-23
 
 ### Fixed
