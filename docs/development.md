@@ -28,6 +28,26 @@ at the source tree, which is what makes `build/freq` work with no setup;
 packagers and `install.sh` set it to `<prefix>/share/talkbank/lib` so the
 binaries keep working without the checkout.
 
+### Where things land
+
+```
+<prefix>/bin/talkbank                 the app, and the only thing on the PATH
+<prefix>/libexec/talkbank/            the 70 CLAN programs
+<prefix>/share/talkbank/lib/          the language data they read (DEPDIR)
+<prefix>/share/locale/*/LC_MESSAGES/  the compiled catalogues
+<prefix>/share/applications/          the desktop entry
+<prefix>/share/doc/talkbank/          the guide the start page links to
+```
+
+**The CLAN programs must not go into `bin/`.** Three of them — `uniq`, `script`
+and `gem` — are named after standard Unix commands, and others (`indent`,
+`repeat`, `post`, `dist`, `lines`, `check`) collide on some systems. An early
+release did install them into `~/.local/bin`, where CLAN's `uniq` shadowed
+coreutils' and printed its banner every time a shell startup file called `uniq`.
+`find_bin_dir()` in `talkbank-engine` knows the private layout; the PATH stays
+last in its search order, as a courtesy to anyone who added the directory
+themselves.
+
 ### Running from the build directory
 
 ```sh

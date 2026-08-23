@@ -71,18 +71,56 @@ meson setup build $setup --wipe >/dev/null 2>&1 || meson setup build $setup
 meson compile -C build
 meson install -C build
 
+# Releases before 0.1.1 installed the 70 CLAN programs straight into bin/, where
+# `uniq`, `script` and `gem` shadowed the system commands of the same name — with
+# the visible effect of a CLAN banner every time a shell started. Upgrading has
+# to clean those up, or the damage outlives the fix.
+old=0
+for f in build/*; do
+    name=${f##*/}
+    case "$name" in
+        *.*|talkbank) continue ;;
+    esac
+    [ -f "$f" ] && [ -x "$f" ] || continue
+    [ -f "$PREFIX/bin/$name" ] || continue
+    if cmp -s "$f" "$PREFIX/bin/$name"; then
+        rm -f "$PREFIX/bin/$name"
+        old=$((old + 1))
+    fi
+done
+[ "$old" -gt 0 ] && say "Removed $old CLAN programs left in $PREFIX/bin by an earlier version"
+
+# --- desktop integration ---------------------------------------------------
+# meson does this too, but only when installing into a system prefix; for a
+# ~/.local install the user's own databases are the ones that need refreshing.
+have update-desktop-database && update-desktop-database -q "$PREFIX/share/applications" 2>/dev/null || true
+have gtk-update-icon-cache && gtk-update-icon-cache -qtf "$PREFIX/share/icons/hicolor" 2>/dev/null || true
+
 # --- report ----------------------------------------------------------------
 say "Installed into $PREFIX"
 echo "  Source kept in $SRC (rerun this script to update)"
+echo
+echo "  The app is in your applications menu as \"TalkBank\"."
 case ":$PATH:" in
     *":$PREFIX/bin:"*) ;;
     *)
         echo
-        echo "  $PREFIX/bin is not on your PATH. Add it with:"
+        echo "  $PREFIX/bin is not on your PATH, so the \`talkbank\` command will not"
+        echo "  be found from a shell. Add it with:"
         echo
         echo "    echo 'export PATH=\"\$HOME/.local/bin:\$PATH\"' >> ~/.profile"
-        echo
         ;;
 esac
-echo "  Run:  talkbank"
-echo "  Docs: https://github.com/matteospanio/talkbank#documentation"
+cat <<EOF
+
+  Run:       talkbank
+  Uninstall: curl -LsSf https://raw.githubusercontent.com/matteospanio/talkbank/main/uninstall.sh | sh
+  Docs:      https://github.com/matteospanio/talkbank#documentation
+
+  The 70 CLAN programs are in $PREFIX/libexec/talkbank, deliberately off your
+  PATH: three of them (uniq, script, gem) share a name with a system command.
+  The app finds them by itself. To use them from a shell, append — never
+  prepend — that directory:
+
+    echo 'export PATH="\$PATH:$PREFIX/libexec/talkbank"' >> ~/.profile
+EOF

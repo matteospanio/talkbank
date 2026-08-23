@@ -20,8 +20,9 @@ tasks), **Archive** (browse and download TalkBank).
 curl -LsSf https://raw.githubusercontent.com/matteospanio/talkbank/main/install.sh | sh
 ```
 
-The script checks for the build dependencies, clones the repository, builds it and
-installs into `~/.local`. It builds from source on purpose: GTK 4 and libadwaita
+The script checks for the build dependencies, clones the repository, builds it,
+installs into `~/.local` and registers the launcher, so **TalkBank** appears in
+your applications menu. It builds from source on purpose: GTK 4 and libadwaita
 binaries do not travel well between distributions.
 
 To install elsewhere, or from a checkout you already have:
@@ -31,6 +32,16 @@ meson setup build --prefix="$HOME/.local"
 meson compile -C build
 meson install -C build
 ```
+
+### Uninstall
+
+```sh
+curl -LsSf https://raw.githubusercontent.com/matteospanio/talkbank/main/uninstall.sh | sh
+```
+
+It removes the installed files and the source clone, and leaves your settings and
+your downloaded corpora alone. Add `PURGE=1` to drop the settings and cache too.
+From a checkout, `ninja -C build uninstall` does the same job.
 
 Requirements: `g++`, `meson`, `ninja`, `gettext`, `cargo`, `libgtk-4-dev`,
 `libadwaita-1-dev`. On Debian and Ubuntu:
@@ -51,9 +62,18 @@ talkbank transcript.cha       # opens a file and selects it
 Shortcuts: `Ctrl+Enter` runs an analysis, `Ctrl+B` opens the archive, `Ctrl+,`
 preferences, `Ctrl+H` recent commands.
 
-The 70 CLAN programs are installed alongside it and work on their own:
+### The CLAN programs
+
+The 70 CLAN programs are installed in `~/.local/libexec/talkbank`, **deliberately
+off your PATH**: three of them are named after standard Unix commands — `uniq`
+(coreutils), `script` (util-linux) and `gem` (RubyGems) — and putting them on the
+PATH would shadow those for everything you run. The app finds them by itself.
+
+To use them from a shell, **append** that directory so the system commands keep
+winning:
 
 ```sh
+echo 'export PATH="$PATH:$HOME/.local/libexec/talkbank"' >> ~/.profile
 freq +t*CHI 0042.cha
 ```
 

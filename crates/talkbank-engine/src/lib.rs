@@ -10,9 +10,17 @@ pub use runner::{RunError, RunOutput};
 
 use std::path::PathBuf;
 
-/// Where the 70 CLAN programs live. In order: environment variable (for
-/// developers and tests), the build directory next to the executable, the
-/// executable's own directory (installed layout), and finally the PATH.
+/// Where the 70 CLAN programs live.
+///
+/// They are deliberately **not** on the PATH: three of them are named after
+/// standard Unix commands (`uniq`, `script`, `gem`), so an installation puts them
+/// in a private `libexec/talkbank` directory and we look there. See the note in
+/// `meson.build`.
+///
+/// In order: environment variable (for developers and tests), the executable's
+/// own directory (the build directory), the installed private directory, a
+/// couple of build-directory layouts, and finally the PATH — which stays last as
+/// a courtesy to anyone who put the programs there on purpose.
 pub fn find_bin_dir() -> Option<PathBuf> {
     if let Some(dir) = std::env::var_os("CLAN_BIN") {
         let p = PathBuf::from(dir);
@@ -22,7 +30,13 @@ pub fn find_bin_dir() -> Option<PathBuf> {
     }
     let exe = std::env::current_exe().ok()?;
     let exe_dir = exe.parent()?;
-    for rel in ["", "../../build", "../../../build", "../build"] {
+    for rel in [
+        "",
+        "../libexec/talkbank",
+        "../../build",
+        "../../../build",
+        "../build",
+    ] {
         let p = if rel.is_empty() {
             exe_dir.to_path_buf()
         } else {

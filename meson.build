@@ -1,7 +1,7 @@
 # meson is the single entry point: it builds the 70 CLAN programs (1990s C++),
 # the translation catalogues, and — by driving cargo — the Rust desktop app.
 project('talkbank', ['cpp'],
-  version: '0.1.0',
+  version: '0.1.1',
   meson_version: '>= 1.0',
   default_options: ['warning_level=1', 'buildtype=release'])
 
@@ -33,6 +33,17 @@ clan_args = [
   '-I' + root / 'src',
   '-DDEPDIR="' + depdir + '/"',
 ]
+
+# The 70 programs go into a private directory, **not** into bin/.
+#
+# Three of them are named after standard Unix commands — `uniq` (coreutils),
+# `script` (util-linux) and `gem` (RubyGems) — and others (`indent`, `repeat`,
+# `post`, `dist`, `lines`, `check`) collide on some systems. Putting them on the
+# PATH shadows those commands for everything the user runs, which broke shell
+# startup files that call `uniq`. The app locates them by itself; anyone who
+# wants them in a shell appends this directory to PATH deliberately, so the
+# system commands keep winning. See docs/development.md.
+clan_bindir = get_option('libexecdir') / 'talkbank'
 
 clancore = static_library('clancore',
   files('src/cutt.cpp', 'src/c_ver.cpp', 'src/stringparser.cpp',
@@ -83,44 +94,44 @@ foreach name, srcs : simple_programs
     paths += root / 'src' / s
   endforeach
   executable(name, paths,
-    link_with: clancore, cpp_args: clan_args, dependencies: m_dep, install: true)
+    link_with: clancore, cpp_args: clan_args, dependencies: m_dep, install: true, install_dir: clan_bindir)
 endforeach
 
 # "dist" is reserved by meson, both as a target name and as an output name: we
 # build it as clan-dist and put a copy next to it under the name CLAN expects.
 sh = find_program('sh')
 dist_exe = executable('clan-dist', root / 'src/dist.cpp',
-  link_with: clancore, cpp_args: clan_args, dependencies: m_dep, install: true)
+  link_with: clancore, cpp_args: clan_args, dependencies: m_dep, install: true, install_dir: clan_bindir)
 custom_target('dist-alias',
   input: dist_exe, output: 'dist.stamp',
   command: [sh, '-c', 'cp "$1" "$(dirname "$2")/dist" && touch "$2"', 'sh', '@INPUT@', '@OUTPUT@'],
   build_by_default: true)
 meson.add_install_script(sh, '-c',
-  'cd "$MESON_INSTALL_DESTDIR_PREFIX/bin" && cp -f clan-dist dist')
+  'cd "$MESON_INSTALL_DESTDIR_PREFIX/' + clan_bindir + '" && cp -f clan-dist dist')
 
 vocd_src = files('src/vocd/args.cpp', 'src/vocd/speaker.cpp', 'src/vocd/tokens.cpp',
                  'src/vocd/filter.cpp', 'src/vocd/dcompute.cpp', 'src/vocd/vocd.cpp')
 executable('vocd', vocd_src,
   link_with: clancore, cpp_args: clan_args + ['-I' + root / 'src/vocd'],
-  dependencies: m_dep, install: true)
+  dependencies: m_dep, install: true, install_dir: clan_bindir)
 
 executable('kideval',
   [files('src/kideval.cpp', 'src/dss.cpp', 'src/ipsyn.cpp'), vocd_src],
   link_with: clancore,
   cpp_args: clan_args + ['-I' + root / 'src/vocd', '-DKIDEVAL_LIB'],
-  dependencies: m_dep, install: true)
+  dependencies: m_dep, install: true, install_dir: clan_bindir)
 
 executable('mor',
   files('src/mor/arules.cpp', 'src/mor/crules.cpp', 'src/mor/drules.cpp',
         'src/mor/globals.cpp', 'src/mor/lex-trie.cpp', 'src/mor/morlib.cpp',
         'src/mor/mor.cpp'),
   link_with: clancore, cpp_args: clan_args + ['-I' + root / 'src/mor'],
-  dependencies: m_dep, install: true)
+  dependencies: m_dep, install: true, install_dir: clan_bindir)
 
 executable('megrasp',
   files('src/megrasp/megrasp.cpp', 'src/megrasp/maxent.cpp', 'src/megrasp/blmvm.cpp'),
   link_with: clancore, cpp_args: clan_args + ['-I' + root / 'src/megrasp'],
-  dependencies: m_dep, install: true)
+  dependencies: m_dep, install: true, install_dir: clan_bindir)
 
 # The POST family does not use the cutt library: it has its own main and runtime.
 post_common = files(
@@ -146,7 +157,7 @@ foreach name, srcs : post_programs
     paths += root / 'src/post' / s
   endforeach
   executable(name, [post_common, paths],
-    cpp_args: post_args, dependencies: m_dep, install: true)
+    cpp_args: post_args, dependencies: m_dep, install: true, install_dir: clan_bindir)
 endforeach
 
 # ---------------------------------------------------------------------------
@@ -178,11 +189,31 @@ locale_tree = custom_target('locale-tree',
     'sh', build_dir],
   build_by_default: true)
 
-install_data('data/org.talkbank.TalkBank.desktop',
+# The desktop entry carries the absolute path to the binary: a `~/.local` install
+# is not on the PATH of every desktop session, and a launcher that silently does
+# nothing is worse than no launcher.
+desktop = configure_file(
+  input: 'data/org.talkbank.TalkBank.desktop.in',
+  output: 'org.talkbank.TalkBank.desktop',
+  configuration: {'BINDIR': get_option('prefix') / get_option('bindir')},
+  install: true,
   install_dir: get_option('datadir') / 'applications')
+
+desktop_validate = find_program('desktop-file-validate', required: false)
+if desktop_validate.found()
+  test('desktop-file', desktop_validate, args: [desktop])
+endif
 
 install_data('data/icons/hicolor/128x128/apps/org.talkbank.TalkBank.png',
   install_dir: get_option('datadir') / 'icons/hicolor/128x128/apps')
+
+# Without these the entry sits on disk and the launcher never sees it: the
+# desktop database and the icon cache have to be told. `gnome.post_install()`
+# runs the right tools and skips itself under DESTDIR, where they make no sense.
+gnome = import('gnome')
+gnome.post_install(
+  gtk_update_icon_cache: true,
+  update_desktop_database: true)
 
 # The start page links to the guide, so it has to be installed next to the app.
 install_data('docs/guide.md', 'README.md',
