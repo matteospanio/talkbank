@@ -101,6 +101,10 @@ pub struct Config {
     pub email: Option<String>,
     /// Where downloaded corpora land.
     pub download_dir: Option<PathBuf>,
+    /// Whether "include audio and video" starts switched on. Off by default:
+    /// recordings are two to four orders of magnitude larger than transcripts,
+    /// so opting in has to be a decision, not a surprise.
+    pub download_media: bool,
     /// Recently opened folders, newest first. The start page needs it: resuming
     /// work is the most frequent action on opening.
     pub recent_dirs: Vec<PathBuf>,
@@ -151,6 +155,7 @@ impl Default for Config {
             command: None,
             email: None,
             download_dir: None,
+            download_media: false,
             recent_dirs: Vec::new(),
             recent_files: Vec::new(),
         }
@@ -192,6 +197,7 @@ impl Config {
             command: s("command"),
             email: s("email"),
             download_dir: s("download-dir").map(PathBuf::from),
+            download_media: b("download-media", d.download_media),
             recent_dirs: {
                 let mut r = list("recent-dir");
                 // Anyone upgrading from an earlier version has a working
@@ -221,6 +227,7 @@ impl Config {
         kf.set_boolean(GROUP, "preflight", self.preflight);
         kf.set_boolean(GROUP, "default-r6", self.default_r6);
         kf.set_boolean(GROUP, "default-save", self.default_save);
+        kf.set_boolean(GROUP, "download-media", self.download_media);
         if let Some(w) = &self.workdir {
             kf.set_string(GROUP, "workdir", &w.to_string_lossy());
         }

@@ -64,9 +64,40 @@ is counter-intuitive.
   `Jimmy/father/`, compared exactly against the public tree). That is what lets
   "Download all" stop at the first corpus instead of descending.
 - **Media are not in the zip**: `McMillan` declares video on all three of its
-  transcripts and its zip weighs 10 KB. Measured at ~23 KB per transcript over
+  transcripts and its zip weighs 10 KB. They are fetched separately — see
+  "Media" below. Measured at ~23 KB per transcript over
   four corpora, which is the basis of the estimate shown before downloading a
   branch.
+## Media
+
+- Media are **not in the corpus zip** and are served from a different host:
+  `https://media.talkbank.org/<archive path>/<basename>.<ext>`.
+  `talkbank.org/data/<path>.mp3` answers 404.
+- Extensions: `.mp3` for `audio`, `.mp4` for `video`, both confirmed against real
+  files.
+- **A plain GET returns `206` with eleven bytes.** No Range header sent, and the
+  host still answers `Content-Range: bytes 0-10/2118615` — it behaves like a
+  streaming server handing out a preview. An open-ended `Range: bytes=0-` gets
+  the whole file; a fixed upper bound makes it promise bytes it does not have.
+  Without the explicit range a download "succeeds" with an 11-byte mp3, which is
+  why the transfer also checks the length against `Content-Range`.
+- `HEAD` is useless for sizing, for the same reason: it reports the preview
+  length. The true size comes from the `Content-Range` of a `bytes=0-0` request.
+- Sizes, measured 2026-08-23: audio 0.5–68 MB per file, video 203–963 MB.
+  Transcripts are 23 KB. **Between corpora the spread is 25x** (`ca/ATC/disasters`
+  averages 2.0 MB per file, `class/Bradford` 50.6 MB, `childes/Biling/Bailleul`
+  ~370 MB and about 10 GB for the corpus), so a single global constant cannot
+  estimate a download — the corpus has to be sampled.
+- The filename comes from each transcript's `@Media:` header. In 34/34 files
+  sampled it equalled the transcript's own stem, but the CHAT format does not
+  promise that, so the header is the authority.
+- The session cookie is set on `.talkbank.org`, so the same authenticated client
+  reaches the media host with no extra work. Signed out it answers the same
+  `200 text/html` gate as the zip route, and there is no `PK` signature to fall
+  back on — the content type is the only check.
+
+## Downloads
+
 - **A UI problem must not stop a transfer**: the progress callback returns `false`
   only on an explicit cancellation. Tying it to the state of the progress channel
   aborted a download in silence when the page showing it was closed.

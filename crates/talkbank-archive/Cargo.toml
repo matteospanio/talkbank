@@ -16,5 +16,6 @@ futures-util = "0.3"
 zip = { version = "8", default-features = false, features = ["deflate"] }
 
 [dev-dependencies]
+talkbank-engine.workspace = true
 tempdir = "0.3"
 tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }

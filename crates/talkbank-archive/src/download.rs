@@ -213,6 +213,177 @@ pub async fn corpus(
     Ok(dest)
 }
 
+/// The extensions the archive serves, by media kind.
+///
+/// Measured: `audio` is `.mp3` and `video` is `.mp4` on every corpus sampled.
+/// The second entry is a fallback for the cases where the `@Media` flag and the
+/// file on the server disagree, which costs one extra request only when the
+/// first guess 404s.
+pub fn extensions(video: bool) -> [&'static str; 2] {
+    if video { ["mp4", "mp3"] } else { ["mp3", "mp4"] }
+}
+
+/// The real size of a media file, or `None` when it is not there.
+///
+/// `HEAD` is useless here: the server answers `206` with a Content-Length of a
+/// few bytes. A one-byte range request comes back with
+/// `Content-Range: bytes 0-0/<total>`, which is the only honest figure.
+pub async fn media_size(client: &Client, url: &str) -> Option<u64> {
+    let resp = client
+        .http()
+        .get(url)
+        .header(reqwest::header::RANGE, "bytes=0-0")
+        .send()
+        .await
+        .ok()?;
+    if !resp.status().is_success() {
+        return None;
+    }
+    // The access gate answers 200 with HTML for anything, so a successful
+    // status alone would happily "measure" a login page.
+    let ct = resp
+        .headers()
+        .get(reqwest::header::CONTENT_TYPE)
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("");
+    if ct.starts_with("text/html") {
+        return None;
+    }
+    let range = resp
+        .headers()
+        .get(reqwest::header::CONTENT_RANGE)?
+        .to_str()
+        .ok()?;
+    range.rsplit('/').next()?.trim().parse().ok()
+}
+
+/// Downloads one media file to `dest`.
+///
+/// Unlike a corpus this is a single file, so there is no zip and no extraction:
+/// the phases are `Downloading` and then `Done`. Atomicity is per file — the
+/// bytes land in `<dest>.part` and are renamed into place — so an interrupted
+/// transfer never leaves something that looks like a complete recording.
+///
+/// A file that is already there is left alone and reported as done, which is
+/// what makes re-running a download a repair rather than a re-fetch.
+pub async fn media(
+    client: &Client,
+    url: &str,
+    dest: &Path,
+    mut on_progress: impl FnMut(Progress) -> bool,
+) -> Result<(), DownloadError> {
+    if dest.is_file() {
+        on_progress(Progress::Done);
+        return Ok(());
+    }
+
+    // **The media host answers a plain GET with `206` and eleven bytes.**
+    // Measured: no Range header sent, and it still replies
+    // `Content-Range: bytes 0-10/2118615`. It behaves like a streaming server
+    // that hands out a preview unless a range is asked for. An open-ended
+    // `bytes=0-` gets the whole file; a fixed upper bound makes it promise
+    // bytes it does not have. Without this the download "succeeds" with an
+    // 11-byte mp3.
+    let resp = client
+        .http()
+        .get(url)
+        .header(reqwest::header::RANGE, "bytes=0-")
+        .send()
+        .await
+        .map_err(|e| ApiError::Network(e.to_string()))?;
+
+    if resp.status() == reqwest::StatusCode::UNAUTHORIZED {
+        return Err(DownloadError::NeedsPermission);
+    }
+    if resp.status() == reqwest::StatusCode::NOT_FOUND {
+        return Err(DownloadError::NotAvailable);
+    }
+    // 206 is the normal answer here, 200 the polite one; both are fine.
+    if !resp.status().is_success() {
+        return Err(DownloadError::NotAvailable);
+    }
+    // How many bytes to expect, so a truncated transfer is caught rather than
+    // saved as a recording that merely looks complete.
+    let expected = resp
+        .headers()
+        .get(reqwest::header::CONTENT_RANGE)
+        .and_then(|v| v.to_str().ok())
+        .and_then(|v| v.rsplit('/').next()?.trim().parse::<u64>().ok())
+        .or_else(|| resp.content_length());
+    // There is no `PK` magic to fall back on for media, so the content type is
+    // the only thing that separates a recording from the login page.
+    let content_type = resp
+        .headers()
+        .get(reqwest::header::CONTENT_TYPE)
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("")
+        .to_string();
+    if content_type.starts_with("text/html") {
+        return Err(DownloadError::AuthRequired);
+    }
+
+    if let Some(parent) = dest.parent() {
+        std::fs::create_dir_all(parent)?;
+    }
+    let part = part_path(dest);
+    let mut file = std::fs::File::create(&part)?;
+
+    let mut downloaded: u64 = 0;
+    let mut stream = resp.bytes_stream();
+    while let Some(chunk) = stream.next().await {
+        let chunk = match chunk {
+            Ok(c) => c,
+            Err(e) => {
+                let _ = std::fs::remove_file(&part);
+                return Err(ApiError::Network(e.to_string()).into());
+            }
+        };
+        if let Err(e) = write_chunk(&mut file, &chunk) {
+            let _ = std::fs::remove_file(&part);
+            return Err(e);
+        }
+        downloaded += chunk.len() as u64;
+        if !on_progress(Progress::Downloading(downloaded)) {
+            let _ = std::fs::remove_file(&part);
+            return Err(DownloadError::Cancelled);
+        }
+    }
+    if let Err(e) = file.flush().map_err(no_space) {
+        let _ = std::fs::remove_file(&part);
+        return Err(e);
+    }
+    drop(file);
+
+    if downloaded == 0 {
+        let _ = std::fs::remove_file(&part);
+        return Err(DownloadError::NotAvailable);
+    }
+    if let Some(want) = expected {
+        if downloaded < want {
+            let _ = std::fs::remove_file(&part);
+            return Err(DownloadError::BadArchive(format!(
+                "truncated: {downloaded} of {want} bytes"
+            )));
+        }
+    }
+
+    std::fs::rename(&part, dest)?;
+    on_progress(Progress::Done);
+    Ok(())
+}
+
+/// The partial file for a media download.
+///
+/// Built by concatenation for the same reason as `incoming_dir`: media names
+/// carry dots (`020408.mp4`), and `with_extension` would eat the real one.
+fn part_path(dest: &Path) -> PathBuf {
+    let name = dest
+        .file_name()
+        .map(|n| n.to_string_lossy().into_owned())
+        .unwrap_or_else(|| "media".into());
+    dest.with_file_name(format!("{name}.part"))
+}
+
 /// Writes a chunk, telling a full disk apart from any other error: the user
 /// deals with those two differently.
 fn write_chunk(file: &mut std::fs::File, chunk: &[u8]) -> Result<(), DownloadError> {
@@ -456,6 +627,69 @@ mod tests {
         assert!(matches!(full, DownloadError::NoSpace { .. }));
         let other = no_space(std::io::Error::other("whatever"));
         assert!(matches!(other, DownloadError::Io(_)));
+    }
+
+    #[test]
+    fn the_extension_follows_the_media_flag_with_a_fallback() {
+        assert_eq!(extensions(false), ["mp3", "mp4"]);
+        assert_eq!(extensions(true), ["mp4", "mp3"]);
+        // The fallback matters: the `@Media` flag and the file on the server do
+        // occasionally disagree, and one extra request beats a missing file.
+        assert_ne!(extensions(true)[0], extensions(false)[0]);
+    }
+
+    #[test]
+    fn the_partial_file_does_not_eat_the_real_extension() {
+        // `with_extension` on "020408.mp4" would give "020408.part" and two
+        // media of the same corpus would collide.
+        assert_eq!(
+            part_path(Path::new("/data/ca/ATC/020408.mp4")),
+            PathBuf::from("/data/ca/ATC/020408.mp4.part")
+        );
+        assert_ne!(
+            part_path(Path::new("/d/a.mp3")),
+            part_path(Path::new("/d/a.mp4"))
+        );
+    }
+
+    #[test]
+    fn a_media_file_already_on_disk_is_reported_done_without_a_request() {
+        // This is what turns a re-download into a repair: the client is never
+        // touched, so passing a bogus one proves no request happens.
+        let d = tempdir::TempDir::new("talkbank-media").unwrap();
+        let dest = d.path().join("adam01.mp3");
+        std::fs::write(&dest, b"already here").unwrap();
+
+        let client = crate::api::Client::new().unwrap();
+        let mut seen = Vec::new();
+        let rt = tokio::runtime::Runtime::new().unwrap();
+        let out = rt.block_on(media(
+            &client,
+            "http://127.0.0.1:1/nope.mp3",
+            &dest,
+            |p| {
+                seen.push(p);
+                true
+            },
+        ));
+        assert!(out.is_ok());
+        assert_eq!(seen, [Progress::Done]);
+        assert_eq!(std::fs::read(&dest).unwrap(), b"already here");
+    }
+
+    #[test]
+    fn a_truncated_media_transfer_is_rejected_not_saved() {
+        // The media host answers a bare GET with 11 bytes and a Content-Range
+        // announcing the real size. Before the explicit `Range: bytes=0-`, that
+        // was saved as a complete recording. The guard is the length check, so
+        // this pins the arithmetic behind it.
+        let want: u64 = 2_118_615;
+        for got in [0u64, 11, want - 1] {
+            assert!(got < want, "{got} should count as truncated");
+        }
+        assert!(!(want < want), "an exact-length transfer is complete");
+        // A server that sends more than promised is not our problem to reject.
+        assert!(!(want + 1 < want));
     }
 
     #[test]

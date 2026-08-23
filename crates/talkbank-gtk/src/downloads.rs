@@ -54,12 +54,32 @@ impl Phase {
     }
 }
 
+/// What a queue entry actually transfers.
+///
+/// Both kinds share `path` — the corpus's archive path — so that `where_from()`
+/// keeps working and a media file is shown under the corpus it belongs to.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum JobKind {
+    /// The zip of transcripts. `with_media` means: when this lands, read the
+    /// `@Media` headers of what came out and queue the recordings too.
+    Corpus { with_media: bool },
+    /// One recording. Media are not in the zip, so each is its own transfer.
+    Media { url: String, dest: PathBuf },
+}
+
+impl JobKind {
+    pub fn is_corpus(&self) -> bool {
+        matches!(self, JobKind::Corpus { .. })
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct Job {
     pub id: u64,
     /// Path in the archive, bank included.
     pub path: Vec<String>,
     pub phase: Phase,
+    pub kind: JobKind,
     /// Where it gets extracted. Needed to start it when it leaves the queue.
     dest_root: PathBuf,
     /// Raised to cancel: it is read on the network thread, so it is an atomic
@@ -89,9 +109,15 @@ pub enum Paused {
 }
 
 impl Job {
-    /// The name to show: the folder, with its origin above it.
+    /// The name to show: the corpus folder, or the recording's filename.
     pub fn title(&self) -> String {
-        self.path.last().cloned().unwrap_or_default()
+        match &self.kind {
+            JobKind::Corpus { .. } => self.path.last().cloned().unwrap_or_default(),
+            JobKind::Media { dest, .. } => dest
+                .file_name()
+                .map(|n| n.to_string_lossy().into_owned())
+                .unwrap_or_default(),
+        }
     }
     pub fn where_from(&self) -> String {
         let bank = self
@@ -99,7 +125,14 @@ impl Job {
             .first()
             .map(|b| talkbank_archive::catalog::bank_title(b).to_string())
             .unwrap_or_default();
-        let rest = self.path[1..self.path.len().saturating_sub(1)].join(" / ");
+        // A media file belongs *inside* the corpus, so its origin includes the
+        // corpus name that a corpus job puts in the title instead.
+        let upto = if self.kind.is_corpus() {
+            self.path.len().saturating_sub(1)
+        } else {
+            self.path.len()
+        };
+        let rest = self.path[1..upto.max(1)].join(" / ");
         if rest.is_empty() {
             bank
         } else {
@@ -173,9 +206,18 @@ impl Manager {
         self.0.jobs.borrow().clone()
     }
 
-    /// The download for this path, if there is one.
+    /// The corpus download for this path, if there is one.
+    ///
+    /// Media jobs share the corpus's `path`, so they have to be filtered out:
+    /// `inline()` draws the corpus progress bar from this, and a recording
+    /// would otherwise hijack it.
     pub fn job_for(&self, path: &[String]) -> Option<Job> {
-        self.0.jobs.borrow().iter().find(|j| j.path == path).cloned()
+        self.0
+            .jobs
+            .borrow()
+            .iter()
+            .find(|j| j.path == path && j.kind.is_corpus())
+            .cloned()
     }
 
     /// Registers a watcher, tying it to the life of `anchor`.
@@ -332,15 +374,19 @@ impl Manager {
     fn enqueue(
         &self,
         path: &[String],
+        kind: JobKind,
         dest_root: PathBuf,
         group_root: Option<&[String]>,
         group_total: usize,
     ) -> bool {
-        if self.job_for(path).is_some_and(|j| j.phase.pending()) {
+        // Identity is (path, kind): a corpus and its recordings share a path,
+        // and deduplicating on the path alone would have each wipe the others.
+        let same = |j: &Job| j.path == path && j.kind == kind;
+        if self.0.jobs.borrow().iter().any(|j| same(j) && j.phase.pending()) {
             return false;
         }
         // An earlier attempt, finished or failed, makes way for the new one.
-        self.0.jobs.borrow_mut().retain(|j| j.path != path);
+        self.0.jobs.borrow_mut().retain(|j| !same(j));
 
         let id = {
             let mut n = self.0.next_id.borrow_mut();
@@ -352,6 +398,7 @@ impl Manager {
             id,
             path: path.to_vec(),
             phase: Phase::Queued,
+            kind,
             dest_root,
             cancel: Arc::new(AtomicBool::new(false)),
             announced: false,
@@ -362,9 +409,10 @@ impl Manager {
         true
     }
 
-    /// Queues a single corpus.
-    pub fn start(&self, path: &[String], dest_root: PathBuf) {
-        if !self.enqueue(path, dest_root, None, 1) {
+    /// Queues a single corpus. `with_media` also fetches the recordings, once
+    /// the transcripts are on disk and their `@Media` headers can be read.
+    pub fn start(&self, path: &[String], dest_root: PathBuf, with_media: bool) {
+        if !self.enqueue(path, JobKind::Corpus { with_media }, dest_root, None, 1) {
             self.0.app.toast(&t("This corpus is already downloading."));
             return;
         }
@@ -372,20 +420,55 @@ impl Manager {
         self.pump();
     }
 
+    /// Queues only the recordings of a corpus that is already on disk.
+    ///
+    /// This is the repair path: someone who downloaded a corpus before turning
+    /// the option on should not have to fetch the transcripts again.
+    pub fn start_media_only(&self, path: &[String], dest_root: PathBuf) {
+        let dest = talkbank_archive::download::destination(&dest_root, path);
+        let queued = self.enqueue_media_for(path, &dest, &dest_root, None, 1);
+        self.notify_watchers();
+        self.pump();
+        if queued == 0 {
+            self.0
+                .app
+                .toast(&t("No media to fetch: this corpus already has all of them."));
+        }
+    }
+
     /// Queues a whole branch. The paths come from the plan, so they are already
     /// the minimal set covering it. `root` is the folder the user started from:
     /// it tells us where to open once the work is done.
     ///
     /// `again` re-queues even what is already on disk.
-    pub fn start_many(&self, paths: &[Vec<String>], dest_root: PathBuf, root: &[String], again: bool) {
+    pub fn start_many(
+        &self,
+        paths: &[Vec<String>],
+        dest_root: PathBuf,
+        root: &[String],
+        again: bool,
+        with_media: bool,
+    ) {
         let mut queued = 0;
         for path in paths {
             // Anything already complete is skipped: these are megabytes, not
-            // requests.
+            // requests. With media wanted, "complete" is not enough — the
+            // transcripts may be there while the recordings are not — so the
+            // media are queued straight from what is already on disk.
             if !again && talkbank_archive::download::already_there(&dest_root, path) {
+                if with_media {
+                    let dest = talkbank_archive::download::destination(&dest_root, path);
+                    queued += self.enqueue_media_for(path, &dest, &dest_root, Some(root), paths.len());
+                }
                 continue;
             }
-            if self.enqueue(path, dest_root.clone(), Some(root), paths.len()) {
+            if self.enqueue(
+                path,
+                JobKind::Corpus { with_media },
+                dest_root.clone(),
+                Some(root),
+                paths.len(),
+            ) {
                 queued += 1;
             }
         }
@@ -394,6 +477,54 @@ impl Manager {
         if queued == 0 {
             self.0.app.toast(&t("Nothing left to download: it is all already here."));
         }
+    }
+
+    /// Reads the `@Media` headers of an extracted corpus and queues one job per
+    /// recording. Returns how many were queued.
+    ///
+    /// This runs after extraction because the header is the only authority on
+    /// the filename: it usually matches the transcript's own name, but the CHAT
+    /// format does not promise it.
+    fn enqueue_media_for(
+        &self,
+        path: &[String],
+        dest: &std::path::Path,
+        dest_root: &std::path::Path,
+        group_root: Option<&[String]>,
+        group_total: usize,
+    ) -> usize {
+        let mut queued = 0;
+        for (file, media) in transcripts_with_media(dest) {
+            // `missing` means the archive does not hold it: asking would only
+            // earn a 404 and a row in the panel saying so.
+            if !media.is_fetchable() {
+                continue;
+            }
+            let Some(parent) = file.parent() else { continue };
+            // The archive path of the folder the transcript sits in, which is
+            // the corpus path plus whatever subfolders the zip created.
+            let mut dir = path.to_vec();
+            if let Ok(rel) = parent.strip_prefix(dest) {
+                dir.extend(rel.components().map(|c| c.as_os_str().to_string_lossy().into_owned()));
+            }
+            let ext = talkbank_archive::download::extensions(media.video)[0];
+            let url = talkbank_archive::api::media_url(&dir, &media.basename, ext);
+            let target = parent.join(format!("{}.{ext}", media.basename));
+            // Already there: nothing to do, and saying so keeps the panel honest.
+            if target.is_file() {
+                continue;
+            }
+            if self.enqueue(
+                path,
+                JobKind::Media { url, dest: target },
+                dest_root.to_path_buf(),
+                group_root,
+                group_total,
+            ) {
+                queued += 1;
+            }
+        }
+        queued
     }
 
     /// Starts queued jobs up to the concurrency limit.
@@ -427,27 +558,57 @@ impl Manager {
             if active >= PARALLEL {
                 break;
             }
-            let next = self
-                .0
-                .jobs
-                .borrow()
-                .iter()
-                .find(|j| j.phase == Phase::Queued)
-                .map(|j| (j.id, j.path.clone(), j.dest_root.clone(), j.cancel.clone()));
-            let Some((id, path, dest_root, cancel)) = next else {
+            // Transcripts jump the queue. A branch of twenty-four corpora
+            // queues its first corpus's recordings — hundreds of megabytes —
+            // before the twenty-third corpus's transcripts, which are 23 KB
+            // each. In insertion order the small, immediately useful files
+            // would wait hours behind the large ones.
+            let pick = |only_corpora: bool| {
+                self.0
+                    .jobs
+                    .borrow()
+                    .iter()
+                    .find(|j| {
+                        j.phase == Phase::Queued && (!only_corpora || j.kind.is_corpus())
+                    })
+                    .map(|j| {
+                        (
+                            j.id,
+                            j.path.clone(),
+                            j.kind.clone(),
+                            j.dest_root.clone(),
+                            j.cancel.clone(),
+                        )
+                    })
+            };
+            let Some((id, path, kind, dest_root, cancel)) = pick(true).or_else(|| pick(false))
+            else {
                 break;
             };
             // Mark it started *before* launching: `spawn_with_progress` can
             // finish immediately on an error and re-enter here.
             self.set_phase(id, Phase::Downloading(0));
-            self.launch(id, path, dest_root, cancel);
+            self.launch(id, path, kind, dest_root, cancel);
         }
     }
 
-    fn launch(&self, id: u64, path: Vec<String>, dest_root: PathBuf, cancel: Arc<AtomicBool>) {
+    fn launch(
+        &self,
+        id: u64,
+        path: Vec<String>,
+        kind: JobKind,
+        dest_root: PathBuf,
+        cancel: Arc<AtomicBool>,
+    ) {
+        if let JobKind::Media { url, dest } = kind {
+            self.launch_media(id, url, dest, cancel);
+            return;
+        }
+        let with_media = matches!(kind, JobKind::Corpus { with_media: true });
         let p = path.clone();
         let this = self.clone();
         let done_path = path.clone();
+        let root_dir = dest_root.clone();
         let stop = cancel.clone();
         net().spawn_with_progress(
             move |tx| async move {
@@ -486,7 +647,28 @@ impl Manager {
                     tracing::warn!("download failed: {} — {e}", done_path.join("/"));
                 }
                 match res {
-                    Ok(dest) => this.set_phase(id, Phase::Done(dest)),
+                    Ok(dest) => {
+                        // The transcripts are on disk, so their `@Media`
+                        // headers can finally be read.
+                        if with_media {
+                            let (root, total) = this
+                                .0
+                                .jobs
+                                .borrow()
+                                .iter()
+                                .find(|j| j.id == id)
+                                .map(|j| (j.group_root.clone(), j.group_total))
+                                .unwrap_or((None, 1));
+                            this.enqueue_media_for(
+                                &done_path,
+                                &dest,
+                                &root_dir,
+                                root.as_deref(),
+                                total,
+                            );
+                        }
+                        this.set_phase(id, Phase::Done(dest));
+                    }
                     Err(E::Cancelled) => this.set_phase(id, Phase::Cancelled),
                     Err(E::AuthRequired) => {
                         // The session expired: the rest of the queue would fail
@@ -512,6 +694,61 @@ impl Manager {
         );
     }
 
+    /// One recording. No zip and no extraction, so the phases are just
+    /// `Downloading` and `Done`.
+    fn launch_media(&self, id: u64, url: String, dest: PathBuf, cancel: Arc<AtomicBool>) {
+        let this = self.clone();
+        let stop = cancel.clone();
+        let u = url.clone();
+        let d = dest.clone();
+        let log_url = url.clone();
+        net().spawn_with_progress(
+            move |tx| async move {
+                talkbank_archive::download::media(net().client(), &u, &d, |pr| {
+                    let _ = tx.try_send(pr);
+                    !stop.load(Ordering::Relaxed)
+                })
+                .await
+            },
+            {
+                let this = self.clone();
+                move |pr| {
+                    if let talkbank_archive::download::Progress::Downloading(b) = pr {
+                        this.set_phase(id, Phase::Downloading(b));
+                    }
+                }
+            },
+            move |res| {
+                use talkbank_archive::download::DownloadError as E;
+                match res {
+                    Ok(()) => this.set_phase(id, Phase::Done(dest)),
+                    Err(E::Cancelled) => this.set_phase(id, Phase::Cancelled),
+                    Err(E::AuthRequired) => {
+                        this.set_phase(id, Phase::Queued);
+                        this.pause(Paused::SignInNeeded);
+                        this.0.app.ask_to_sign_in();
+                    }
+                    Err(E::NoSpace { .. }) => {
+                        this.set_phase(id, Phase::Queued);
+                        this.pause(Paused::DiskFull);
+                    }
+                    Err(E::NotAvailable) => {
+                        // The header named a recording the archive does not
+                        // serve. One row says so; the corpus stays a success.
+                        tracing::info!("media not on the server: {log_url}");
+                        this.set_phase(id, Phase::Failed(t("Media file not found")));
+                    }
+                    Err(e) => {
+                        tracing::warn!("media download failed: {log_url} — {e}");
+                        this.set_phase(id, Phase::Failed(describe(&e)));
+                    }
+                }
+                this.pump();
+                this.announce_if_idle();
+            },
+        );
+    }
+
     /// Reports the outcome once the queue empties: once per group, not once per
     /// corpus.
     fn announce_if_idle(&self) {
@@ -526,8 +763,20 @@ impl Manager {
                 // The expected total comes from the group: it is what allows
                 // "23 of 24" instead of "23", which is the difference between
                 // noticing a loss and not noticing it.
-                e.expected = e.expected.max(j.group_total);
+                if j.kind.is_corpus() {
+                    e.expected = e.expected.max(j.group_total);
+                }
                 match &j.phase {
+                    Phase::Done(dest) if !j.kind.is_corpus() => {
+                        e.media += 1;
+                        // A recording alone should still offer a way in.
+                        e.where_to.get_or_insert_with(|| match &j.group_root {
+                            Some(root) => {
+                                talkbank_archive::download::destination(&j.dest_root, root)
+                            }
+                            None => dest.parent().map(Into::into).unwrap_or_else(|| dest.clone()),
+                        });
+                    }
                     Phase::Done(dest) => {
                         e.done += 1;
                         e.name = j.title();
@@ -548,7 +797,8 @@ impl Manager {
             }
             e
         };
-        if outcome.done == 0 && outcome.failed == 0 && outcome.cancelled == 0 {
+        if outcome.done == 0 && outcome.failed == 0 && outcome.cancelled == 0 && outcome.media == 0
+        {
             return;
         }
         self.notify_watchers();
@@ -795,6 +1045,9 @@ struct Outcome {
     done: usize,
     failed: usize,
     cancelled: usize,
+    /// Recordings that arrived. Counted apart from the corpora: they are a
+    /// different unit, and "24 corpora" would be a lie if it meant 24 mp3s.
+    media: usize,
     /// The name of the last one finished, for the singular phrasing.
     name: String,
     /// The folder to open.
@@ -808,21 +1061,70 @@ impl Outcome {
     }
 
     fn headline(&self) -> String {
+        // Recordings with no corpus beside them: the repair path, where someone
+        // fetched the media of a corpus that was already on disk.
+        if self.done == 0 && self.media > 0 && self.failed == 0 && self.cancelled == 0 {
+            return tn("%u media file downloaded.", "%u media files downloaded.", self.media as u32)
+                .replace("%u", &self.media.to_string());
+        }
         // A single corpus is called by name; a group is counted, and if anything
         // is missing the count says so.
         if self.expected <= 1 && self.failed == 0 && self.cancelled == 0 && self.done == 1 {
-            return t("%s downloaded.").replace("%s", &self.name);
+            let corpus = t("%s downloaded.").replace("%s", &self.name);
+            if self.media == 0 {
+                return corpus;
+            }
+            return format!(
+                "{corpus} {}",
+                tn("%u media file too.", "%u media files too.", self.media as u32)
+                    .replace("%u", &self.media.to_string())
+            );
         }
         if self.done == 0 {
             return t("Download failed");
         }
         if !self.incomplete() {
-            return tn("%u corpus downloaded.", "%u corpora downloaded.", self.done as u32)
+            let corpora = tn("%u corpus downloaded.", "%u corpora downloaded.", self.done as u32)
                 .replace("%u", &self.done.to_string());
+            if self.media == 0 {
+                return corpora;
+            }
+            return format!(
+                "{corpora} {}",
+                tn("%u media file too.", "%u media files too.", self.media as u32)
+                    .replace("%u", &self.media.to_string())
+            );
         }
         t("%d of %u corpora downloaded.")
             .replace("%d", &self.done.to_string())
             .replace("%u", &self.expected.max(self.done).to_string())
+    }
+}
+
+/// Every transcript under `dir` that declares a recording, with the declaration.
+///
+/// Recursive: a corpus zip keeps its own subfolders (`Brown/Adam/adam01.cha`),
+/// and the recording sits next to its transcript, not at the corpus root.
+fn transcripts_with_media(dir: &std::path::Path) -> Vec<(PathBuf, talkbank_engine::chat::MediaRef)> {
+    let mut out = Vec::new();
+    collect_media(dir, &mut out);
+    out.sort_by(|a, b| a.0.cmp(&b.0));
+    out
+}
+
+fn collect_media(dir: &std::path::Path, out: &mut Vec<(PathBuf, talkbank_engine::chat::MediaRef)>) {
+    let Ok(entries) = std::fs::read_dir(dir) else {
+        return;
+    };
+    for entry in entries.flatten() {
+        let path = entry.path();
+        if path.is_dir() {
+            collect_media(&path, out);
+        } else if path.extension().is_some_and(|e| e == "cha") {
+            if let Some(media) = talkbank_engine::chat::inspect(&path).media {
+                out.push((path, media));
+            }
+        }
     }
 }
 
@@ -850,10 +1152,26 @@ mod tests {
     use super::*;
 
     fn job(path: &[&str], phase: Phase) -> Job {
+        kinded_job(path, phase, JobKind::Corpus { with_media: false })
+    }
+
+    fn media_job(path: &[&str], name: &str, phase: Phase) -> Job {
+        kinded_job(
+            path,
+            phase,
+            JobKind::Media {
+                url: format!("https://media.talkbank.org/{name}"),
+                dest: PathBuf::from("/data").join(name),
+            },
+        )
+    }
+
+    fn kinded_job(path: &[&str], phase: Phase, kind: JobKind) -> Job {
         Job {
             id: 1,
             path: path.iter().map(|s| s.to_string()).collect(),
             phase,
+            kind,
             dest_root: PathBuf::from("/data"),
             cancel: Arc::new(AtomicBool::new(false)),
             announced: false,
@@ -917,6 +1235,37 @@ mod tests {
         // and that has to be said even when it was a decision.
         let stopped = Outcome { expected: 5, done: 2, cancelled: 3, ..Default::default() };
         assert!(stopped.incomplete());
+    }
+
+    #[test]
+    fn a_media_job_is_named_by_its_file_and_placed_under_its_corpus() {
+        let j = media_job(&["childes", "Eng-NA", "Brown"], "adam01.mp3", Phase::Queued);
+        assert_eq!(j.title(), "adam01.mp3");
+        // The corpus keeps its name in the title, so a recording has to show it
+        // in the origin instead — otherwise the panel never says which corpus.
+        assert_eq!(j.where_from(), "CHILDES · Eng-NA / Brown");
+
+        let c = job(&["childes", "Eng-NA", "Brown"], Phase::Queued);
+        assert_eq!(c.title(), "Brown");
+        assert_eq!(c.where_from(), "CHILDES · Eng-NA");
+    }
+
+    #[test]
+    fn a_queue_of_recordings_is_counted_apart_from_the_corpora() {
+        // "24 corpora" would be a lie if it meant 24 mp3s.
+        let one = Outcome { expected: 1, done: 1, name: "Brown".into(), media: 27, ..Default::default() };
+        let h = one.headline();
+        assert!(h.contains("Brown"), "{h}");
+        assert!(h.contains("27"), "{h}");
+        assert!(!one.incomplete());
+
+        // The repair path: recordings alone, no corpus beside them.
+        let repair = Outcome { media: 27, ..Default::default() };
+        assert!(repair.headline().contains("27"), "{}", repair.headline());
+
+        // And a corpus with no media reads exactly as it did before.
+        let plain = Outcome { expected: 1, done: 1, name: "Brown".into(), ..Default::default() };
+        assert_eq!(plain.headline(), t("%s downloaded.").replace("%s", "Brown"));
     }
 
     #[test]

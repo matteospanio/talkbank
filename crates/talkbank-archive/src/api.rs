@@ -24,6 +24,13 @@ use serde_json::{json, Value};
 pub const BASE: &str = "https://sla2.talkbank.org";
 pub const DATA_BASE: &str = "https://talkbank.org/data";
 
+/// Where the media live. A different host from the transcripts, and the only
+/// place they are served: `talkbank.org/data/<path>.mp3` answers 404.
+///
+/// The session cookie is set on `.talkbank.org`, so the same authenticated
+/// client reaches this host with no extra work.
+pub const MEDIA_BASE: &str = "https://media.talkbank.org";
+
 /// The outcome of a call, classified once here so that every caller can react
 /// consistently.
 #[derive(Debug)]
@@ -386,6 +393,26 @@ pub fn corpus_zip_url(path: &[String]) -> String {
     format!("{DATA_BASE}/{}?f=zip", path.join("/"))
 }
 
+/// URL of one media file.
+///
+/// `dir` is the archive path of the folder holding the transcript, bank
+/// included; `basename` comes from the transcript's `@Media` header.
+///
+/// Built through `Url` rather than `format!` because a basename can contain
+/// spaces, and the two builders above would happily produce a broken URL.
+pub fn media_url(dir: &[String], basename: &str, ext: &str) -> String {
+    let mut url = reqwest::Url::parse(MEDIA_BASE).expect("MEDIA_BASE is a valid URL");
+    {
+        let mut segments = url
+            .path_segments_mut()
+            .expect("MEDIA_BASE can be a base");
+        segments.pop_if_empty();
+        segments.extend(dir);
+        segments.push(&format!("{basename}.{ext}"));
+    }
+    url.into()
+}
+
 /// Public description page, to open in a browser: it holds the required citation
 /// and the history of the corpus.
 pub fn corpus_page_url(path: &[String]) -> String {
@@ -462,6 +489,26 @@ mod tests {
         assert_eq!(
             corpus_page_url(&p(&["childes", "Eng-NA", "Brown"])),
             "https://childes.talkbank.org/access/Eng-NA/Brown.html"
+        );
+        // Measured against the live service: media sit on their own host, and
+        // `talkbank.org/data/<path>.mp3` answers 404.
+        assert_eq!(
+            media_url(&p(&["ca", "ATC", "disasters"]), "alaska261_2000", "mp3"),
+            "https://media.talkbank.org/ca/ATC/disasters/alaska261_2000.mp3"
+        );
+        assert_eq!(
+            media_url(&p(&["childes", "Biling", "Bailleul"]), "020408", "mp4"),
+            "https://media.talkbank.org/childes/Biling/Bailleul/020408.mp4"
+        );
+    }
+
+    #[test]
+    fn a_media_name_with_spaces_is_encoded_not_broken() {
+        // `format!` would emit a raw space and produce an invalid URL; a
+        // basename is archive data, so it cannot be assumed to be tidy.
+        assert_eq!(
+            media_url(&p(&["ca", "ATC"]), "two words", "mp3"),
+            "https://media.talkbank.org/ca/ATC/two%20words.mp3"
         );
     }
 

@@ -1794,3 +1794,57 @@ msgstr ""
 
 msgid "%d of %u corpora downloaded."
 msgstr ""
+
+msgid "Include audio and video"
+msgstr ""
+
+msgid "Checking how much that adds…"
+msgstr ""
+
+msgid "On your disk"
+msgstr ""
+
+msgid "Get the media"
+msgstr ""
+
+msgid "About %s of transcripts."
+msgstr ""
+
+msgid "Include audio and video — checking size…"
+msgstr ""
+
+msgid "This corpus has no media"
+msgstr ""
+
+msgid "%n file"
+msgid_plural "%n files"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%n, about %s more"
+msgstr ""
+
+msgid "Include audio and video — about %s more (estimate)"
+msgstr ""
+
+msgid "No media to fetch: this corpus already has all of them."
+msgstr ""
+
+msgid "Media file not found"
+msgstr ""
+
+msgid "%u media file downloaded."
+msgid_plural "%u media files downloaded."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%u media file too."
+msgid_plural "%u media files too."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Include audio and video by default"
+msgstr ""
+
+msgid "Recordings are much larger than transcripts — often hundreds of megabytes per corpus."
+msgstr ""

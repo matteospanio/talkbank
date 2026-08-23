@@ -168,8 +168,8 @@ out (anything needing authorisation, and anything that could not be verified).
 Nothing starts before that confirmation.
 
 Two things the confirmation says that are worth reading: the size estimate is
-**approximate** (23 KB per transcript, measured over four corpora), and **media
-are not included** — the zip holds transcripts only. Anything already on disk is
+**approximate** (23 KB per transcript, measured over four corpora), and media are
+included only if you ask — see below. Anything already on disk is
 skipped, and if you would rather fetch it again there is "Download again".
 
 On a very large branch the survey stops after five hundred folders and says so:
@@ -198,6 +198,37 @@ and an interruption leaves nothing half-done.
 On a corpus page you will find what it contains, the citation to use, the metadata
 (languages, study type, activity, group) and the participants — the last of these
 only on request, because on a large corpus that call can take half a minute.
+
+### Audio and video
+
+The corpus zip holds transcripts only. The recordings are fetched separately, and
+only if you ask for them: **Include audio and video**, the switch just above the
+Download button, and the tick box in the "Download all" confirmation.
+
+It is off by default, and worth understanding why. A transcript is 23 KB. An
+audio file is between half a megabyte and seventy; a video file is between two
+hundred megabytes and a gigabyte. One corpus of video comes to roughly ten
+gigabytes. So the switch tells you what it would add — «27 files, about 54 MB
+more» — measured by sampling the actual corpus, because between corpora the sizes
+differ by a factor of twenty-five and no general rule would be any use.
+
+The recordings land **next to their transcripts**, which is where CLAN and
+Batchalign look for them: after this, `adam01.mp3` sits beside `adam01.cha`, and
+the transcription and alignment tasks stop telling you the media is missing.
+
+They arrive after the transcripts, so you can start working while they come in,
+and transcripts always take priority in the queue — on a branch of twenty-four
+corpora you get all the text first, then the recordings.
+
+If you already downloaded a corpus without them, its page offers **Get the
+media**: only the recordings, without fetching the transcripts again. The same
+applies to anything interrupted — every file is checked individually, so
+downloading again only picks up what is missing.
+
+A few transcripts name a recording the archive does not hold. Those are marked
+`missing` and skipped without asking; if one turns out to be absent anyway it
+gets a line of its own in the downloads panel, and the corpus still counts as
+complete.
 
 **Download** puts the corpus in `<destination>/<bank>/<…>/<corpus>/` — the bank is
 part of the path, so CHILDES's `Eng-NA` and PhonBank's `Eng-NA` do not get mixed

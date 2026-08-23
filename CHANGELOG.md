@@ -6,6 +6,23 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **Audio and video downloads.** The archive serves recordings from a separate
+  host and never puts them in the corpus zip, so they are now fetched as their
+  own transfers: a switch on the corpus page, a tick box in the "Download all"
+  confirmation, and **Get the media** for a corpus already on disk. Files land
+  next to their transcripts, where CLAN and Batchalign look for them.
+- The size is estimated by sampling the corpus rather than from a constant.
+  Audio runs 0.5-68 MB per file and video 203-963 MB, and between corpora the
+  spread is twenty-five fold, so a general figure would be worthless. The
+  estimate is shown before anything is committed to.
+- Transcripts now take priority over recordings in the download queue: on a large
+  branch all the text arrives first, and the media follow.
+- `@Media` is read from each transcript, and is the authority on which file to
+  fetch.
+- A new preference, "Include audio and video by default".
+
 ## [0.1.1] - 2026-08-23
 
 ### Fixed

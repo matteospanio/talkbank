@@ -1794,3 +1794,57 @@ msgstr "Trova il corpus"
 
 msgid "%d of %u corpora downloaded."
 msgstr "Scaricati %d corpora su %u."
+
+msgid "Include audio and video"
+msgstr "Includi audio e video"
+
+msgid "Checking how much that adds…"
+msgstr "Sto controllando quanto aggiunge…"
+
+msgid "On your disk"
+msgstr "Sul tuo disco"
+
+msgid "Get the media"
+msgstr "Prendi i media"
+
+msgid "About %s of transcripts."
+msgstr "Circa %s di trascrizioni."
+
+msgid "Include audio and video — checking size…"
+msgstr "Includi audio e video — controllo la dimensione…"
+
+msgid "This corpus has no media"
+msgstr "Questo corpus non ha media"
+
+msgid "%n file"
+msgid_plural "%n files"
+msgstr[0] "%n file"
+msgstr[1] "%n file"
+
+msgid "%n, about %s more"
+msgstr "%n, circa %s in più"
+
+msgid "Include audio and video — about %s more (estimate)"
+msgstr "Includi audio e video — circa %s in più (stima)"
+
+msgid "No media to fetch: this corpus already has all of them."
+msgstr "Nessun media da prendere: questo corpus li ha già tutti."
+
+msgid "Media file not found"
+msgstr "File media non trovato"
+
+msgid "%u media file downloaded."
+msgid_plural "%u media files downloaded."
+msgstr[0] "%u file media scaricato."
+msgstr[1] "%u file media scaricati."
+
+msgid "%u media file too."
+msgid_plural "%u media files too."
+msgstr[0] "Anche %u file media."
+msgstr[1] "Anche %u file media."
+
+msgid "Include audio and video by default"
+msgstr "Includi audio e video per impostazione predefinita"
+
+msgid "Recordings are much larger than transcripts — often hundreds of megabytes per corpus."
+msgstr "Le registrazioni sono molto più grandi delle trascrizioni: spesso centinaia di megabyte per corpus."

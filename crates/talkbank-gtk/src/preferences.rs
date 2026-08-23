@@ -258,6 +258,18 @@ fn folders_group(app: &App) -> adw::PreferencesGroup {
     wd.set_subtitle_selectable(true);
     g.add(&wd);
 
+    let media = adw::SwitchRow::new();
+    media.set_title(&t("Include audio and video by default"));
+    media.set_subtitle(&t(
+        "Recordings are much larger than transcripts — often hundreds of megabytes per corpus.",
+    ));
+    media.set_active(config::with(|c| c.download_media));
+    media.connect_active_notify(|s| {
+        let on = s.is_active();
+        config::update(|c| c.download_media = on);
+    });
+    g.add(&media);
+
     let bin = adw::ActionRow::new();
     bin.set_title(&t("CLAN programs"));
     bin.set_subtitle(

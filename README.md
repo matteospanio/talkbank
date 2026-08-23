@@ -8,7 +8,8 @@ download the corpora of all fifteen TalkBank banks.
 
 One window, four sections: **Start** (resume your work), **Transcripts** (editor
 with format checking), **Analyses** (the 70 CLAN programs plus the Batchalign
-tasks), **Archive** (browse and download TalkBank).
+tasks), **Archive** (browse and download TalkBank — transcripts, and the audio
+and video too when you ask for them).
 
 > **Not affiliated with Carnegie Mellon University.** CLAN and the TalkBank
 > archive are the work of Brian MacWhinney and the TalkBank project; this is an

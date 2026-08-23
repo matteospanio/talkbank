@@ -52,6 +52,12 @@ pub struct Inner {
     browse_group: RefCell<Option<adw::PreferencesGroup>>,
     search_text: RefCell<String>,
     logged_in: Cell<bool>,
+    /// The "include audio and video" row of the corpus page on screen, so the
+    /// metadata request that page already makes can fill in the estimate
+    /// instead of a second one being fired for it.
+    media_row: RefCell<Option<adw::SwitchRow>>,
+    /// What that row is set to, read when Download is pressed.
+    media_wanted: Rc<Cell<bool>>,
 }
 
 #[derive(Clone)]
@@ -85,6 +91,8 @@ pub fn page(parent: &App) -> (gtk::Widget, ArchiveWindow) {
         browse_group: RefCell::new(None),
         search_text: RefCell::new(String::new()),
         logged_in: Cell::new(false),
+        media_row: RefCell::new(None),
+        media_wanted: Rc::new(Cell::new(false)),
     }));
 
     let vb = gtk::Box::new(gtk::Orientation::Vertical, 0);
@@ -483,6 +491,7 @@ impl ArchiveWindow {
 
         let this = self.clone();
         let p = path.to_vec();
+        let p2 = path.to_vec();
         let meta2 = meta.clone();
         let loading2 = loading.clone();
         net().spawn(
@@ -499,7 +508,10 @@ impl ArchiveWindow {
                 }
                 meta2.remove(&loading2);
                 match res {
-                    Ok(table) => this.fill_contents(&meta2, &table),
+                    Ok(table) => {
+                        this.fill_contents(&meta2, &table);
+                        this.estimate_media(&p2, &table);
+                    }
                     Err(e) => {
                         if e.is_degradable() {
                             tracing::debug!("metadata unavailable: {e}");
@@ -713,6 +725,26 @@ impl ArchiveWindow {
         dest_row.add_suffix(&change);
         g.add(&dest_row);
 
+        // The media switch. It sits above the action row because it changes what
+        // that row is about to do, and the size it announces is the reason
+        // someone would leave it off.
+        let media_row = adw::SwitchRow::new();
+        media_row.set_title(&t("Include audio and video"));
+        media_row.set_subtitle(&t("Checking how much that adds…"));
+        media_row.set_sensitive(false);
+        media_row.set_active(crate::config::with(|c| c.download_media));
+        self.media_wanted.set(media_row.is_active());
+        let wanted = self.media_wanted.clone();
+        media_row.connect_active_notify(move |s| {
+            let on = s.is_active();
+            wanted.set(on);
+            // Also the default for next time: the choice is nearly always the
+            // same for one person's way of working.
+            crate::config::update(|c| c.download_media = on);
+        });
+        g.add(&media_row);
+        *self.media_row.borrow_mut() = Some(media_row.clone());
+
         let action = adw::ActionRow::new();
         action.set_title(&t("Download this corpus"));
         action.set_subtitle(&t("Checking whether this folder can be downloaded…"));
@@ -742,8 +774,12 @@ impl ArchiveWindow {
         let this = self.clone();
         let p = path.to_vec();
         let r = branch.clone();
+        let media_only = Rc::new(Cell::new(false));
+        let mo = media_only.clone();
         button.connect_clicked(move |_| {
-            if r.get() {
+            if mo.get() {
+                this.start_media_only(&p);
+            } else if r.get() {
                 this.start_branch(&p);
             } else {
                 this.start_download(&p);
@@ -757,6 +793,8 @@ impl ArchiveWindow {
             .iter()
             .filter(|c| c.transcripts > 0)
             .count();
+
+        let on_disk = talkbank_archive::download::already_there(&self.download_dir(), path);
 
         // The probe: the only thing that separates a corpus from a collection.
         let p = path.to_vec();
@@ -777,10 +815,24 @@ impl ArchiveWindow {
                 match outcome {
                     Downloadable::Yes => {
                         btn.set_sensitive(true);
-                        act.set_subtitle(
-                            &tn("%u transcript", "%u transcripts", n as u32)
-                                .replace("%u", &n.to_string()),
-                        );
+                        if on_disk {
+                            // Already downloaded. The interesting question is no
+                            // longer "get this?" but "get what is missing?",
+                            // which for most people means the recordings.
+                            media_only.set(true);
+                            act.set_title(&t("On your disk"));
+                            act.set_subtitle(
+                                &tn("%u transcript", "%u transcripts", n as u32)
+                                    .replace("%u", &n.to_string()),
+                            );
+                            btn.set_label(&t("Get the media"));
+                            btn.remove_css_class("suggested-action");
+                        } else {
+                            act.set_subtitle(
+                                &tn("%u transcript", "%u transcripts", n as u32)
+                                    .replace("%u", &n.to_string()),
+                            );
+                        }
                     }
                     Downloadable::No if useful_children > 0 => {
                         // Not a corpus, but there are corpora below: the button
@@ -983,8 +1035,7 @@ impl ArchiveWindow {
         let mut body = vec![
             tn("%u transcript in all", "%u transcripts in all", plan.transcripts as u32)
                 .replace("%u", &plan.transcripts.to_string()),
-            t("About %s, transcripts only — media files are not included.")
-                .replace("%s", &human_size(plan.transcripts)),
+            t("About %s of transcripts.").replace("%s", &human_size(plan.transcripts)),
             t("Into %p").replace("%p", &dest.display().to_string()),
         ];
         if already > 0 {
@@ -1053,19 +1104,56 @@ impl ArchiveWindow {
         }
         dlg.set_close_response("cancel");
 
+        // The media choice rides in the dialog rather than in a preference: on a
+        // branch it is the difference between 27 MB and 14 GB, so it belongs in
+        // front of the person about to commit to it.
+        let media = gtk::CheckButton::with_label(&t("Include audio and video"));
+        media.set_active(crate::config::with(|c| c.download_media));
+        media.set_margin_top(6);
+        dlg.set_extra_child(Some(&media));
+
+        // Sampling costs a handful of requests, so it only runs if the box is
+        // actually ticked.
+        let this = self.clone();
+        let sampled = Rc::new(Cell::new(false));
+        let corpora = plan.corpora.clone();
+        let m2 = media.clone();
+        media.connect_toggled(move |c| {
+            let on = c.is_active();
+            crate::config::update(|cfg| cfg.download_media = on);
+            if !on || sampled.replace(true) {
+                return;
+            }
+            c.set_label(Some(&t("Include audio and video — checking size…")));
+            this.estimate_branch_media(&corpora, &m2);
+        });
+        if media.is_active() {
+            media.emit_by_name::<()>("toggled", &[]);
+        }
+
         let this = self.clone();
         let r = root.to_vec();
-        dlg.choose(Some(&self.win), gio::Cancellable::NONE, move |resp| match resp.as_str() {
-            "go" => this
-                .parent
-                .downloads()
-                .start_many(&plan.corpora, this.download_dir(), &r, false),
-            "again" => this
-                .parent
-                .downloads()
-                .start_many(&plan.corpora, this.download_dir(), &r, true),
-            "more" => this.keep_looking(&r, plan.clone()),
-            _ => {}
+        let m3 = media.clone();
+        dlg.choose(Some(&self.win), gio::Cancellable::NONE, move |resp| {
+            let with_media = m3.is_active();
+            match resp.as_str() {
+                "go" => this.parent.downloads().start_many(
+                    &plan.corpora,
+                    this.download_dir(),
+                    &r,
+                    false,
+                    with_media,
+                ),
+                "again" => this.parent.downloads().start_many(
+                    &plan.corpora,
+                    this.download_dir(),
+                    &r,
+                    true,
+                    with_media,
+                ),
+                "more" => this.keep_looking(&r, plan.clone()),
+                _ => {}
+            }
         });
     }
 
@@ -1180,11 +1268,165 @@ impl ArchiveWindow {
 
     /// Starts the download by handing it to the manager: from here on the page
     /// is out of the picture, and you can change section without stopping it.
+    /// Fills in what the media would cost, from the metadata the page already
+    /// fetched plus a small sample of real file sizes.
+    ///
+    /// The count is exact and free: the table says which transcripts declare a
+    /// recording. The size is sampled, because it cannot be guessed — audio runs
+    /// from half a megabyte to seventy, and one corpus of video reaches ten
+    /// gigabytes. A per-corpus sample is the only estimate worth showing.
+    fn estimate_media(&self, path: &[String], table: &api::Table) {
+        let Some(row) = self.media_row.borrow().clone() else {
+            return;
+        };
+        // Names of the transcripts that declare a recording, and whether it is
+        // video. `missing` means the archive does not hold it.
+        let candidates: Vec<(String, bool)> = table
+            .rows
+            .iter()
+            .filter_map(|r| {
+                let flags = table.get(r, "media")?;
+                if flags.contains("missing") {
+                    return None;
+                }
+                let name = table.get(r, "filename")?;
+                Some((name.to_string(), flags.contains("video")))
+            })
+            .collect();
+
+        if candidates.is_empty() {
+            row.set_subtitle(&t("This corpus has no media"));
+            row.set_active(false);
+            row.set_sensitive(false);
+            self.media_wanted.set(false);
+            return;
+        }
+        row.set_sensitive(true);
+
+        let total = candidates.len();
+        // Five is enough for an order of magnitude and cheap enough to run on
+        // every corpus page.
+        let sample: Vec<(Vec<String>, String, bool)> = candidates
+            .iter()
+            .take(5)
+            .map(|(name, video)| (path.to_vec(), name.clone(), *video))
+            .collect();
+
+        let r2 = row.clone();
+        net().spawn(
+            async move {
+                let mut sizes = Vec::new();
+                for (dir, name, video) in sample {
+                    let ext = talkbank_archive::download::extensions(video)[0];
+                    let url = talkbank_archive::api::media_url(&dir, &name, ext);
+                    if let Some(n) = talkbank_archive::download::media_size(net().client(), &url).await
+                    {
+                        sizes.push(n);
+                    }
+                }
+                sizes
+            },
+            move |sizes| {
+                if r2.root().is_none() {
+                    return;
+                }
+                let counted = tn("%n file", "%n files", total as u32)
+                    .replace("%n", &total.to_string());
+                if sizes.is_empty() {
+                    // Signed out, or the names do not line up with the server.
+                    // Say the count and stop guessing at the size.
+                    r2.set_subtitle(&counted);
+                    return;
+                }
+                let mean = sizes.iter().sum::<u64>() / sizes.len() as u64;
+                r2.set_subtitle(
+                    &t("%n, about %s more")
+                        .replace("%n", &counted)
+                        .replace("%s", &human_bytes(mean * total as u64)),
+                );
+            },
+        );
+    }
+
+    /// What the recordings of a whole branch would cost, roughly.
+    ///
+    /// Sampling every corpus would be dozens of requests, so three are taken and
+    /// scaled by the transcript count. The label says "estimate" because with a
+    /// 25x spread between corpora it genuinely is one.
+    fn estimate_branch_media(&self, corpora: &[Vec<String>], label: &gtk::CheckButton) {
+        let sample: Vec<Vec<String>> = corpora.iter().take(3).cloned().collect();
+        let total_corpora = corpora.len();
+        let lbl = label.clone();
+        net().spawn(
+            async move {
+                let client = net().client();
+                let (mut bytes, mut files, mut seen_corpora) = (0u64, 0usize, 0usize);
+                for path in &sample {
+                    let Ok(table) = client.transcript_summary(path).await else {
+                        continue;
+                    };
+                    seen_corpora += 1;
+                    let candidates: Vec<(String, bool)> = table
+                        .rows
+                        .iter()
+                        .filter_map(|r| {
+                            let flags = table.get(r, "media")?;
+                            if flags.contains("missing") {
+                                return None;
+                            }
+                            Some((table.get(r, "filename")?.to_string(), flags.contains("video")))
+                        })
+                        .collect();
+                    files += candidates.len();
+                    for (name, video) in candidates.iter().take(2) {
+                        let ext = talkbank_archive::download::extensions(*video)[0];
+                        let url = talkbank_archive::api::media_url(path, name, ext);
+                        if let Some(n) =
+                            talkbank_archive::download::media_size(client, &url).await
+                        {
+                            bytes += n;
+                            seen_corpora = seen_corpora.max(1);
+                        }
+                    }
+                }
+                (bytes, files, seen_corpora)
+            },
+            move |(bytes, files, seen)| {
+                if lbl.root().is_none() {
+                    return;
+                }
+                if bytes == 0 || files == 0 || seen == 0 {
+                    lbl.set_label(Some(&t("Include audio and video")));
+                    return;
+                }
+                // Mean per file from the sample, times the files the sampled
+                // corpora hold, scaled to the whole branch.
+                let sampled_files = files.min(seen * 2).max(1) as u64;
+                let per_file = bytes / sampled_files;
+                let est = per_file * files as u64 * (total_corpora as u64) / seen.max(1) as u64;
+                lbl.set_label(Some(
+                    &t("Include audio and video — about %s more (estimate)")
+                        .replace("%s", &human_bytes(est)),
+                ));
+            },
+        );
+    }
+
+    /// Fetches only the recordings of a corpus whose transcripts are already
+    /// on disk.
+    fn start_media_only(&self, path: &[String]) {
+        self.parent
+            .downloads()
+            .start_media_only(path, self.download_dir());
+    }
+
     fn start_download(&self, path: &[String]) {
         // No pre-emptive check here either: if there is no session the queue
         // notices, pauses and asks for a sign-in — then resumes on its own,
         // without restarting anything.
-        self.parent.downloads().start(path, self.download_dir());
+        self.parent
+            .downloads()
+            .start(path, self.download_dir(), self.media_wanted.get());
     }
 
     fn toast(&self, msg: &str) {
@@ -1199,6 +1441,16 @@ impl ArchiveWindow {
 /// is the difference that matters before pressing.
 fn human_size(transcripts: usize) -> String {
     let bytes = transcripts as u64 * talkbank_archive::download::BYTES_PER_TRANSCRIPT;
+    if bytes >= 1_073_741_824 {
+        format!("{:.1} GB", bytes as f64 / 1_073_741_824.0)
+    } else {
+        format!("{} MB", (bytes / 1_048_576).max(1))
+    }
+}
+
+/// A readable size from a byte count. Unlike `human_size` this starts from real
+/// bytes, because media sizes are measured rather than derived from a constant.
+fn human_bytes(bytes: u64) -> String {
     if bytes >= 1_073_741_824 {
         format!("{:.1} GB", bytes as f64 / 1_073_741_824.0)
     } else {

@@ -10,7 +10,8 @@
 //! The assertions are thresholds: the archive grows, and one extra corpus must
 //! not break the suite.
 
-use talkbank_archive::api::{ApiError, Client, Downloadable, LoginOutcome};
+use talkbank_archive::api::{ApiError, Client, Downloadable, LoginOutcome, media_url};
+use talkbank_archive::download;
 
 fn client() -> Client {
     Client::new().expect("client created")
@@ -710,6 +711,176 @@ fn a_branch_is_planned_downloaded_and_not_downloaded_again() {
             .filter(|c| !talkbank_archive::download::already_there(dir.path(), c))
             .count();
         assert_eq!(left, 0, "an already downloaded branch is not downloaded again");
+    });
+}
+
+/// The media live on their own host and are not in the corpus zip.
+///
+/// Sizes measured on 2026-08-23. Thresholds, not equalities: the archive is
+/// re-encoded from time to time.
+#[test]
+#[ignore]
+fn media_are_served_from_their_own_host() {
+    let Some((email, password)) = credentials() else {
+        eprintln!("no .env: test skipped");
+        return;
+    };
+    rt().block_on(async {
+        let c = client();
+        assert_eq!(c.login(&email, &password).await.unwrap(), LoginOutcome::Success);
+        use talkbank_archive::api::media_url;
+        use talkbank_archive::download::media_size;
+
+        // audio, two corpora an order of magnitude apart
+        for (dir, name, floor_mb) in [
+            (p(&["ca", "ATC", "disasters"]), "alaska261_2000", 1u64),
+            (p(&["class", "Bradford"]), "14", 20),
+        ] {
+            let url = media_url(&dir, name, "mp3");
+            let n = media_size(&c, &url).await.unwrap_or_else(|| panic!("{url}"));
+            eprintln!("{url} -> {:.1} MB", n as f64 / 1_048_576.0);
+            assert!(n / 1_048_576 >= floor_mb, "{url}: {n} bytes");
+        }
+
+        // video is .mp4 and is very much larger — this is what the size
+        // estimate has to warn about before a branch download starts.
+        let url = media_url(&p(&["childes", "Biling", "Bailleul"]), "020408", "mp4");
+        let n = media_size(&c, &url).await.expect("Bailleul video");
+        eprintln!("{url} -> {:.1} MB", n as f64 / 1_048_576.0);
+        assert!(n / 1_048_576 >= 100, "video should be hundreds of MB: {n}");
+
+        // and the transcripts route does not serve them
+        let wrong = format!(
+            "{}/ca/ATC/disasters/alaska261_2000.mp3",
+            talkbank_archive::api::DATA_BASE
+        );
+        assert!(media_size(&c, &wrong).await.is_none(), "{wrong} should 404");
+    });
+}
+
+/// A name that does not exist must come back as absent, not as a login page.
+#[test]
+#[ignore]
+fn a_missing_media_name_is_not_mistaken_for_the_access_gate() {
+    let Some((email, password)) = credentials() else { return };
+    rt().block_on(async {
+        let c = client();
+        assert_eq!(c.login(&email, &password).await.unwrap(), LoginOutcome::Success);
+        let url = talkbank_archive::api::media_url(&p(&["ca", "ATC"]), "no-such-recording", "mp3");
+        assert!(talkbank_archive::download::media_size(&c, &url).await.is_none());
+
+        let dir = tempdir::TempDir::new("talkbank-media").unwrap();
+        let err = talkbank_archive::download::media(&c, &url, &dir.path().join("x.mp3"), |_| true)
+            .await
+            .expect_err("expected a missing file");
+        assert!(
+            matches!(err, talkbank_archive::download::DownloadError::NotAvailable),
+            "expected NotAvailable, got {err}"
+        );
+    });
+}
+
+/// Signed out, the media host answers with the gate, exactly like the zip
+/// route. This is the test that protects the content-type check.
+#[test]
+#[ignore]
+fn without_sign_in_the_media_host_answers_the_gate() {
+    rt().block_on(async {
+        let c = client();
+        let url = talkbank_archive::api::media_url(
+            &p(&["ca", "ATC", "disasters"]),
+            "alaska261_2000",
+            "mp3",
+        );
+        assert!(
+            talkbank_archive::download::media_size(&c, &url).await.is_none(),
+            "signed out there is nothing to measure"
+        );
+        let dir = tempdir::TempDir::new("talkbank-media").unwrap();
+        let err = talkbank_archive::download::media(&c, &url, &dir.path().join("x.mp3"), |_| true)
+            .await
+            .expect_err("expected the access gate");
+        assert!(
+            matches!(err, talkbank_archive::download::DownloadError::AuthRequired),
+            "expected AuthRequired, got {err}"
+        );
+        assert!(!dir.path().join("x.mp3").exists());
+        assert!(!dir.path().join("x.mp3.part").exists(), "no partial left behind");
+    });
+}
+
+/// The whole media path, end to end: a corpus, then the recordings its
+/// transcripts name, landing next to them.
+///
+/// This is the test that caught the media host answering a plain GET with
+/// eleven bytes — a unit test could not have seen it.
+#[test]
+#[ignore]
+fn a_corpus_and_its_media_land_side_by_side() {
+    let Some((email, password)) = credentials() else {
+        eprintln!("no .env: test skipped");
+        return;
+    };
+    rt().block_on(async {
+        let c = client();
+        assert_eq!(c.login(&email, &password).await.unwrap(), LoginOutcome::Success);
+        let dir = tempdir::TempDir::new("e2e").unwrap();
+        let path: Vec<String> = ["ca", "ATC"].iter().map(|s| s.to_string()).collect();
+
+        let dest = download::corpus(&c, &path, dir.path(), |_| true).await.expect("corpus");
+        // Recursive: ATC keeps a `disasters` subfolder, and a recording sits
+        // next to its transcript rather than at the corpus root.
+        fn chas_in(d: &std::path::Path, out: &mut Vec<std::path::PathBuf>) {
+            for e in std::fs::read_dir(d).into_iter().flatten().flatten() {
+                let p = e.path();
+                if p.is_dir() { chas_in(&p, out); }
+                else if p.extension().is_some_and(|x| x == "cha") { out.push(p); }
+            }
+        }
+        let mut chas = Vec::new();
+        chas_in(&dest, &mut chas);
+        chas.sort();
+        eprintln!("transcripts: {}", chas.len());
+        assert!(!chas.is_empty());
+
+        let mut got = 0;
+        for cha in chas.iter().take(3) {
+            let info = talkbank_engine::chat::inspect(cha);
+            let m = info.media.expect("every ATC transcript declares a recording");
+            assert!(m.is_fetchable());
+            let ext = download::extensions(m.video)[0];
+            let parent = cha.parent().unwrap();
+            let mut dir = path.clone();
+            if let Ok(rel) = parent.strip_prefix(&dest) {
+                dir.extend(rel.components().map(|c| c.as_os_str().to_string_lossy().into_owned()));
+            }
+            let url = media_url(&dir, &m.basename, ext);
+            let target = parent.join(format!("{}.{ext}", m.basename));
+            download::media(&c, &url, &target, |_| true).await.expect(&url);
+            let n = std::fs::metadata(&target).unwrap().len();
+            eprintln!("  {} -> {:.1} MB beside {}", target.file_name().unwrap().to_string_lossy(),
+                      n as f64 / 1048576.0, cha.file_name().unwrap().to_string_lossy());
+            assert!(n > 100_000, "media too small, the preview bug is back: {n}");
+            assert!(!parent.join(format!("{}.{ext}.part", m.basename)).exists(), "a .part file was left behind");
+            got += 1;
+        }
+        assert_eq!(got, 3);
+
+        // Idempotence: this is what makes a repeat download a repair.
+        let cha = &chas[0];
+        let m = talkbank_engine::chat::inspect(cha).media.unwrap();
+        let ext = download::extensions(m.video)[0];
+        let parent = cha.parent().unwrap();
+        let mut dir = path.clone();
+        if let Ok(rel) = parent.strip_prefix(&dest) {
+            dir.extend(rel.components().map(|c| c.as_os_str().to_string_lossy().into_owned()));
+        }
+        let target = parent.join(format!("{}.{ext}", m.basename));
+        let before = std::fs::metadata(&target).unwrap().modified().unwrap();
+        download::media(&c, &media_url(&dir, &m.basename, ext), &target, |_| true).await.unwrap();
+        assert_eq!(std::fs::metadata(&target).unwrap().modified().unwrap(), before,
+                   "a recording already on disk must not be fetched again");
+        eprintln!("idempotence: ok");
     });
 }
 
